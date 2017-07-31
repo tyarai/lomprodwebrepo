@@ -1,0 +1,298 @@
+<?php
+
+define('PUBLIC_LIST_SETTINGS','public_list');
+
+
+function lom_get_default_settings(){
+    return array(
+            array('title'=> PUBLIC_LIST_SETTINGS,),
+    );
+}
+
+function lom_isKeyDefinedInDefaultSettings($key){
+    if($key != NULL){
+        $default = lom_get_default_settings();
+        foreach($default as $setting){
+            foreach($setting as $title => $value){
+                if(trim($key) == $value){
+                    return TRUE;
+                }
+            }
+        }
+    }
+    return FALSE;
+}
+
+function lom_common_menu(){
+    $items['lom_settings'] = array(
+        'title' => t('Settings'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('_lom_common_settings_form'),
+        'access callback' => 'lom_common_settings_permission',
+        
+    );
+    return $items;
+}
+
+
+function lom_common_settings_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function _lom_common_settings_form($form,&$form_state){
+    $form = array();
+   
+    
+    $form['fieldset'] = array(
+        '#type' => 'fieldset',
+        
+    );
+    module_load_include('php','wrappers_custom','includes/lom_user_settings_entity/LomUserSettingsEntityLomUserSettingsEntityWrapper');
+    global $user;
+    $array = LomUserSettingsEntityLomUserSettingsEntityWrapper::export($user->uid);
+    $settings = count($array) > 0 ? $array : lom_get_default_settings() ;
+    
+    if(count($settings) != 0){
+        foreach($settings as $setting){
+
+            switch($setting['title']){
+                case PUBLIC_LIST_SETTINGS:
+                    $form['fieldset'][PUBLIC_LIST_SETTINGS] = array(
+                        '#type' => 'checkbox',
+                        '#title' => t('Make my lemur life list and sightings public on www.lemursofmadagascar.com'),
+                        '#default_value' => isset($setting['value']) ? $setting['value'] : 0,
+                    );
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        $form['save'] = array(
+            '#type' => 'submit',
+            '#value' => t('Save'),
+        );
+    }
+    
+    
+    
+    return $form;
+}
+
+
+function _lom_common_settings_form_submit($form,&$form_state){
+    
+    $settings = $form_state['values'];
+    
+    
+    module_load_include('php','wrappers_custom','includes/lom_user_settings_entity/LomUserSettingsEntityLomUserSettingsEntityWrapper');
+    global $user;
+      
+    $user_saved_settings = LomUserSettingsEntityLomUserSettingsEntityWrapper::export($user->uid);
+    
+    if(count($user_saved_settings) >0){
+        //---- Efa nisy settings tao anaty table ---//
+        foreach($user_saved_settings as $saved_settings){
+            try{
+                
+                $entity = new LomUserSettingsEntityLomUserSettingsEntityWrapper($saved_settings['id']);
+                $value = $settings[$saved_settings['title']];
+                $entity->setValue($value)  ;
+                $entity->save();
+                
+                if($saved_settings['title'] == PUBLIC_LIST_SETTINGS){
+                    lom_user_settings_updateUserFieldPublicList($user->uid,$value);
+                }
+                
+            }catch(Exception $ex){
+                drupal_set_message(t('[_lom_common_settings_form_submit()] :@e',array('@e'=>$ex->getMessage())),'error');
+            }
+        }
+        
+    }else{
+        //---- Tsy mbola nisy settinga mihitsy fa vao hanomboka anisy ---//
+        foreach($settings as $key => $value){
+            if(lom_isKeyDefinedInDefaultSettings($key,lom_get_default_settings())){
+                try{
+                    
+                    $entitySettings = LomUserSettingsEntityLomUserSettingsEntityWrapper::create();
+                    $entitySettings->setTitle($key);
+                    $entitySettings->setValue($value);
+                    $entitySettings->save();
+                    
+                    if($key == PUBLIC_LIST_SETTINGS){
+                       lom_user_settings_updateUserFieldPublicList($user->uid,$value);
+                    }
+                    
+                }catch (Exception $ex) {
+                    drupal_set_message(t('[_lom_common_settings_form_submit()] :@e',array('@e'=>$ex->getMessage())),'error');
+                }
+            }
+        }
+    }
+    
+}
+
+/**
+ * Implements hook_date_formats().
+ */
+function lom_common_date_formats() {
+  return array(
+    // Creates a new format for a new, custom format type.
+    array(
+      'type' => 'lom_short_y_m-d',
+      'format' => 'Y-m-d',
+      'locales' => array(),
+    ),
+    
+  );
+}
+
+/**
+ * Implements hook_date_format_types().
+ */
+function lom_common_date_format_types() {
+  return array(
+    'lom_short_y_m' => t('LOM Short: YYYY-m-d'),
+  );
+}
+
+
+function lom_common_block_info() {
+    // This hook returns an array, each component of which is an array of block
+    // information. The array keys are the 'delta' values used in other block
+    // hooks.
+    //
+    // The required block information is a block description, which is shown
+    // to the site administrator in the list of possible blocks. You can also
+    // provide initial settings for block weight, status, etc.
+    //
+    // Many options are defined in hook_block_info():
+    $blocks['primate_watching_block'] = array(
+        // info: The name of the block.
+        'info' => t('Primate watching'),
+        'status' => TRUE,
+        'region' => 'sidebar_first',
+        // Block caching options (per role, per user, etc.)
+        // DRUPAL_CACHE_PER_ROLE is the default.
+        'cache' => DRUPAL_CACHE_PER_ROLE,
+        'weight' => -100,
+    );
+    $blocks['species_menu'] = array(
+        // info: The name of the block.
+        'info' => t('Species main menu'),
+        'status' => TRUE,
+        'region' => 'sidebar_first',
+        // Block caching options (per role, per user, etc.)
+        // DRUPAL_CACHE_PER_ROLE is the default.
+        'cache' => DRUPAL_CACHE_PER_ROLE,
+        'weight' => -99,
+    );
+    
+    $blocks['settings'] = array(
+        // info: The name of the block.
+        'info' => t('Settings'),
+        'status' => TRUE,
+        'region' => 'sidebar_first',
+        // Block caching options (per role, per user, etc.)
+        // DRUPAL_CACHE_PER_ROLE is the default.
+        'cache' => DRUPAL_CACHE_PER_ROLE,
+        'weight' => -50,
+    );
+    
+    return $blocks;
+}
+
+function lom_common_block_view($delta = '') {
+    // The $delta parameter tells us which block is being requested.
+    $block = array();
+    switch ($delta) {
+        case 'primate_watching_block':
+            // The subject is displayed at the top of the block. Note that it
+            // should be passed through t() for translation. The title configured
+            // for the block using Drupal UI supercedes this one.
+            $block['subject'] = t('Primate watching');
+            $block['content'] = lom_common_block_contents($delta);
+            break;
+        
+        case 'species_menu':
+            // The subject is displayed at the top of the block. Note that it
+            // should be passed through t() for translation. The title configured
+            // for the block using Drupal UI supercedes this one.
+            $block['subject'] = t('Main menu');
+            $block['content'] = lom_common_block_contents($delta);
+            break;
+        
+        
+        case 'settings':
+            // The subject is displayed at the top of the block. Note that it
+            // should be passed through t() for translation. The title configured
+            // for the block using Drupal UI supercedes this one.
+            $block['subject'] = t('Configuration');
+            $block['content'] = lom_common_settings();
+            break;
+
+
+        default :
+            break;
+    }
+    return $block;
+}
+
+function lom_common_block_contents($delta){
+    
+    $logged = user_is_logged_in();
+    $html = NULL;
+    
+    if($delta == 'primate_watching_block'){
+    
+        $html  .= '<div class="primate_watching_block_menu">';
+        //$html .= '<ul>';
+            //$html .= '<li>';
+            $html .= $logged ? '<div class="lom-block-item">'.l(t('My sightings'),'sightings').'</div>' : NULL;
+            //$html .= '</li>';
+            //$html .= '<li>';
+            $html .= $logged ? '<div class="lom-block-item">'.l(t('My lemur life list'),'lifelist').'</div>' : NULL;
+            //$html .= '</li>';
+            //$html .= '<li>';
+            $html .= $logged ? '<div class="lom-block-item">'.l(t('Add sighting'),'sighting/add').'</div>' : NULL;
+            //$html .= '</li>';
+            //$html .= '<li>';
+            $html .= '<div class="lom-block-item">'.l(t('Public sightings'),'public_sightings').'</div>';
+            //$html .= '</li>';
+
+        //$html .= '</ul>';
+        $html .= '</div>';
+    }
+    
+    if($delta == 'species_menu'){
+        $html  .= '<div class="primate_watching_block_menu">';
+            $html .= '<div class="lom-block-item">'.l(t('Species'),'all-species').'</div>' ;
+            $html .= '<div class="lom-block-item">'.l(t('Species families'),'lemur-families').'</div>';
+            $html .= '<div class="lom-block-item">'.l(t('Origin of the Lemurs'),'origin-lemurs').'</div>';
+            $html .= '<div class="lom-block-item">'.l(t('Extinct lemurs'),'extinct-lemurs').'</div>';
+            $html .= '<div class="lom-block-item">'.l(t('Lemur-watching Sites'),'lemur-watching-sites').'</div>';
+            $html .= '<div class="lom-block-item">'.l(t('About the authors'),'about-authors').'</div>';
+        $html .= '</div>';
+    }
+    
+    $results = array('#markup' => $html);
+    return $results;
+}
+
+function lom_common_settings(){
+    
+    $html  = '<div class="settings_block_menu">';
+    $html .= '<ul>';
+        $html .= '<li>';
+        $html .= l(t('My settings'),'lom_settings');
+        $html .= '</li>';
+    $html .= '</ul>';
+    $html .= '</div>';
+    
+    $results = array('#markup' => $html);
+    return $results;
+}

@@ -1,0 +1,8 @@
+; $Id:$
+
+
+name = Master List setup
+description = Hooks and function of Master List
+core = 7.x
+package = Lemurs Of Madagascar
+files[] = master_list_setup.module

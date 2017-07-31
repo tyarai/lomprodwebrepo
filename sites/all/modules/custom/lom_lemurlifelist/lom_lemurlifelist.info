@@ -1,0 +1,8 @@
+; $Id:$
+
+
+name = LOM Lemur Life List
+description = Lemur Life List
+core = 7.x
+package = Lemurs Of Madagascar
+

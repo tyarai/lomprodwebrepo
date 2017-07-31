@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the LOM Display Suite feature.
+ */
+
+include_once 'lom_display_suite.features.inc';

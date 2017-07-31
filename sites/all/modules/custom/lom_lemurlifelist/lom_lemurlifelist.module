@@ -1,0 +1,124 @@
+<?php
+
+function lom_lemurlifelist_menu(){
+    $items['lifelist'] = array(
+        'title' => t('My lemur life list'),
+        'page callback' => 'lom_mylifelist',
+        'access callback' => 'lom_lemurlifelist_permission',
+    );
+    
+    return $items;
+}
+
+function lom_lemurlifelist_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function lom_mylifelist(){
+    
+    
+    module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+    global $user;
+    
+    $lemurLifeList = PublicationNodeWrapper::getUserLemurLifeList($user->uid);
+    $markup  = '<div class="lom-life-list">';
+    $profilePhoto= NULL;
+    foreach ($lemurLifeList as $item){
+    
+        $speciesNID = $item['_speciesNid'];
+        $speciesWrapper    = entity_metadata_wrapper('node',$speciesNID);
+        if($speciesWrapper){
+            $profilePhoto = $speciesWrapper->field_species_profile_photograph->value();
+            $image = field_get_items('node', $profilePhoto, 'field_lom_photograph');
+            $output = field_view_value('node', $profilePhoto, 'field_lom_photograph', $image[0], array(
+                        'type' => 'image',
+                        'settings' => array(
+                            'image_style' => 'thumbnail',
+                            'image_link' => 'content',
+                        ),
+                    ));
+  
+            $alias = drupal_get_path_alias('node/'.$speciesNID);
+            $options = array(
+                'attributes' => array('class' => array() ),
+            );
+            
+            $markup .= '<div >';
+            
+                $markup .= '<div class="lemur-life-list-item-title">'. l($item['_speciesName'],$alias,$options) . '</div>';
+                
+                $markup .= '<div class="lemur-life-list-item-left">';
+                    $markup .= '<div class="group-left life-list-title">'. render($output) . '</div>';
+                $markup .= '</div>';
+
+                $markup .= '<div class="lemur-life-list-item-right">';
+                    $markup .= '<div class="lemur-life-list-item-detail">' . t('Total observed ') . $item['totalObserved']  . '</div>';
+                    $markup .= '<div class="lemur-life-list-item-detail">' . t('Total sightings '). $item['totalSightings'] . '</div>';
+                $markup .= '</div>';
+        
+            $markup .= '</div>';
+        }
+    }
+    
+    
+    $markup .= '</div>';
+    
+    return array('#markup' => $markup);
+}
+
+/**
+ * 
+ * Tadiavina ao anaty lemurLifeList n'ilay olona ity species ty'
+ */
+function _lom_lemurlifelist_lookForSpeciesInUserList($speciesNID,$userUID){
+    if($speciesNID != NULL && $userUID != NULL){
+        try{
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type','node');
+            $query->entityCondition('bundle','personal_lemur_life_list_item');
+            $query->propertyCondition('uid',$userUID);
+            $result = $query->execute();
+            if($result != NULL){
+                $nids= array_keys($result['node']);
+                foreach($nids as $nid){
+                    $wrapper = entity_metadata_wrapper('node',$nid);
+                    $lifeListNID = $wrapper->field_species->value()->nid;
+                    if($lifeListNID == $speciesNID){
+                        return TRUE;
+                    }
+                }
+            }
+        }catch(Exception $e){
+            drupal_set_message(t('[lom_lemurlifelist::_lom_lemurlifelist_lookSpeciesInUserList] Error: @error',array('@error'=>$e->getMessage())),'error');
+        }
+    }
+    return FALSE;
+}
+
+/**
+ * hook_presave
+ */
+function lom_lemurlifelist_entity_presave($entity, $type){
+    /*if($entity != NULL && $entity->type ==  'personal_lemur_life_list_item'){
+        
+            $wrapper = entity_metadata_wrapper('personal_lemur_life_list_item',$entity->id);
+            //---- Raha tsy mbola manana UUID ilay lemur-life-list zay foana asiana vaovao --
+            if( ! isset($wrapper->field_uuid) ){
+                require_once 'sites/all/modules/custom/lom_guuid/lom_guuid.inc';
+                $uuid = _getGUID();
+                $wrapper->field_uuid->set($uuid);
+            }
+        
+    }*/
+    
+}
+
+function lom_lemurlifelist_entity_view($entity, $type, $view_mode, $langcode ){
+   /*$entity->content['a_new_field'] = array(
+              '#markup' => $entity->uuid,
+              '#weight' => -10,
+        );*/
+}

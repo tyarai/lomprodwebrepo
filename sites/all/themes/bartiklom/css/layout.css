@@ -1,0 +1,136 @@
+
+/* ---------- Basic Layout Styles ----------- */
+
+html,
+body,
+#page  {
+  height: 100%;
+}
+#page-wrapper {
+  min-height: 100%;
+  min-width: 960px;
+}
+#header div.section,
+#featured div.section,
+#messages div.section,
+#main,
+#triptych,
+#footer-columns,
+#footer {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#header div.section {
+  position: relative;
+}
+.region-header {
+  float: right; /* LTR */
+  margin: 0 5px 10px;
+}
+.with-secondary-menu .region-header {
+  margin-top: 3em;
+}
+.without-secondary-menu .region-header {
+  margin-top: 15px;
+}
+#secondary-menu {
+  position: absolute;
+  right: 0; /* LTR */
+  top: 0;
+  width: 480px;
+}
+#content,
+#sidebar-first,
+#sidebar-second,
+.region-triptych-first,
+.region-triptych-middle,
+.region-triptych-last,
+.region-footer-firstcolumn,
+.region-footer-secondcolumn,
+.region-footer-thirdcolumn,
+.region-footer-fourthcolumn {
+  display: inline;
+  float: left; /* LTR */
+  position: relative;
+}
+.one-sidebar #content {
+  width: 720px;
+}
+.two-sidebars #content {
+  width: 480px;
+}
+.no-sidebars #content {
+  width: 960px;
+  float: none;
+}
+#sidebar-first,
+#sidebar-second {
+  width: 240px;
+}
+#main-wrapper {
+  min-height: 300px;
+}
+#content .section,
+.sidebar .section {
+  padding: 0 15px;
+}
+#breadcrumb {
+  margin: 0 15px;
+}
+.region-triptych-first,
+.region-triptych-middle,
+.region-triptych-last {
+  margin: 20px 20px 30px;
+  width: 280px;
+}
+#footer-wrapper {
+  padding: 35px 5px 30px;
+}
+.region-footer-firstcolumn,
+.region-footer-secondcolumn,
+.region-footer-thirdcolumn,
+.region-footer-fourthcolumn {
+  padding: 0 10px;
+  width: 220px;
+}
+#footer {
+  width: 940px;
+  min-width: 920px;
+}
+
+/* ====== LEMUR LIFELIST =======*/
+.lemur_lifelist_views_page .content .views-row,
+.page-all-publication .content .views-row { padding: 5px 20px 5px 20px; border: 1px solid #d6d6d6; margin: 10px 0 0 0; border-radius: 4px;}
+.lemur_lifelist_views_page .content .views-row .basic_information .username,
+.page-all-publication .content .views-row .basic_information .username { font-weight: bold; font-size: 18px; font-style: italic;}
+.lemur_lifelist_views_page .content .views-row .basic_information span.legend,
+.page-all-publication .content .views-row .basic_information span.legend { width: 65px; display: inline-block;}
+.lemur_lifelist_views_page .content .views-row .basic_information .text,
+.page-all-publication .content .views-row .basic_information .text { font-weight: normal; font-size: 16px;}
+.lemur_lifelist_views_page .content .views-row .basic_information p, 
+.page-all-publication .content .views-row .basic_information p { margin: 5px 0 5px 0;}
+.lemur_lifelist_views_page .content .views-row .basic_information p span, 
+.page-all-publication .content .views-row .basic_information p span { font-weight: bold;}
+.lemur_lifelist_views_page .content .views-row .comment_wrapper_element, 
+.page-all-publication .content .views-row .comment_wrapper_element {
+  background-color: #f6f6f2;
+  border-color: #f9f9f9;
+  padding: 5px;
+}
+.lemur_lifelist_views_page .content .views-row .comment_wrapper_element .comment,
+.page-all-publication .content .views-row .comment_wrapper_element .comment {margin-left: 20px;}
+.lemur_lifelist_views_page .content .views-row .comment_wrapper_element h2.comment-form, 
+.page-all-publication .content .views-row .comment_wrapper_element h2.comment-form {font-size: 15px;}
+.content .views-row .comment_wrapper_element .comment-form .form-type-item,
+.content .views-row .comment_wrapper_element .comment-form .form-item-subject,
+.content .views-row .comment_wrapper_element .comment-form fieldset.filter-wrapper,
+.content .views-row .comment_wrapper_element .comment-form .field-type-image label,
+.node-publication-form .field-name-body fieldset,
+html.js .page-add-post-publication .node-publication-form #edit-preview {display: none;}
+.page-all-publication .content .views-row .comment_wrapper_element .comment-form .form-item .description {margin-left: 0;}
+html.js .page-add-personal-lemur-life-list-item input.form-autocomplete,
+html.js .page-add-post-publication input.form-autocomplete { background-position: 100% 9px;}
+html.js .page-add-personal-lemur-life-list-item input.form-autocomplete.throbbing, 
+html.js .page-add-post-publication input.form-autocomplete.throbbing { background-position: 100% -13px;}
+/* ====== END LEMUR LIFELIST =======*/
