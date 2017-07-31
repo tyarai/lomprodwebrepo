@@ -506,8 +506,8 @@ class LomFamilyNodeWrapper extends WdNodeWrapper {
         }
 
         
-        return drupal_json_encode($familyList);
-
+        //return drupal_json_encode($familyList);
+        return $familyList;
     }
 
 }

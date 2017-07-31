@@ -183,7 +183,8 @@ class LomMapNodeWrapper extends WdNodeWrapper {
             drupal_set_message(t('[LomMap::allMaps()] Error: @e',array('@e'=>$e->getMessage())),'error');
         }
         
-        return drupal_json_encode($maps);
+        return $maps;
+        //return json_encode($maps,JSON_UNESCAPED_SLASHES);
 
     }
 

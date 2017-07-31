@@ -243,7 +243,8 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
         }
 
         
-        return drupal_json_encode($placeList);
+        //return drupal_json_encode($placeList);
+        return $placeList;
 
     }
 

@@ -141,7 +141,7 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
                         
                         $imageFile = $photograph->getLomPhotograph();
                         
-                        $origImage = image_load($imageFile['uri']);
+                        //$origImage = image_load($imageFile['uri']);
                         
                         global $base_url;
                         
@@ -175,10 +175,9 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
                         if($photograph){
 
                             $photos[] = array(
-                                "nid"                   => intval($photograph->getId()),
-                                "title"                 => strip_tags($photograph->getTitle()),
-                                //'image_url'             => $path_to_file,
-                                "image_url"             => $path_to_file,
+                                'nid'                   => intval($photograph->getId()),
+                                'title'                 => strip_tags($photograph->getTitle()),
+                                'image_url'             => $path_to_file,
                             );
 
                         }
@@ -189,7 +188,8 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
             drupal_set_message(t('[LomPhotograph::allPhotographs()] Error: @e',array('@e'=>$e->getMessage())),'error');
         }
         
-        return json_encode($photos,JSON_UNESCAPED_SLASHES);
+        //return json_encode($photos,JSON_UNESCAPED_SLASHES);
+        return $photos;
 
     }
 

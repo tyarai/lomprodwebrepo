@@ -744,8 +744,8 @@ class LomSpeciesNodeWrapper extends WdNodeWrapper {
         }
 
         
-        return drupal_json_encode($speciesList);
-
+        //return drupal_json_encode($speciesList);
+        return $speciesList;
     }
     
 }

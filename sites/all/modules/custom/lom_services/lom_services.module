@@ -4,7 +4,7 @@
 function lom_services_menu(){
     $items = array();
     $items['lom_services/%'] = array(
-        'page callback' => '_lom_services_changed_photographs',
+        'page callback' => '_lom_services_changed_nodes',
         'access callback'   => TRUE,
         'page arguments' => array(1),
     );
@@ -59,6 +59,9 @@ function lom_services_default_services_endpoint() {
     $endpoint->resources = array(
         'lom_node_services' => array(
             'actions' => array(
+                'changed_nodes' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
                 'changed_species' => array( //Export to iPhone
                     'enabled' => '1',
                 ),
@@ -100,6 +103,23 @@ function lom_services_services_resources() {
     'lom_node_services'=> array(
         
         'actions' => array(
+            
+                'changed_nodes' => array(
+
+                    'help' => t('Export recently changed nodes to iPhone'),
+                    'callback' => '_lom_services_changed_nodes',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
             
                 'changed_species' => array(
 
@@ -278,4 +298,41 @@ function _lom_services_changed_maps($from_date){
     }
 }
 
+/**
+ * Maka ny Nodes vaovao na niova rehetra (Species, Photographs, Family, Map)
+ */
 
+function _lom_services_changed_nodes($from_date){
+   
+    $data = array();
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/LomMapNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/LomPhotographNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/LomFamilyNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/BestPlacesNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+        
+        $photographs = LomPhotographNodeWrapper::allPhotographs($from_date);;
+        $maps        = LomMapNodeWrapper::allMaps($from_date);
+        $families    = LomFamilyNodeWrapper::allFamilies($from_date);
+        $best_places = BestPlacesNodeWrapper::allPlaces($from_date);
+        $species     = LomSpeciesNodeWrapper::allSpecies($from_date);;
+        
+        //$data['species']     = LomSpeciesNodeWrapper::allSpecies($from_date);
+        $data  = array(
+            'species'     => $species,
+            'families'    => $families,
+            'photographs' => $photographs,
+            'maps'        => $maps,
+            'best_places' => $best_places,
+        );
+        //$data['families']    = LomFamilyNodeWrapper::allFamilies($from_date);
+        //$data['best_places'] = BestPlacesNodeWrapper::allPlaces($from_date);
+        //$data['maps']        = LomMapNodeWrapper::allMaps($from_date);
+    }
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return json_encode($data,JSON_UNESCAPED_SLASHES);
+}
