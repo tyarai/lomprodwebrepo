@@ -1,0 +1,4 @@
+name = LOM Services
+description = LOM Services for nodes (species,map,photograph,family,...)
+core = 7.x
+package = LOM

@@ -1,0 +1,8 @@
+; $Id:$
+
+
+name = LOM Common configuration
+description = LOM Common configuration (date, date formats,...)
+core = 7.x
+package = Lemurs Of Madagascar
+

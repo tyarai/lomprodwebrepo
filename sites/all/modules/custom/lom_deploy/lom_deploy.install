@@ -1,0 +1,123 @@
+<?php
+/**
+ * Activate Sighting features
+ */
+function lom_deploy_update_7001(){
+    module_enable(array('lom_data_model_sighting'));
+}
+
+
+function lom_deploy_update_7002(){
+    $modules = array(
+    'master_list',
+    'personal_lemur_life_list_default_title',
+    'personal_lemur_life_list_item_setup',
+    'pagelistmigration',
+    'drupalgap',
+    'drupalgap_entityreference',
+    'eck',
+    'feeds',
+    'feeds_ui',
+    'feed_import_base',
+    'image_url_formatter',
+    'job_scheduler',
+    'migrate',
+    'migrate_ui',
+    'migrate_extras',
+    'migrate_ui',
+    'migrate_extras',
+    'views_data_export',
+  );
+  db_delete('system')
+    ->condition('name', $modules, 'IN')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Disable toolbar menu
+ */
+function lom_deploy_update_7003(){
+    module_disable(array('toolbar'));
+}
+
+/**
+ * Enable rename_admin_paths
+ */
+function lom_deploy_update_7004(){
+    module_disable(array('rename_admin_paths'));
+}
+
+
+/**
+ * Enable lom_common
+ */
+/*function lom_deploy_update_7005(){
+    module_enable(array('lom_common','lom_settings_service','lom_user_settings_entity'));
+}*/
+
+
+/**
+ * Enable lom_common
+ */
+function lom_deploy_update_7020(){
+    module_enable(array('lom_common','lom_settings_service','lom_user_settings_entity'));
+}
+
+
+/**
+ * Enable lom_nexusmenu
+ */
+function lom_deploy_update_7021(){
+    module_enable(array('lom_nexusmenu'));
+}
+
+/**
+ * Enable captcha
+ */
+function lom_deploy_update_7022(){
+    module_enable(array('captcha','image_captcha'));
+}
+
+/**
+ * Enable views_php module
+ */
+function lom_deploy_update_7023(){
+    module_enable(array('views_php'));
+}
+
+/**
+ * Enable lom_comment module
+ */
+function lom_deploy_update_7024(){
+    module_enable(array('lom_comment'));
+}
+
+/**
+ * Add 'synced' field to 'comment' table
+ */
+function lom_deploy_update_7025(){
+   
+    $field = array(
+        'type' => 'int',
+        'length' => '3',
+        'not null' => FALSE,
+        'description' => 'Synced',
+    );
+    db_add_field('comment', 'synced', $field);
+}
+
+/**
+ * Add 'synced' property to comment
+ */
+function lom_deploy_update_7028(){
+   
+    $field = array(
+        'type' => 'int',
+        'length' => '3',
+        'not null' => FALSE,
+        'description' => 'Synced',
+    );
+    db_add_field('comment', 'synced', $field);
+    
+}

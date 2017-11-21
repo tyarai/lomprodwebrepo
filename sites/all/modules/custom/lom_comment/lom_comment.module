@@ -1,0 +1,30 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+/**
+ * Izay comment niova na vaovao dia mila averins isSynced=FALE aty @ server
+ * @param type $node
+ */
+function lom_comment_node_presave($node){
+    /*if($node->type == 'comment'){
+        try{
+            module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+            
+            $comment = new CommentNodePublicationCommentWrapper($node->cid);
+            if($comment){
+                $comment->setIsSynced(FALSE);
+                $comment->save();
+            }
+        }catch(Exception $e){
+            watchdog('lom_comment', $e->getMessage());
+            drupal_set_message('[lom_comment_node_presave()] '.$e->getMessage(),'error');
+        }
+    }*/
+}
+

@@ -1,0 +1,42 @@
+<?php
+
+/*
+ *   Implementation of hook_views_query_alter()
+ *
+ *   Register View API information.
+ */
+function filtered_species_view_widget_views_query_alter(&$view, &$query) {
+
+  if($view->name == "filtered_species_view_widget"  ){
+
+    $view->query->add_where(0,db_and()->condition('field_data_field_species.field_species_target_id','','IS NULL'));
+    global $user;
+    
+    /* Relates field_species and field_user in <Personal-lemur-life-list-item> using common field 'entity_id'
+       which is the <Personal-lemur-life-list-item> entity ID
+    */
+    $join = new views_join();
+    $join->table = 'field_data_field_user';
+    $join->field = 'entity_id';
+    $join->left_table = 'field_data_field_species';
+    $join->left_field = 'entity_id';
+    $join->type = 'LEFT';
+
+    /*
+     *  1- Must use 'field_user_alias' to map its column
+     *  2- initialize the currently-logged-in user with global
+     *  3- Set the target used id to the current user
+     */
+    //global $user;
+    //$join->extra = "(field_user_alias.field_user_target_id = '".$user->uid."' )";
+    $join->extra = "(field_user_alias.field_user_target_id ='$user->uid')";
+    $query->add_relationship('field_user_alias', $join,'node');
+
+
+
+    //$view->query->add_where(0,db_and()->condition('field_user_alias.field_user_target_id',$user->uid,'='));
+  }
+
+}
+
+

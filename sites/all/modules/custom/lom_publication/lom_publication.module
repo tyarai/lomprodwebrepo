@@ -1,0 +1,625 @@
+<?php
+
+//define('USER_IMAGE_FOLDER','public://user_image_folder');
+define('USER_IMAGE_FOLDER','public://');
+
+function lom_publication_menu(){
+    $items['sighting/add'] = array(
+        'title' => t('Add sighting'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lom_publication_add_sighting',2),
+        'access callback' => 'lom_publication_permission',
+    );
+    $items['sighting/%/edit'] = array(
+        'title' => t('Edit sighting'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lom_publication_add_sighting',1),
+        'access callback' => 'lom_publication_permission',
+    );
+    $items['sighting/dummy/%'] = array(
+        'title' => t('Dummy sighting'),
+        'page callback' => '_dummySighting',
+        'page arguments' => array(2),
+        'access callback' => 'lom_publication_permission',
+    );
+    return $items;
+}
+
+function lom_publication_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/*
+ * hook_theme
+ */
+
+function lom_publication_theme(){
+    return array(
+        'theme_sighting_image' => array(
+            'render element' => 'element',
+            //'file'           => 'abc.module',
+    ));
+}
+
+/*
+ * hook_enable
+ * - Active the view mode for sighting
+ */
+function lom_publication_enable(){
+    $settings = field_bundle_settings('node', 'publication');
+    $settings['view_modes']['sighting_list_view_mode']['custom_settings'] = TRUE;
+    field_bundle_settings('node', 'article', $settings);
+}
+/*
+ * One's sighting header
+ */
+function lom_publication_sightings_views_header(){
+    global $user;
+    module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
+    $count = PublicationNodeWrapper::getSightingsCount($user->uid, $changedFrom=NULL,$isSynced=NULL);
+    
+    $html   = '<div class="sighting-view-header">';
+        $html  .= '<div class="">';
+            $html  .= t('You have @count sightings',array('@count'=>$count));
+        $html  .= '</div>';
+    $html  .= '</div>';
+    return $html;
+}
+
+
+function lom_publication_add_sighting($form,&$form_state,$sightingID){
+    
+    $wrapper = NULL;
+    
+    try{
+    
+        $form_state['speciesNID'] = NULL;
+        
+        if($sightingID != NULL && trim($sightingID) != 0){
+            $wrapper = entity_metadata_wrapper('node',$sightingID);
+            $form_state['sightingNID'] =  $sightingID;
+        }
+
+        $form = array();
+
+        module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
+        module_load_include('php', 'wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+        module_load_include('php', 'wrappers_custom','includes/node/BestPlacesNodeWrapper');
+
+        $form['#attached']['css'] = array(
+            drupal_get_path('module', 'lom_publication') . '/css/sighting.css');
+
+        $form['container'] = array(
+            '#type' => 'container',
+            '#prefix' => '<div class="add_sighting_form">',
+            '#suffix' => '</div>',
+        );
+
+        $form['container']['sighting'] = array(
+            '#type' => 'fieldset',
+        );
+
+        $form['container']['sighting']['title'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Title'),
+            '#required' => TRUE,
+            '#size' => 80,
+            '#attributes' => array('class'=>array("bottom_spacement")),
+            '#default_value' => $wrapper != NULL ? $wrapper->title->value() : NULL,
+            //'#suffix' => '</div>',
+        );
+        $options = LomSpeciesNodeWrapper::getAllSpeciesKeyedByNID($extinct=FALSE);
+        $speciesNID = $wrapper  ? $wrapper->field_associated_species->value()->nid : NULL;
+        $form['container']['sighting']['species'] = array(
+            '#type' => 'select',
+            '#title' => t('Species'),
+            '#required' => TRUE,
+            '#options' => $options,
+            '#default_value' => $speciesNID,
+            '#ajax'    => array(
+                'callback' => '_sightingChangeSpeciesInfoCallBack',
+                'wrapper'  => 'speciesinfo',
+            ),
+            //'#attributes' => array('class'=>array("spacement")),
+        );
+
+        $speciesInfo = NULL;
+        
+        if( (isset($form_state['values']['species']) && $form_state['values']['species'] != NULL)  
+            ){
+            $species = isset($form_state['speciesNID'])? node_load($form_state['speciesNID']) : node_load($form_state['values']['species']);
+            $view = node_view($species, 'species_selecting');//Render species with 'species_selecting'
+            $speciesInfo = drupal_render($view);
+        }
+        $form['container']['sighting']['speciesinfo'] = array(
+            '#type' => 'markup',
+            '#markup' => $speciesInfo,
+            '#prefix' => '<div id="speciesinfo">',
+            '#suffix' => '</div>',
+            //'#attributes' => array('class'=>array("spacement")),
+        );
+
+       $file = $wrapper ?  $wrapper->field_photo->value() : NULL;
+        $form['container']['sighting']['image'] = array(
+            '#type' => 'managed_file',
+            '#description' => t('If you don\'t have photo, a default one will be chosen'),
+            '#title' => t('Sighting photo'),
+            '#required' => FALSE,
+            '#upload_location' => USER_IMAGE_FOLDER,
+            '#upload_validators'  => array("file_validate_extensions" => array("png jpg jpeg")),
+            '#attributes' => array('class'=>array("top_spacement")),
+            '#default_value' => $wrapper != NULL ? $file['fid'] : NULL,
+            '#theme' => 'theme_sighting_image',
+        );
+        $form['container']['sighting']['count'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Number observed'),
+            '#size' => 3,
+            '#required' => TRUE,
+            '#element_validate' => array('element_validate_integer'),
+            '#attributes' => array('class'=>array("bottom_spacement")),
+            '#default_value' => $wrapper != NULL ? $wrapper->field_count->value() : NULL,
+        );
+        $form['container']['sighting']['date'] = array(
+            '#type' => 'date_popup',
+            '#title' => t('Sighting date'),
+            '#required' => TRUE,
+            '#date_format' => 'Y - M - d',
+            '#date_label_position' => '',
+            '#default_value' => $wrapper != NULL ? date('Y-m-d',$wrapper->field_date->value()) : date('Y-m-d'),
+            '#date_year_range' => '0:-100',
+            '#attributes' => array('class'=>array("bottom_spacement")),
+        );
+        $options = BestPlacesNodeWrapper::getAllSitesKeyedByNID();
+        $form['container']['sighting']['placenamereference'] = array(
+            '#type' => 'select',
+            '#title' => t('Place name'),
+            '#required' => TRUE,
+            '#options' => $options,
+            '#ajax'    => array(
+                'callback' => '_sightingChangeMapCallBack',
+                'wrapper'  => 'place-map',
+            ),
+            '#default_value' => $wrapper != NULL ? $wrapper->field_place_name_reference->value()->nid : date('Y-m-d'),
+        );
+        
+
+        $map = NULL;
+
+        if(isset($form_state['values']['placenamereference']) && $form_state['values']['placenamereference'] != NULL){
+            $placeNID = $form_state['values']['placenamereference'];
+            $placeNode = node_load($placeNID);
+            $view = node_view($placeNode, 'best_places_map_view');//Render place_node with 'best_places_map_view'
+            $map = drupal_render($view);
+        }
+
+        $form['container']['sighting']['placemap'] = array(
+            '#type' => 'markup',
+            '#markup' => $map,
+            '#prefix' => '<div id="place-map">',
+            '#suffix' => '</div>',
+            '#attributes' => array('class'=>array("bottom_spacement")),
+        );
+        
+        
+        if($wrapper != NULL){
+            //--- Rehefa 'Edit' zay vao aseho ny delete button --//
+            $form['container']['sighting']['newDeleteButton'] = array(
+                '#type' => 'submit',
+                '#value' => t(' Delete sighting'),
+                '#submit' => array('lom_publication_delete_submit'),
+                '#prefix' => '<div class="delete-sighting">',
+                '#sufffix' => '</div>',
+                '#attributes' => array('class'=>array("submit","delete-sighting","top_spacement","bottom_spacement")),
+            );
+        }
+
+        $form['container']['sighting']['submit'] = array(
+            '#type' => 'submit',
+            '#value' => t('Save sighting'),
+            '#attributes' => array('class'=>array("submit","top_spacement","bottom_spacement")),
+            '#weight' => 100,
+        );
+    
+    }catch(Exception $e){
+        drupal_set_message($e->getMessage(),'error');
+    }
+    
+    return $form;
+}
+
+function theme_theme_sighting_image($variables) {
+
+    $element = $variables['element'];
+
+    if (isset($element['#file']->uri)) {
+        $output = '<div id="edit-logo-ajax-wrapper"><div class="form-item form-type-managed-file form-item-logo">';
+        $output .= '<span class="file sighting-image-file"> <img height="250px" src="' . file_create_url($element['#file']->uri) . '" />' .'</div>';
+        $output .= '</span>';
+        $output .= '<input type="submit" id="edit-' . $element['#name'] . '-remove-button" name="' . $element['#name'] . '_remove_button" value="Remove" class="form-submit ajax-processed">';
+        $output .= '<input type="hidden" name="' . $element['#name'] . '[fid]" value="' . $element['#file']->fid . '">';
+
+        return $output;
+    }
+}
+
+
+function _sightingChangeMapCallBack($form,&$form_state){
+    
+    return $form['container']['sighting']['placemap'];
+}
+
+function _sightingChangeSpeciesInfoCallBack($form,&$form_state){
+    $form_state['speciesNID'] = $form_state['values']['species'];
+    return $form['container']['sighting']['speciesinfo'];
+}
+
+
+function lom_publication_add_sighting_submit($form,&$form_state){
+    module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
+    module_load_include('php', 'wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+    module_load_include('php', 'wrappers_custom','includes/node/BestPlacesNodeWrapper');
+    
+    $transaction = db_transaction();
+    try{
+        global $user;
+        
+        $title          = $form_state['values']['title'];
+        $speciesNID     = $form_state['values']['species'];
+        $count          = $form_state['values']['count'];
+        $date           = $form_state['values']['date'];
+        $placerefNID    = $form_state['values']['placenamereference'] ;
+        
+        $placeObject = new BestPlacesNodeWrapper($placerefNID);
+        $fileObject = NULL;
+        if(isset($form_state['values']['image']) && $form_state['values']['image'] != NULL){
+            $file = file_load($form_state['values']['image']);
+            $file->status = FILE_STATUS_PERMANENT;
+            $fileObject = file_save($file);
+            $providedPhoto = TRUE;
+        }else{
+            $fid = _lom_sighting_chooseDefaultImage($speciesNID);
+            $fileObject = file_load($fid);
+        }
+        
+        $sighting = NULL;
+        if(!isset($form_state['sightingNID'])){
+           $sighting = PublicationNodeWrapper::create();
+        }else{
+           $sighting = new PublicationNodeWrapper($form_state['sightingNID']); 
+        }
+        
+        $latitude   =  $sighting->getLat() != 0 ? $sighting->getLat() : 0;
+        $longitude  =  $sighting->getLong() != 0 ? $sighting->getLong() : 0;
+        $altitude   =  $sighting->getAltitude() != 0 ? $sighting->getAltitude() : 0;
+        
+        $sighting->setLat($latitude);
+        $sighting->setLong($longitude);
+        $sighting->setAltitude($altitude);
+        
+        $sighting->setTitle($title);
+        $sighting->setAssociatedSpecies($speciesNID);
+        $sighting->setCount($count);
+        $sighting->setDate(strtotime($date));
+        $sighting->setPlaceName($placeObject->getTitle());
+        $sighting->setPlaceNameReference($placerefNID);
+        $sighting->setPhoto((array)$fileObject);
+        $sighting->setIsSynced(FALSE);// Mila ampidinina any @ tablet ity
+        $sighting->setAuthorId($user->uid);
+        
+        $sighting->save();
+        
+        
+    } catch (Exception $ex) {
+        
+        $transaction->rollback();
+        drupal_set_message(t('[lom_publication::lom_publication_add_sighting_submit()] Error:@e',array('@e'=>$ex->getMessage())),'error');
+        
+    }
+    
+}
+/*
+ * When no photo was provided then choose a default image 
+ */
+function _lom_sighting_chooseDefaultImage($speciesNID){
+    
+    if($speciesNID != NULL){
+
+        $species = node_load($speciesNID);
+        
+        if($species){
+            $speciesWrapper = entity_metadata_wrapper('node',$species);
+            
+            if($speciesWrapper != NULL){
+                
+                $photographs = $speciesWrapper->field_species_photograph->value();
+                
+                foreach($photographs as $photo){
+                    if($photo != NULL){
+                        $fid = $photo->field_lom_photograph['und'][0]['fid'];
+                        return $fid;
+                        
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    return NULL;;
+    
+}
+
+function lom_publication_node_presave($node){
+    if($node->type == 'publication'){
+        try{
+            module_load_include('php', 'wrappers_custom','includes/node/BestPlacesNodeWrapper');
+            $nid = $node->field_place_name_reference['und'][0]['target_id'];
+            $place= new BestPlacesNodeWrapper($nid);
+            $node->field_place_name['und'][0]['value'] =  $place->getTitle();
+        }catch(Exception $e){
+            drupal_set_message('[lom_publication_node_presave()] '.$e->getMessage(),'error');
+        }
+    }
+}
+
+
+/**
+ * 
+ */
+function lom_publication_form_alter(&$form, &$form_state, $form_id){
+    /*if($form_id == 'publication_node_form'){
+       
+        $form['addToListCheckBox'] = array(
+            '#title' => t('Add this species to your lemur life list'),
+            '#description' => t('If not found then add it automatically'),
+            '#type' => 'checkbox',
+            '#value' => TRUE,
+            '#prefix' => '<div id="show_add_to_lifelist">',
+            '#suffix' => '</div>',
+            '#weight' => 2,
+        );
+        //$form['#submit'][] = '_lom_publication_addSpeciesToLemurLifeListHandler';
+        
+    }*/
+    
+    /**
+     * Soloina ny delete button
+     */
+    
+    if($form_id == 'publication_node_form'){
+        
+        
+        if(isset($form['actions']['delete'])){
+            unset($form['actions']['delete']);
+        }
+        
+        $fieldsToHide = array('field_is_synced','field_is_local','body','field_is_deleted','field_modified',
+            'field_uuid','field_longtitude','field_latitude','field_place_name'
+        );
+        
+        //---- Ovana izay species mbola velona ny ato @ list --//
+        module_load_include('php', 'wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+        $options = LomSpeciesNodeWrapper::getAllSpeciesKeyedByNID($extinct=FALSE);
+        
+        if(isset($form['field_associated_species'])){
+            $form['field_associated_species']['und']['#options'] = $options;
+        }
+        
+        foreach($fieldsToHide as $field){
+            if(isset($form[$field])){
+                unset($form[$field]);
+            }
+        }
+        if(isset($form['#node'])){
+            //--- Rehefa Edit (zany hoe defined ny #node zay vao aseho ny delete button --//
+            $form['newDeleteButton'] = array(
+                '#type' => 'submit',
+                '#value' => t('Delete'),
+                '#weight' => 100,
+                '#submit' => array('lom_publication_delete_submit'),
+            );
+        }
+    }
+    
+    
+    
+}
+/*
+ * Function manao isDeleted ny publication
+ */
+function lom_publication_delete_submit($form,&$form_state){
+    
+    module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
+    $nid = isset($form_state['sightingNID']) ? $form_state['sightingNID'] : NULL ;
+    $transaction = db_transaction();
+    try{
+        if($nid != NULL){
+
+            $node            = node_load($nid);
+            $sightingWrapper = new PublicationNodeWrapper($node);
+            $sightingWrapper->setIsDeleted(TRUE);
+            $sightingWrapper->setIsSynced(FALSE);
+            $sightingWrapper->save();
+            drupal_goto('/sightings');
+        }
+    }catch(Exception $e){
+        $transaction->rollback();
+        drupal_set_message('[Sighting::Delete] '.$e->getMessage(),'error');
+    }
+}
+
+
+/*
+function lom_publication_delete_submit($form,&$form_state){
+    //$nid = $form['#entity']->nid;
+    $nid = isset($form_state['sightingNID']) ? $form_state['sightingNID'] : NULL ;
+    $transaction = db_transaction();
+    try{
+        if($nid != NULL){
+
+            $sightingWrapper = entity_metadata_wrapper('node',$nid);
+            $sightingWrapper->field_is_deleted->set(TRUE);
+            $sightingWrapper->field_is_synced->set(FALSE);
+            $sightingWrapper->save();
+            drupal_goto('/sightings');
+        }
+    }catch(Exception $e){
+        $transaction->rollback();
+        drupal_set_message('[Sighting::Delete] '.$e->getMessage(),'error');
+    }
+}
+ * 
+ */
+
+/**
+ * Submit handler to add new species to Lemur Life List
+ */
+function _lom_publication_addSpeciesToLemurLifeListHandler($form,&$form_state){
+    if($form_state['values']['addToListCheckBox']){
+        global $user;
+        $speciesNID = $form_state['values']['field_associated_species']['und'][0]['target_id'];
+        $userUID = $user->uid;
+        if(! _lom_lemurlifelist_lookForSpeciesInUserList($speciesNID,$userUID)){
+            $entity = entity_create('node', array('type'=>'personal_lemur_life_list_item'));
+            $entity->uid = $userUID;
+            $wrapper = entity_metadata_wrapper('node',$entity);
+            $wrapper->title->set($form_state['values']['title']);
+            $wrapper->body->value = $form_state['values']['body']['und'][0]['value'];
+            $wrapper->field_species->set($form_state['values']['field_associated_species']['und'][0]['target_id']);
+            $wrapper->field_locality->set($form_state['values']['field_place_name']['und'][0]['value']);
+            $wrapper->field_date->set(strtotime($form_state['values']['field_date']['und'][0]['value']));
+            $wrapper->field_lemur_photo = array('fid'=>$form_state['values']['field_photo']['und'][0]['fid']);
+            $wrapper->save();
+            
+        }
+    }
+}
+
+/**
+ * hook mampiseho ny comments any @ custom view mode
+ * @param type $node
+ * @param type $view_mode
+ * @param type $langcode
+ */
+
+function lom_publication_node_view($node, $view_mode, $langcode) {
+	if ($view_mode == 'publication_teaser') {
+		comment_node_view($node, 'full');
+	}
+}
+
+
+/**
+ * Implements hook_entity_info_alter().
+ * - Creating a custom view mode
+ * 
+ */
+function lom_publication_entity_info_alter(&$entity_info) {
+    $entity_info['node']['view modes']['sighting_list_view_mode'] = array(
+        'label' => t('Sighting lists view mode'),
+        'custom settings' => TRUE,
+    );
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function lom_publication_preprocess_node(&$variables) {
+  if($variables['view_mode'] == 'sighting_list_view_mode') {
+        $variables['theme_hook_suggestions'][] = 'node__' . $variables['type'] . '__sighting_list_view_mode';
+  }
+ 
+}
+
+
+/**
+ * Implements hook_preprocess_node().
+ */
+/*
+function lom_publication_entity_info(&$variables) {
+  if($variables['view_mode'] == 'sighting_list_view_mode') {
+        $variables['theme_hook_suggestions'][] = 'node__' . $variables['type'] . '__sighting_list_view_mode';
+  }
+ 
+}*/
+
+function callback_entity_info_uri($entity) {
+  return array(
+    'path' => 'ranto/' . $entity->nid,
+  );
+}
+
+/**
+ * function that returns comments' links and menu in sighting view mode
+ * @param type $nid
+ * @return type
+ */
+
+function _sighting_getCommentMenu($node){
+    $html = '<div class="sighting-comment-menu">';
+    
+    if($node != NULL){
+        try{
+            global $base_path;
+            module_load_include('inc','pathauto','pathauto');
+            $cleanTitle  = pathauto_cleanstring($node->title);
+            $linkUri = $base_path."sighting/$node->nid/$cleanTitle#comments";
+            $addCommentUri = $base_path."sighting/$node->nid/$cleanTitle#comment-form";
+            
+            
+            $commentLink    =  '<a href="'.$linkUri.'">'.$node->comment_count. ' '.t('comment(s)') .'</a>';
+            $addCommentLink =  '<a href="'.$addCommentUri.'">'.t('Add new comment ') .'</a>';
+            
+            $html .= '<div class="clearfix sighting-comment-link-list">';
+                $html .= '<div class="sighting-comment-link">';
+                if ($node->comment_count > 0){    
+                    $html .= '<div class="sighting-comment-link">';
+                    $html .= $commentLink;
+                    $html .= '</div>';
+                    
+                } 
+                
+                $html .= '<div class="sighting-comment-link">';
+                    $html .= $addCommentLink;
+                $html .= '</div>';
+            $html .= '</div>';
+            
+        }catch(Exception $e){
+            drupal_set_message($e->getMessage(),'error');
+        }
+    }
+    $html .= '</div>';
+    
+    return $html;
+    
+}
+/*
+ * Create dummy sightings
+ */
+function _dummySighting($count){
+    
+    if($count > 0){
+        $i = 1;
+        module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+        global $user;
+        while($i <= $count){
+            
+            $form_state['values']['title']              = $user->uid.' dummy sighting '.$i;
+            $form_state['values']['species']            = $i % 2 == 0 ? 271 : 47;
+            $form_state['values']['count']              = $i;
+            $form_state['values']['date']               = date('Y-m-d H:i:s');
+            $form_state['values']['placenamereference'] = $i % 2 == 0 ? 721 : 726;
+            $form_state['values']['image']              = NULL;
+            
+            lom_publication_add_sighting_submit(array(),$form_state);
+            
+            $i++;
+        }
+        
+    }
+    
+}

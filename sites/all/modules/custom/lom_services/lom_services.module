@@ -1,0 +1,882 @@
+<?php
+
+
+function lom_services_menu(){
+    $items = array();
+    $items['lom_services/%'] = array(
+        'page callback' => '_lom_services_changed_nodes',
+        'access callback'   => TRUE,
+        'page arguments' => array(1),
+    );
+    $items['lom_services/sightings/%/%'] = array(
+        'page callback' => '_lom_services_changed_sightings',
+        'access callback'   => TRUE,
+        'page arguments' => array(2,3),
+    );
+    $items['lom_services/sightings/count/%/%'] = array(
+        'page callback' => '_lom_services_count_sightings',
+        'access callback'   => TRUE,
+        'page arguments' => array(3,4),
+    );
+    $items['new_sighting/%/%/%/%/%/%/%/%/%/%/%/%/%'] = array(
+        'page callback' => '_lom_services_new_sighting_test',
+        'access callback'   => TRUE,
+        'page arguments' => array(1,2,3,4,5,6,7,8,9,10,11,12,13),
+    );
+    
+    $items['lom_services/pagedsightings/%/%/%/%/%'] = array( //$uid, $from_date, $start, $count
+        'page callback' => '_lom_services_changed_sightings',
+        'access callback'   => TRUE,
+        'page arguments' => array(2,3,4,5,6),
+    );
+    $items['lom_services/reset_synced/%/%'] = array( //$uid, $from_date, $start, $count
+        'page callback' => '_lom_services_reset_synced',
+        'access callback'   => TRUE,
+        'page arguments' => array(2,3),//uid,synced_value
+    );
+    return $items;
+}
+
+
+/*
+ * hook_ctools_plugin_api
+ * 
+ * Ilaina ity function ahafahana mi-declarer service aty @ code fa tsy any @ interface
+ */
+
+function lom_services_ctools_plugin_api($owner,$api){
+    if ($owner == 'services' && $api == 'services') {
+        return array(
+            'version' => 3,
+        );
+    }
+}
+/*
+ * Function mi-declarer endpoint
+ */
+function lom_services_default_services_endpoint() {
+    
+    $endpoints = array();
+    
+    $endpoint = new stdClass();
+    $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
+    $endpoint->api_version = 3;
+    //$endpoint->name = 'lom_node_services';
+    $endpoint->name = 'lom_services';
+    $endpoint->server = 'rest_server';
+    $endpoint->path = 'lom_endpoint/api/v1/services';
+    $endpoint->authentication =array();// array( 'services' => 'services',);
+    $endpoint->server_settings = array(
+        'formatters' => array(
+            'json' => TRUE,
+            'bencode' => FALSE,
+            'jsonp' => FALSE,
+            'php' => FALSE,
+            'xml' => FALSE,
+        ),
+        'parsers' => array(
+            'application/json' => TRUE,
+            'application/vnd.php.serialized' => FALSE,
+            'application/x-www-form-urlencoded' => TRUE,
+            'application/xml' => FALSE,
+            'multipart/form-data' => FALSE,
+            'text/xml' => FALSE,
+        ),
+    );
+    $endpoint->resources = array(
+        'lom_node_services' => array(
+            'actions' => array(
+                'changed_nodes' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'changed_species' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'changed_places' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'changed_families' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'changed_photographs' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'changed_maps' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                
+            ),
+        ),
+        
+        'lom_sighting_services' => array(
+            'actions' => array(
+                'changed_sightings' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'reset_synced' => array( //Averina atao tsy synced daholo ny sightings rehefa @ ilay mampidina voalohany
+                    'enabled' => '1',
+                ),
+                'count_sightings' => array(
+                    'enabled' => '1',
+                ),
+                'new_sighting'      => array(
+                    'enabled' => '1',
+                ),
+                'new_comment'      => array(
+                    'enabled' => '1',
+                ),
+                'edit_comment'      => array(
+                    'enabled' => '1',
+                ),
+                'changed_comments'      => array(
+                    'enabled' => '1',
+                )
+            ),
+        ),
+        
+    );
+    
+    $endpoint->debug = 1;
+
+    $endpoints[] = $endpoint;
+
+    return $endpoints;
+      
+}
+
+
+/*
+ * hook_services_resources
+ */
+
+
+function lom_services_services_resources() {
+    return array(
+        
+    'lom_node_services'=> array(
+        
+        'actions' => array(
+            
+                'changed_nodes' => array(
+
+                    'help' => t('Export recently changed nodes to iPhone'),
+                    'callback' => '_lom_services_changed_nodes',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
+            
+                'changed_species' => array(
+
+                    'help' => t('Export recently changed species to iPhone'),
+                    'callback' => '_lom_services_changed_species',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
+            
+                'changed_places' => array(
+
+                    'help' => t('Export recently changed places to iPhone'),
+                    'callback' => '_lom_services_changed_places',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
+            
+                'changed_families' => array(
+
+                    'help' => t('Export recently changed families to iPhone'),
+                    'callback' => '_lom_services_changed_families',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
+            
+                'changed_photographs' => array(
+
+                    'help' => t('Export recently changed photographs to iPhone'),
+                    'callback' => '_lom_services_changed_photographs',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
+            
+                'changed_maps' => array(
+
+                    'help' => t('Export recently changed maps to iPhone'),
+                    'callback' => '_lom_services_changed_maps',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                    ),
+                ),
+            
+            ),
+        ),
+       
+    
+    'lom_sighting_services'=> array(
+        
+            'actions' => array(
+                
+                'new_sighting' => array(
+
+                    'help' => t('Create new sighting'),
+                    'callback' => '_lom_services_new_sighting',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'data', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => 'data',
+                                    'type' => 'data', 
+                                    'description' => 'Title',
+                                ),
+                    ),
+                ),
+                
+                'new_comment' => array(
+
+                    'help' => t('Create new comment'),
+                    'callback' => '_lom_services_new_comment',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'data', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => 'data',
+                                    'type' => 'data', 
+                                    'description' => 'Data',
+                                ),
+                    ),
+                ),
+                
+                'edit_comment' => array(
+
+                    'help' => t('Edit comment'),
+                    'callback' => '_lom_services_edit_comment',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'data', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => 'data',
+                                    'type' => 'data', 
+                                    'description' => 'Data',
+                                ),
+                    ),
+                ),
+                'changed_comments' => array(
+
+                    'help' => t('Get user\'s changed comments'),
+                    'callback' => '_lom_services_changed_comments',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'data', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => 'data',
+                                    'type' => 'data', 
+                                    'description' => 'Data',
+                                ),
+                    ),
+                ),
+                
+                
+                'changed_sightings' => array(
+
+                    'help' => t('Export recently changed sightings'),
+                    'callback' => '_lom_services_changed_sightings',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'uid', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'uid'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => TRUE, 
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'string', 
+                                    'description' => 'From Date',
+                                ),
+                                array(
+                                    'name' => 'start', 
+                                    'optional' => TRUE, 
+                                    'source' => array('param' => 'start'),
+                                    'type' => 'int', 
+                                    'description' => 'Start',
+                                ),
+                                array(
+                                    'name' => 'count', 
+                                    'optional' => TRUE, 
+                                    'source' => array('param' => 'count'),
+                                    'type' => 'int', 
+                                    'description' => 'Count',
+                                ),
+                                array(
+                                    'name' => 'synced', 
+                                    'optional' => TRUE, 
+                                    'source' => array('param' => 'synced'),
+                                    'type' => 'int', 
+                                    'description' => 'Synced',
+                                ),
+                    ),
+                ),
+                
+                'reset_synced' => array(
+
+                    'help' => t('Reset synced'),
+                    'callback' => '_lom_services_reset_synced',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'uid', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'uid'),
+                                    'type' => 'int', 
+                                    'description' => 'UID',
+                                ),
+                                array(
+                                    'name' => 'synced_value', 
+                                    'optional' => TRUE, //optional parameter
+                                    'source' => array('param' => 'synced_value'),
+                                    'type' => 'int', 
+                                    'description' => 'UID',
+                                ),
+                            )
+                ),
+                
+                'count_sightings' => array(
+
+                    'help' => t('Count sightings'),
+                    'callback' => '_lom_services_count_sightings',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name' => 'uid', 
+                                    'optional' => FALSE, //mandatory parameter
+                                    'source' => array('param' => 'uid'),
+                                    'type' => 'int', 
+                                    'description' => 'User uid',
+                                ),
+                                array(
+                                    'name' => 'from_date', 
+                                    'optional' => TRUE, 
+                                    'source' => array('param' => 'from_date'),
+                                    'type' => 'int', 
+                                    'description' => 'From Date',
+                                ),
+                                array(
+                                    'name' => 'synced', 
+                                    'optional' => TRUE, 
+                                    'source' => array('param' => 'synced'),
+                                    'type' => 'int', 
+                                    'description' => 'Synced',
+                                ),
+                               
+                    ),
+                ),
+                
+            ),  
+        ),
+    );
+    
+}
+
+/**
+ * Ito ny function mametra ny access @ ity webservice ity. Raha tsy authenticated tsy mahazo miditra
+ * @return boolean
+ */
+function _lom_services_access_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return TRUE;
+}
+    
+/*
+ * Maka izay species changed vao haingana
+ */
+function _lom_services_changed_species($from_date){
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+        $data = LomSpeciesNodeWrapper::allSpecies($from_date);
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        return $data; 
+        
+    }
+}
+
+/*
+ * Maka izay species changed vao haingana
+ */
+function _lom_services_changed_places($from_date){
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/BestPlacesNodeWrapper');
+        $data = BestPlacesNodeWrapper::allPlaces($from_date);
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        return $data; 
+        
+    }
+}
+
+/*
+ * Maka izay family changed vao haingana
+ */
+function _lom_services_changed_families($from_date){
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/LomFamilyNodeWrapper');
+        $data = LomFamilyNodeWrapper::allFamilies($from_date);
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        return $data; 
+        
+    }
+}
+
+/*
+ * Maka izay photo changed vao haingana
+ */
+function _lom_services_changed_photographs($from_date){
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/LomPhotographNodeWrapper');
+        $data = LomPhotographNodeWrapper::allPhotographs($from_date);
+        drupal_add_http_header('Content-Type', 'application/json; charset=UTF-8');
+        return $data; 
+        
+    }
+}
+
+/*
+ * Maka izay map changed vao haingana
+ */
+function _lom_services_changed_maps($from_date){
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/LomMapNodeWrapper');
+        $data = LomMapNodeWrapper::allMaps($from_date);
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        return $data; 
+        
+    }
+}
+
+/**
+ * Maka ny Nodes vaovao na niova rehetra (Species, Photographs, Family, Map)
+ */
+
+function _lom_services_changed_nodes($from_date){
+   
+    $data = array();
+    
+    if($from_date != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/LomMapNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/LomPhotographNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/LomFamilyNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/BestPlacesNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+        module_load_include('php','wrappers_custom','includes/node/AuthorsNodeWrapper');
+        
+        $photographs = LomPhotographNodeWrapper::allPhotographs($from_date);;
+        $maps        = LomMapNodeWrapper::allMaps($from_date);
+        $families    = LomFamilyNodeWrapper::allFamilies($from_date);
+        $best_places = BestPlacesNodeWrapper::allPlaces($from_date);
+        $species     = LomSpeciesNodeWrapper::allSpecies($from_date);;
+        $authors     = AuthorsNodeWrapper::allAuthors($from_date);
+        
+        $data  = array(
+            'species'     => $species,
+            'families'    => $families,
+            'photographs' => $photographs,
+            'maps'        => $maps,
+            'best_places' => $best_places,
+            'authors'     => $authors,
+        );
+    }
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    //return json_encode($data,JSON_UNESCAPED_SLASHES);
+    return $data;
+}
+
+/*
+ * 1- Rehefa maka ny changed sightings dia mbola synced= FALSE ny sighting
+ * 2- Mila avadika synced=TRUE rehefa tafalatsaka any @ phone @ zay izy eto
+ */
+function _lom_services_changed_sightings($uid,$from_date,$start,$count,$synced=NULL){
+    
+    $sightings      = array("nodes"=>array());
+    $lastSyncDate   = 0;
+    
+    if($uid != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+        $modifiedSightings  = array();
+        $sightings          = PublicationNodeWrapper::allSightings($uid,$from_date,$start,$count,$synced,$modifiedSightings);
+        
+        if(count($modifiedSightings) != 0){
+            
+            //--- Nisy sightings voaova taty @server dia nivadika synced=FALSE izy ireo ka mila avadika 
+            //    synced=TRUE @ zay eto satria halatsaka any @ phone
+            foreach ($modifiedSightings as $nid => $title){
+                if($nid != NULL){
+                    $_sighting = new PublicationNodeWrapper($nid);
+                    $_sighting->setIsSynced(TRUE);
+                    $_sighting->save();
+                }
+            }
+            
+            $lastSyncDate = strtotime('now');
+        }
+    }
+    
+    $sightings["serverLastSyncDate"] = $lastSyncDate;
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $sightings;
+}
+/*
+ * Get changed sightings count (from_date is optional)
+ */
+function _lom_services_count_sightings($uid,$from_date=NULL,$synced=NULL){
+    $count = 0;
+    if($uid != NULL){
+        module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+        $count          = PublicationNodeWrapper::getSightingsCount($uid,$from_date,$synced);
+    }
+    $return = array('count'=>intval($count));
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+}
+
+/*
+ * Averina synced=FALSE daholo ny sighting an'ilay UID rehefa hampidina voalohany.
+ * Ni-resinstall ilay app izy zany dia mila ampidinina daholo indray ny sighting an'azy
+ */
+function _lom_services_reset_synced($uid,$synced_value=0){
+    if($uid != NULL){
+        module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+        PublicationNodeWrapper::resetSynced($uid,$synced_value);
+    }
+    $return = array('reset'=>1);
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+}
+
+
+/*
+ * Create new sighting
+ */
+function _lom_services_new_sighting($data){
+  
+    $nid            = 0;
+    //$serverLastSync = 0;
+    
+    module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            if(! PublicationNodeWrapper::lookupUUID($data['uuid'],$nid,$errorMessage)){
+            
+                $node               = new stdClass(); // We create a new node object
+                $node->type         = 'publication'; // Or any other content type you want
+                $node->title        = $data['title'];
+                $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+                node_object_prepare($node); // Set some default values.
+                $node->uid          = $data['uid']; // Or any id you wish
+                $node->status       = $data['status']; // Or any id you wish
+                $node->uuid         = $data['uuid'];
+
+                $node->body[$node->language][0]['value']   = $data['body'];
+                $node->body[$node->language][0]['summary'] = NULL;
+                $node->body[$node->language][0]['format']  = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+
+                $node->field_place_name_reference[$node->language][] = array(
+                    'target_id'   => intval($data['field_place_name_reference']),
+                    'target_type' => 'node',
+                );
+
+                $node->field_associated_species[$node->language][] = array(
+                    'target_id'   => intval($data['field_associated_species']),
+                    'target_type' => 'node',
+                );
+
+                $node->field_count[$node->language][0]['value']   = $data['field_count'];        ;
+                $node->field_date[$node->language][0]['value']    = $data['field_date'];
+
+                $node->field_place_name[$node->language][0]['value']  = $data['field_place_name'];
+                $node->field_lat[$node->language][0]['value']         = $data['field_lat'];
+                $node->field_long[$node->language][0]['value']        = $data['field_long'];
+                $node->field_altitude[$node->language][0]['value']    = $data['field_altitude'];
+                $node->field_is_local[$node->language][0]['value']    = $data['field_is_local'];
+                $node->field_is_synced[$node->language][0]['value']   = $data['field_is_synced'];
+                $node->field_is_deleted[$node->language][0]['value']  = 0;
+                $node->field_photo[$node->language][]                 = array('fid'=>$data['field_photo']);
+
+                $node = node_submit($node);
+                node_save($node);
+
+                $nid = $node->nid;
+            }
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('WebServices :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'nid'       =>intval($nid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+
+function _lom_services_new_sighting_test($title,$uuid,$uid,$status,
+                                    $field_uuid,$body,$field_place_name,
+                                    $field_date,$field_associated_species,
+                                    $field_lat,$field_long,$field_altitude,
+                                    $field_is_local,$field_is_synced,
+                                    $field_count,$field_photo,$field_place_name_reference){
+
+    $return = array(
+        
+        'error'  => $title,
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+}
+
+/*
+ * Create new comment
+ * 
+ */
+function _lom_services_new_comment($data){
+  
+    $cid = 0;
+    $error = NULL;
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            if(! CommentNodePublicationCommentWrapper::lookupUUID($data['uuid'],$errorMessage,$cid)){
+            
+                $comment = new stdClass();
+                
+                $comment->nid       = $data['nid']; // nid of a node you want to attach a comment to
+                $comment->uid       = $data['uid']; // user's id, who left the comment
+                $comment->uuid      = $data['uuid']; // user's id, who left the comment
+                $comment->status    = $data['status']; // user's id, who left the comment
+                $comment->mail      = $_user->getMail(); // user's email
+                $comment->name      = $_user->getName(); 
+                $comment->language  = LANGUAGE_NONE;
+                $comment->subject   = $data['subject']; 
+                $comment->comment_body[$comment->language][0]['value']    = $data['body'];
+                $comment->comment_body[$comment->language][0]['format']   = 'filtered_html'; 
+                $comment->field_is_synced[$comment->language][0]['value'] = $data['synced'];
+                
+                comment_submit($comment);
+                comment_save($comment);
+                
+                
+                
+                $cid = $comment->cid;
+                
+            }
+            
+        }catch(Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollback();
+            drupal_set_message(t('New comment services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'cid'    =>intval($cid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+
+
+/*
+ * Create edit  comment
+ * 
+ */
+function _lom_services_edit_comment($data){
+  
+    $cid = 0;
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            $uuid               = $data['uuid'];
+            $body               = $data['body'];
+            $status             = $data['status'];
+            $deleted            = $data['deleted'];
+            $error              = NULL;
+                    
+            
+            CommentNodePublicationCommentWrapper::lookupUUID($uuid, $error, $cid);
+            
+            if($cid != 0){
+                $comment = new CommentNodePublicationCommentWrapper($cid);
+                $comment->setCommentBody($body);
+                $comment->setStatus($status);
+                $comment->setIsdeleted($deleted);
+                $comment->save();
+            }
+            
+            
+          
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('Edit comment services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'cid'    =>intval($cid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+/**
+ * Maka ny comments vaovao na niova rehetra (Species, Photographs, Family, Map)
+ */
+
+function _lom_services_changed_comments($data){
+   
+    $comments       = array();
+    $lastSyncDate   = 0;
+    
+    if($data != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+    
+        $changedFrom = (isset($data['fromDate']) && $data['fromDate'] != NULL) ? $data['fromDate'] : NULL;
+        $uid         = (isset($data['uid']) && $data['uid'] != NULL) ? $data['uid'] : NULL;
+        $synced      = (isset($data['synced']) && $data['synced'] != NULL) ? $data['synced'] : NULL;
+        $nid         = (isset($data['nid']) && $data['nid'] != NULL) ? $data['nid'] : NULL;
+        
+        $comments["comments"]  =   CommentNodePublicationCommentWrapper::getComments($uid, $nid,$changedFrom,$synced);
+        
+        $lastSyncDate = strtotime('now');
+        
+    }
+    
+    $comments["serverLastSyncDate"] =  $lastSyncDate;
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $comments;
+}

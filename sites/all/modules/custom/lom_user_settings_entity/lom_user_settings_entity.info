@@ -1,0 +1,4 @@
+name = LOM User Settings Entity
+description = LOM User Settings Entity
+core = 7.x
+package = LOM

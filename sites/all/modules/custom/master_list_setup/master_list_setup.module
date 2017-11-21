@@ -1,0 +1,506 @@
+<?php
+
+/*
+ *   Implementation of hook_views_api()
+ *
+ *   Register View API information.
+ */
+
+function master_list_setup_views_api() {
+  return array(
+    'api' => 3,
+  );
+}
+
+/*
+ * Implements hook_form_node_alter
+ *
+ * - This function disables the 'field_user' field of 'master-list' content type
+ *   to prevent users from changing it as it is assigned by default
+ */
+
+function master_list_setup_form_master_list_node_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  $user = user_load($user->uid);
+
+  $form['field_user'][LANGUAGE_NONE][0]['target_id']['#value'] = "$user->name($user->uid)";
+  $form['field_user']['#disabled'] = TRUE; // disable this input
+}
+
+/*
+ * Implements hook_node_insert
+ * - This function updates current user's master_list species_count field by adding 1 to
+ *   it each time a new species is added ti the current list
+ */
+
+function master_list_setup_node_insert($node) {
+
+  // Only do this when adding new 'personal_lemur_life_list_item'
+  if ($node->type == 'personal_lemur_life_list_item') {
+    global $user;
+    $user = user_load($user->uid);
+    include_once drupal_get_path('module', 'master_list_setup') . '/includes/master_list_toggle_status.inc';
+    $master_list_wrapper = _get_master_list_wrapper_of_user($user->uid);
+    if ($master_list_wrapper != NULL && !empty($master_list_wrapper)) {
+      $oldValue = $master_list_wrapper->field_species_count->value();
+      $master_list_wrapper->field_species_count->set($oldValue + 1);
+      $master_list_wrapper->save();
+    }
+  }
+}
+
+/*
+ * Implements hook_menu
+ *
+ * - Add 'list/personal-lemur-life-list/togglestatus' menu link
+ */
+
+function master_list_setup_menu() {
+  $items['list/master-list/togglestatus'] = array(
+    'title' => t('Master list toggle status'),
+    'description' => t('Make this list public or closed'),
+    'page callback' => '_toggle_master_list_status',
+    'file' => 'master_list_toggle_status.inc',
+    'file path' => drupal_get_path('module', 'master_list_setup') . '/includes',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+  );
+  
+  $items['add/personal-lemur-life-list-item'] = array(
+    'title' => t('Add species to my personal lemur life-list'),
+    'description' => t('Make this list public or closed'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('render_node_lemurlife_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  $items['add/post-publication'] = array(
+    'title' => 'Add new post images',
+    'description' => 'Adding new post with or without images.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('render_node_publication_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM
+  );
+
+  return $items;
+}
+
+/*
+ * hook_views_pre_render
+ *
+ * - This function changes the 'master_list' view title to
+ *   "user.first_name + user.last_name's list"
+ *
+ */
+function master_list_setup_views_pre_render(&$view) {
+
+  /*
+   * http://www.lemursofmadagascar.com/list/personal-lemur-life-list
+   * arg(0) = list
+   * arg(1) = personal-lemur-life-list
+   */
+  $current_user = NULL;
+  $arg_2 = arg(2);
+  
+  // return the current logged-in user if there is no uid parameter passed in the url
+  if (empty($arg_2) || $arg_2 == NULL) {
+    global $user;
+    $user = user_load($user->uid);
+    $current_user = $user;
+  } else {
+    $current_user = user_load($arg_2);
+  }
+
+  if (!empty($current_user) && $current_user != NULL) {
+    if ($view->name == 'master_list') {
+      $user_entity_wrapper = entity_metadata_wrapper('user', $current_user);
+
+      $field_first_name = $user_entity_wrapper->field_first_name->value();
+      $field_last_name = $user_entity_wrapper->field_last_name->value();
+
+      if (!empty($field_first_name) && !empty($field_last_name)) {
+        $view->build_info['title'] = $user_entity_wrapper->field_first_name->value() . " " . $user_entity_wrapper->field_last_name->value();
+      }
+    }
+    
+  } else {
+    $view->build_info['title'] = t('Lemur life-list not found!');
+  }
+}
+
+/**
+ * Get all sc
+ */
+function master_list_setup_getAllscientific_name() {
+  $query = db_select('field_data_field_scientific_name', 'sn')
+    ->fields('sn', array('entity_id', 'field_scientific_name_value'))
+    ->condition('sn.deleted', 0)
+    ->condition('sn.bundle', 'lom_species');
+  $results = $query->execute()->fetchAll();
+  $data = array();
+
+  // Structure data to treat it later.
+  if (!empty($results)) {
+    foreach ($results as $result) {
+      $data[$result->entity_id] = $result->field_scientific_name_value;
+    }
+  }
+
+  return $data;
+}
+
+/**
+ * Helper function to replace all scientific name to custom style and link.
+ * @param type $string
+ */
+function master_list_setup_scientific_replace($string, $with_link = TRUE) {
+  $data = master_list_setup_getAllscientific_name();
+  if (!empty($data)) {
+    // All term to be replaced
+    $to_replace = $data;
+    $replacement = array();
+    foreach ($data as $nid => $scientname) {
+      $url = url('node/' . $nid, array('absolute' => TRUE));
+      if ($with_link) {
+        $replacement[] = '<span class="text_italic"><a title="' . check_plain($scientname) . '" href="' . $url . '">' . $scientname . '</a></span>';
+      } else {
+        $replacement[] = check_plain('<span class="text_italic">' . $scientname . '</span>');
+      }
+    }
+
+    // Create array for all term 
+    $tobe_replace = $replacement;
+    $string = str_replace($to_replace, $tobe_replace, $string);
+  }
+
+  return $string;
+}
+
+/**
+ * Implements hook_node_view
+ * @param type $node
+ * @param type $view_mode
+ */
+function master_list_setup_node_view($node, $view_mode) {
+  if ($view_mode == 'full') {
+    // Indentification
+    $field_list = array(
+      'field_lom_identification',
+      'field_lom_natural_history',
+      'field_lom_geographic_range',
+      'field_lom_conservation_status',
+      'field_lom_where_to_see_it',
+      'field_scientific_name');
+    foreach ($field_list as $field) {
+      if (isset($node->content[$field][0])) {
+        $text = $node->content[$field][0]['#markup'];
+        $node->content[$field][0]['#markup'] = master_list_setup_scientific_replace($text);
+      }
+    }
+  }
+  
+  // Track Body value
+  if (isset($node->content['body'][0])) {
+     $text = $node->content['body'][0]['#markup'];
+     $node->content['body'][0]['#markup'] = master_list_setup_scientific_replace($text);
+  }
+  
+  if ($view_mode == 'lemur_species_teaser' || $view_mode == 'extinct_lemur_teaser'){ 
+    foreach ($node->view->result as $key => $result){
+      $title = $result->node_title;
+      $node->view->result[$key]->_field_data['nid']['entity']->content['title'][0]['#markup'] = '<h3>' . master_list_setup_scientific_replace($title) . '</h3>';
+    }
+  }
+}
+
+/**
+ * Menu callback for adding new item in lemurlife list
+ * @global type $user
+ * @param type $type
+ * @return type
+ */
+
+function render_node_lemurlife_form($form, &$form_state){
+  $form = master_list_create_form_element($form, $form_state, 'personal_lemur_life_list_item');
+  $form_state['redirect'] = 'list/my-lemur-life-list';
+  return $form;
+}
+
+/**
+ * Render publication node form.
+ * @param type $form
+ * @param array $form_state
+ * @return type
+ */
+function render_node_publication_form($form, &$form_state){
+  $form = master_list_create_form_element($form, $form_state, 'publication');
+  $form_state['redirect'] = 'all-publication';
+  return $form;
+}
+/**
+ * helper function to create all node form.
+ * @global type $user
+ * @param type $form
+ * @param type $form_state
+ * @return array
+ */
+require_once drupal_get_path('module', 'node') . '/node.pages.inc';
+function master_list_create_form_element($form, &$form_state, $type){
+  global $user;
+  $node = (object) array('title' => '' ,'uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => LANGUAGE_NONE); 
+  node_object_prepare($node);
+  $form_state['node'] = $node;
+  $form['#attributes']['class'][] = 'node-form';
+  if (!empty($node->type)) {
+    $form['#attributes']['class'][] = 'node-' . $node->type . '-form';
+  }
+  
+  // Basic node information.
+  // These elements are just values so they are not even sent to the client.
+  foreach (array('nid', 'vid', 'uid', 'created', 'type', 'language') as $key) {
+    $form[$key] = array(
+      '#type' => 'value',
+      '#value' => isset($node->$key) ? $node->$key : NULL,
+    );
+  }
+
+  // Changed must be sent to the client, for later overwrite error checking.
+  $form['changed'] = array(
+    '#type' => 'hidden',
+    '#default_value' => isset($node->changed) ? $node->changed : NULL,
+  );
+  
+  // Invoke hook_form() to get the node-specific bits. Can't use node_invoke(),
+  // because hook_form() needs to be able to receive $form_state by reference.
+  // @todo hook_form() implementations are unable to add #validate or #submit
+  //   handlers to the form buttons below. Remove hook_form() entirely.
+  $function = node_type_get_base($node) . '_form';
+  if (function_exists($function) && ($extra = $function($node, $form_state))) {
+    $form = array_merge_recursive($form, $extra);
+  }
+  
+  // @todo D8: Remove. Modules should access the node using $form_state['node'].
+  $form['#node'] = $node;
+  // Add a log field if the "Create new revision" option is checked, or if the
+  // current user has the ability to check that option.
+  $form['revision_information'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Revision information'),
+    '#collapsible' => TRUE,
+    // Collapsed by default when "Create new revision" is unchecked
+    '#collapsed' => !$node->revision,
+    '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('node-form-revision-information', 'element-invisible'),
+    ),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+    ),
+    '#weight' => 20,
+    '#access' => $node->revision || user_access('administer nodes'),
+  );
+  $form['revision_information']['revision'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Create new revision'),
+    '#default_value' => $node->revision,
+    '#access' => user_access('administer nodes'),
+  );
+  // Check the revision log checkbox when the log textarea is filled in.
+  // This must not happen if "Create new revision" is enabled by default, since
+  // the state would auto-disable the checkbox otherwise.
+  if (!$node->revision) {
+    $form['revision_information']['revision']['#states'] = array(
+      'checked' => array(
+        'textarea[name="log"]' => array('empty' => FALSE),
+      ),
+    );
+  }
+  
+  $form['revision_information']['log'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Revision log message'),
+    '#rows' => 4,
+    '#default_value' => !empty($node->log) ? $node->log : '',
+    '#description' => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
+  );
+
+  // Node author information for administrators
+  $form['author'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer nodes'),
+    '#title' => t('Authoring information'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('node-form-author', 'element-invisible'),
+    ),
+    '#attached' => array(
+      'js' => array(
+        drupal_get_path('module', 'node') . '/node.js',
+        array(
+          'type' => 'setting',
+          'data' => array('anonymous' => variable_get('anonymous', t('Anonymous'))),
+        ),
+      ),
+    ),
+    '#weight' => 90,
+  );
+  
+  $form['author']['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Authored by'),
+    '#maxlength' => 60,
+    '#autocomplete_path' => 'user/autocomplete',
+    '#default_value' => !empty($node->name) ? $node->name : '',
+    '#weight' => -1,
+    '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
+  );
+  
+  $form['author']['date'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Authored on'),
+    '#maxlength' => 25,
+    '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? date_format(date_create($node->date), 'Y-m-d H:i:s O') : format_date($node->created, 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? date_format(date_create($node->date), 'O') : format_date($node->created, 'custom', 'O'))),
+    '#default_value' => !empty($node->date) ? $node->date : '',
+  );
+
+  // Node options for administrators
+  $form['options'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer nodes'),
+    '#title' => t('Publishing options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('node-form-options', 'element-invisible'),
+    ),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+    ),
+    '#weight' => 95,
+  );
+  
+  $form['options']['status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Published'),
+    '#default_value' => $node->status,
+  );
+  
+  $form['options']['promote'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Promoted to front page'),
+    '#default_value' => $node->promote,
+  );
+  
+  $form['options']['sticky'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Sticky at top of lists'),
+    '#default_value' => $node->sticky,
+  );
+
+  // Add the buttons.
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#access' => variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview'])),
+    '#value' => t('Save'),
+    '#weight' => 5,
+    '#submit' => array('node_form_submit'),
+  );
+  
+  $form['actions']['preview'] = array(
+    '#access' => variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_DISABLED,
+    '#type' => 'submit',
+    '#value' => t('Preview'),
+    '#weight' => 10,
+    '#submit' => array('node_form_build_preview'),
+  );
+  
+  if (!empty($node->nid) && node_access('delete', $node)) {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#weight' => 15,
+      '#submit' => array('node_form_delete_submit'),
+    );
+  }
+  
+  // This form uses a button-level #submit handler for the form's main submit
+  // action. node_form_submit() manually invokes all form-level #submit handlers
+  // of the form. Without explicitly setting #submit, Form API would auto-detect
+  // node_form_submit() as submit handler, but that is the button-level #submit
+  // handler for the 'Save' action. To maintain backwards compatibility, a
+  // #submit handler is auto-suggested for custom node type modules.
+  if (!isset($form['#submit']) && function_exists($node->type . '_node_form_submit')) {
+    $form['#submit'][] = $node->type . '_node_form_submit';
+  }
+  $form += array('#submit' => array());
+
+  field_attach_form('node', $node, $form, $form_state, entity_language('node', $node));
+ 
+  return $form;
+}
+
+/**
+ * Alter comment form on views page
+ * @param type $form
+ * @param type $form_state
+ */
+function master_list_setup_form_alter(&$form, &$form_state){
+  if (current_path() == 'list/public-lemur-life-list' || current_path() == 'list/my-lemur-life-list' || current_path() == 'all-publication'){
+    if ($form['#form_id'] == 'comment_node_personal_lemur_life_list_item_form' || $form['#form_id'] == 'comment_node_publication_form'){
+      hide($form['author']);
+      hide($form['actions']['preview']);
+      $form['#action'] = $form['#action'] . '?destination=' . current_path();
+      $form['#submit'][] = 'master_redirect_comment';
+      $form_state['values']['nid'] = $form['#node']->nid;
+      $form['nid'] = array('#type' => 'textfield', '#title' => '', '#value' => $form['#node']->nid, '#attributes' => array('class' => array('element-invisible')));
+    }
+  }
+}
+
+/**
+ * Redirect form comment to current page
+ * @param type $form
+ * @param type $form_state
+ */
+function master_redirect_comment(&$form, &$form_state){
+  $form_state['redirect'] = current_path();
+}
+
+/**
+ * Associated species with lemurlife list
+ */
+function master_get_allAssociatedSpecies(){
+  $species = db_select('field_data_field_species', 's')
+  ->fields('s', array('field_species_target_id'))
+  ->condition('s.bundle', 'personal_lemur_life_list_item')
+  ->execute()->fetchAll();
+  $invalidSpecies = array();
+  if (!empty($species)){
+    foreach($species as $specie){ 
+      $invalidSpecies[] = $specie->field_species_target_id;
+    }
+  }
+  
+  return $invalidSpecies;
+}
+
+/**
+ * Alter query for entity_reference
+ * @param QueryAlterableInterface $query
+ */
+function master_list_setup_query_entityreference_alter(QueryAlterableInterface $query) {
+  $excludeSpecies = master_get_allAssociatedSpecies();
+  if (!empty($excludeSpecies)){
+    if (current_path() == 'add/personal-lemur-life-list-item' ||  drupal_match_path(current_path(), 'entityreference/autocomplete/single/field_species/node/personal_lemur_life_list_item/*/*')){
+      $query->where('node.nid NOT IN (:name)', array(':name' => $excludeSpecies));
+    }
+  }
+}
