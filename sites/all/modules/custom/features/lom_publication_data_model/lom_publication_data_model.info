@@ -7,7 +7,6 @@ dependencies[] = colorbox
 dependencies[] = date
 dependencies[] = ds
 dependencies[] = eck
-dependencies[] = eck
 dependencies[] = list
 dependencies[] = lom_field_bases
 dependencies[] = options

@@ -306,6 +306,15 @@ function lom_display_suite_default_services_endpoint() {
         'new_sighting' => array(
           'enabled' => '1',
         ),
+        'new_comment' => array(
+          'enabled' => '1',
+        ),
+        'edit_comment' => array(
+          'enabled' => '1',
+        ),
+        'changed_comments' => array(
+          'enabled' => '1',
+        ),
         'changed_sightings' => array(
           'enabled' => '1',
         ),
