@@ -514,7 +514,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
         return FALSE;
     }
     
-    public static function getSightingsCount($uid,$changedFrom=NULL,$isSynced=NULL){
+    public static function getSightingsCount($uid,$changedFrom=NULL,$isSynced=NULL,$isDeleted=NULL){
         
         $count  = 0;
         
@@ -531,6 +531,16 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                     $query .= " AND synced.bundle = 'publication' ";
                     $query .= " AND synced.field_is_synced_value = ". intval($isSynced);
                 }
+                
+                if($isDeleted !== NULL) {
+                    //-- Updated on march-20-2018 ---//
+                    $query .= " JOIN field_data_field_is_deleted deleted ";
+                    $query .= " ON deleted.entity_id = n.nid ";
+                    $query .= " AND deleted.entity_type = 'node' ";
+                    $query .= " AND deleted.bundle = 'publication' ";
+                    $query .= " AND deleted.field_is_deleted_value = ". intval($isDeleted);
+                }
+                //--------------------------------
                 
                 $query .= " WHERE n.type = 'publication' ";
                 $query .= " AND n.status = 1 "; // Only published=YES will be returned

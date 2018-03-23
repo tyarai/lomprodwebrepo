@@ -59,7 +59,7 @@ function lom_publication_enable(){
 function lom_publication_sightings_views_header(){
     global $user;
     module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
-    $count = PublicationNodeWrapper::getSightingsCount($user->uid, $changedFrom=NULL,$isSynced=NULL);
+    $count = PublicationNodeWrapper::getSightingsCount($user->uid, $changedFrom=NULL,$isSynced=NULL,$isDeleted=false);
     
     $html   = '<div class="sighting-view-header">';
         $html  .= '<div class="">';
