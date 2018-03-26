@@ -136,7 +136,7 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
             }
             
         }catch(Exception $e){
-            drupal_set_message(t('[LomSpecies::getAllSpeciesKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
+            drupal_set_message(t('[BestPlaces::getAllSitesKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
         }
 
         return $species;

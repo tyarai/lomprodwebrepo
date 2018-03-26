@@ -535,6 +535,7 @@ function _lom_services_changed_maps($from_date){
 function _lom_services_changed_nodes($from_date){
    
     $data = array();
+    $lastSyncDate = strtotime('now');
     
     if($from_date != NULL){
         
@@ -560,9 +561,12 @@ function _lom_services_changed_nodes($from_date){
             'best_places' => $best_places,
             'authors'     => $authors,
         );
+        
+        
     }
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    $data["serverLastSyncDate"] = $lastSyncDate;
     //return json_encode($data,JSON_UNESCAPED_SLASHES);
     return $data;
 }

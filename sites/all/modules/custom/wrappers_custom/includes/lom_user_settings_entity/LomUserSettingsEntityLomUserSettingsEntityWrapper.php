@@ -50,7 +50,7 @@ class LomUserSettingsEntityLomUserSettingsEntityWrapper extends WdLomUserSetting
                 }
 
             }catch(Exception $e){
-                drupal_set_message(t('[LomSpecies::getAllSpeciesKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
+                drupal_set_message(t('[LomUserSettings::export()] Error: @e',array('@e'=>$e->getMessage())),'error');
             }
 
         }
