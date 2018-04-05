@@ -228,10 +228,10 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
 
                             $placeList[] = array(
                                 'nid'                   => $place->getId(),
-                                'title'                 => $place->getTitle(),
+                                'title'                 => strip_tags($place->getTitle()),
                                 'map_id'                => $place->getSpeciesMap()->getid(),
                                 'image'                 => $place->getImage(),
-                                'body'                  => $place->getBody(),
+                                'body'                  => strip_tags($place->getBody()),
                             );
 
                         }

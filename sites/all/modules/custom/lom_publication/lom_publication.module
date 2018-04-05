@@ -85,7 +85,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#type' => 'textfield',
             '#title' => t('Title'),
             '#required' => TRUE,
-            '#size' => 100,
+            '#size' => 80,
             '#attributes' => array('class'=>array("bottom_spacement")),
             '#default_value' => $wrapper != NULL ? $wrapper->title->value() : NULL,
             //'#suffix' => '</div>',

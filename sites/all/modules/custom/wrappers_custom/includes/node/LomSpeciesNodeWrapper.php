@@ -658,7 +658,7 @@ class LomSpeciesNodeWrapper extends WdNodeWrapper {
             $query .= " WHERE n.type = 'lom_species' "; 
             
             if($extinct !== NULL){
-                $query . " AND isextinct.field_isextinct_value = ";
+                $query .= " AND isextinct.field_isextinct_value = ";
                 $query .= $extinct ? "'yes'":"'no'";
             }
             
