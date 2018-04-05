@@ -4,7 +4,10 @@
  * class PublicationNodeWrapper
  */
 
+
+
 module_load_include('php', 'wrappers_delight','includes/WdNodeWrapper');
+module_load_include('php', 'wrappers_custom','includes/node/LomSpeciesNodeWrapper');
 class PublicationNodeWrapper extends WdNodeWrapper {
 
   protected $entity_type = 'node';
@@ -255,6 +258,9 @@ class PublicationNodeWrapper extends WdNodeWrapper {
     return $this;
   }
 
+  public function getFieldDate() {
+    return $this->get('field_date');
+  }
   /**
    * Sets field_is_local
    *
@@ -386,18 +392,18 @@ class PublicationNodeWrapper extends WdNodeWrapper {
     return $this;
   }
 
-  /**
-   * Retrieves field_place_name_reference
-   *
-   * @return BestPlacesNodeWrapper
-   */
-  public function getPlaceNameReference() {
-    $value = $this->get('field_place_name_reference');
-    if (!empty($value)) {
-      $value = new BestPlacesNodeWrapper($value);
+    /**
+     * Retrieves field_place_name_reference
+     *
+     * @return BestPlacesNodeWrapper
+     */
+    public function getPlaceNameReference() {
+        $value = $this->get('field_place_name_reference');
+        if (!empty($value)) {
+            $value = new BestPlacesNodeWrapper($value);
+        }
+        return $value;
     }
-    return $value;
-  }
 
   
     public static function getUserLemurLifeList($uid){
@@ -463,4 +469,312 @@ class PublicationNodeWrapper extends WdNodeWrapper {
         }
         return $list;
     }
+    
+    public static function resetSynced($uid,$synced_value=0){
+        if($uid != NULL){
+            $query = " 
+                UPDATE field_data_field_is_synced synced
+
+                JOIN node n ON n.nid = synced.entity_id
+                AND synced.bundle = 'publication'
+
+                SET synced.field_is_synced_value = ". intval($synced_value);
+
+            $query .= " WHERE n.uid = ". $uid;
+            
+            $result = db_query($query);
+            
+        }
+        return FALSE;
+    }
+    /*
+     * Tadiavina ilay UUID sao efa ao anaty base
+     */
+    public static function lookupUUID($uuid,&$nid,&$error){
+        $nid = 0;
+        if($uuid != NULL){
+            
+            try{
+
+                $query  = " SELECT * FROM {node} where uuid = '".$uuid . "'";
+
+                $result = db_query($query);
+
+                while($record = $result->fetchAssoc()){
+                    $nid      = $record['nid'];
+                    return TRUE;
+                }
+
+            }catch(Exception $e){
+                $error = $e->getMessage();
+                drupal_set_message(t('[Sighting::lookupUUID()] Error: @e',array('@e'=>$e->getMessage())),'error');
+                return FALSE;
+            }
+        }
+        return FALSE;
+    }
+    
+    public static function getSightingsCount($uid,$changedFrom=NULL,$isSynced=NULL,$isDeleted=NULL){
+        
+        $count  = 0;
+        
+        if($uid != NULL){
+            
+            try{
+
+                $query  = " SELECT COUNT(*) as vCount FROM {node} n ";
+
+                if($isSynced !== NULL){
+                    $query .= " JOIN field_data_field_is_synced synced ";
+                    $query .= " ON synced.entity_id = n.nid ";
+                    $query .= " AND synced.entity_type = 'node' ";
+                    $query .= " AND synced.bundle = 'publication' ";
+                    $query .= " AND synced.field_is_synced_value = ". intval($isSynced);
+                }
+                
+                if($isDeleted !== NULL) {
+                    //-- Updated on march-20-2018 ---//
+                    $query .= " JOIN field_data_field_is_deleted deleted ";
+                    $query .= " ON deleted.entity_id = n.nid ";
+                    $query .= " AND deleted.entity_type = 'node' ";
+                    $query .= " AND deleted.bundle = 'publication' ";
+                    $query .= " AND deleted.field_is_deleted_value = ". intval($isDeleted);
+                }
+                //--------------------------------
+                
+                $query .= " WHERE n.type = 'publication' ";
+                $query .= " AND n.status = 1 "; // Only published=YES will be returned
+                $query .= " AND n.uid    = ". $uid; 
+
+                if($changedFrom != NULL){
+                   //$query .= " AND n.changed >= ". strtotime($changedFrom);
+                    $query .= " AND n.changed >= ". $changedFrom; 
+                }
+                
+                
+                
+               $result = db_query($query);
+
+                while($record = $result->fetchAssoc()){
+                    $count = $record['vCount'];
+                    break;
+                }
+
+            }catch(Exception $e){
+                drupal_set_message(t('[Sighting::getSightingsCount()] Error: @e',array('@e'=>$e->getMessage())),'error');
+            }
+        }
+
+        return $count;
+     }
+    
+    public static function getAllSightingsKeyedByNID($uid,$changedFrom=NULL,$start=NULL,$count=NULL,$isSynced=FALSE){
+
+        $sightings  = array();
+        
+        if($uid != NULL){
+            
+            try{
+
+                $query  = " SELECT n.nid,n.title FROM {node} n ";
+
+                if($isSynced !== NULL){
+                    $query .= " JOIN field_data_field_is_synced synced ";
+                    $query .= " ON synced.entity_id = n.nid ";
+                    $query .= " AND synced.entity_type = 'node' ";
+                    $query .= " AND synced.bundle = 'publication' ";
+                }
+                
+                $query .= " WHERE n.type = 'publication' ";
+                $query .= " AND n.status = 1 "; // Only published=YES will be returned
+                $query .= " AND n.uid    = ". $uid;
+                
+                if($isSynced !== NULL){
+                    $query .= " AND synced.field_is_synced_value = ". intval($isSynced);
+                }
+
+                if($changedFrom != NULL){
+                   //$query .= " AND n.changed >= ". strtotime($changedFrom); 
+                    $query .= " AND n.changed >= ". $changedFrom; 
+                }
+                
+                //$query .= " ORDER BY n.changed DESC,n.title ASC ";
+                //$query .= " ORDER BY n.nid, n.changed DESC ";
+                $query .= " ORDER BY n.nid ASC";
+                
+                if($start != NULL && $count != NULL){
+                    $query .= " LIMIT ". $start .",". $count;
+                }
+
+                
+
+                $result = db_query($query);
+
+                while($record = $result->fetchAssoc()){
+                    $sightings[$record['nid']] = $record['title'];
+                }
+
+            }catch(Exception $e){
+                drupal_set_message(t('[Sighting::getAllSightingsKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
+            }
+        }
+
+        return $sightings;
+    }
+    
+    public static function allSightings($uid,$changedFrom=NULL,$start=NULL,$count=NULL,$synced=NULL,&$modifiedSightings=array()){
+        
+        $sightings["nodes"] = array();
+        $changedSightings   = PublicationNodeWrapper::getAllSightingsKeyedByNID($uid,$changedFrom,$start,$count,$synced);
+        $modifiedSightings  = $changedSightings;
+        
+        module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+        
+        try{
+
+            if(count($changedSightings) != 0){
+                foreach ($changedSightings as $nid => $title){
+                    if($nid != NULL){
+
+                        $sighting = new PublicationNodeWrapper($nid);
+                        $wrapper  = entity_metadata_wrapper('node',$nid);
+                        
+                        if($sighting){
+                            
+                            global $base_url;
+                            
+                            $nid                            =  intval($sighting->getId());
+                            $title                          =  strip_tags($sighting->getTitle());
+                            $species                        = strip_tags($sighting->getAssociatedSpecies()->getTitle());
+                            $user_uid                       = intval($sighting->getAuthorId());
+                            $body                           = strip_tags($sighting->getBody());
+                            $photo_name                     = $base_url.'/'.PUBLIC_PATH .'/'.$sighting->getPhoto()['filename'];
+                            $field_photo                    = array(
+                                                                'src' => $photo_name,
+                                                                'alt' => '',    
+                                                            );
+                            $created                        = date('Y-m-d H:i:s',$sighting->getCreatedTime());
+                            $changed                        = date('Y-m-d H:i:s',$sighting->getChangedTime());
+                            $author_name                    = $sighting->getAuthor()->getName();
+                            $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
+                            $uuid                           = $wrapper->uuid->value();
+                            $placeName                      = $sighting->getPlaceName();
+                            $latitude                       = $sighting->getLat() != NULL  ? doubleval($sighting->getLat())  : 0.000000000;
+                            $longitude                      = $sighting->getLong() != NULL ? doubleval($sighting->getLong()) : 0.000000000;
+                            $altitude                       = $sighting->getAltitude() != NULL ? doubleval($sighting->getAltitude()) : 0.000000000;
+                            $count                          = intval($sighting->getCount());
+                            $isLocal                        = intval($sighting->getIsLocal());
+                            $isSynced                       = intval($sighting->getIsSynced());
+                            $date                           = date('Y-m-d',$sighting->getFieldDate());
+                            $deleted                        = intval($sighting->getIsDeleted());
+                            $refNid                         = intval($sighting->getPlaceNameReference()->getId());
+                            
+                            $comments                       = CommentNodePublicationCommentWrapper::getComments($uid=NULL,$nid,$changedFrom=NULL);
+                            
+                            $sightings['nodes'][] = array('node'=> array(
+                                    'nid'                   => $nid,
+                                    'title'                 => $title,
+                                    'species'               => $species,
+                                    'uid'                   => $user_uid,
+                                    'body'                  => $body,
+                                    'field_photo'           => $field_photo,
+                                    'created'               => $created,
+                                    'changed'               => $changed,
+                                    'author_name'           => $author_name,
+                                    'speciesNid'            => $speciesNid,
+                                    'uuid'                  => $uuid,
+                                    'place_name'            => $placeName,
+                                    'latitude'              => $latitude,
+                                    'longitude'             => $longitude,
+                                    'altitude'              => $altitude,
+                                    'count'                 => $count,
+                                    'isLocal'               => 0,//$isLocal,
+                                    'isSynced'              => 1,//$isSynced,
+                                    'date'                  => $date,
+                                    'deleted'               => $deleted,
+                                    'place_name_reference_nid'=> $refNid,
+                                    'comments'              => $comments,
+                                    
+                                )
+                            );
+
+                        }
+                    }
+                }
+            }
+        }catch(Exception $e){
+            drupal_set_message(t('[Sighting::allSightings()] Error: @e',array('@e'=>$e->getMessage())),'error');
+        }
+        
+        return $sightings;
+
+    }
+    
+   
+  
+    
+    
+  /**
+   * Sets field_lat
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function setLat($value) {
+    $this->set('field_lat', $value);
+    return $this;
+  }
+
+  /**
+   * Retrieves field_lat
+   *
+   * @return mixed
+   */
+  public function getLat() {
+    return $this->get('field_lat');
+  }
+
+  /**
+   * Sets field_long
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function setLong($value) {
+    $this->set('field_long', $value);
+    return $this;
+  }
+
+  /**
+   * Retrieves field_long
+   *
+   * @return mixed
+   */
+  public function getLong() {
+    return $this->get('field_long');
+  }
+
+  /**
+   * Sets field_altitude
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function setAltitude($value) {
+    $this->set('field_altitude', $value);
+    return $this;
+  }
+
+  /**
+   * Retrieves field_altitude
+   *
+   * @return mixed
+   */
+  public function getAltitude() {
+    return $this->get('field_altitude');
+  }
+
 }

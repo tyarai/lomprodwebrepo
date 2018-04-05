@@ -136,7 +136,8 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
             }
             
         }catch(Exception $e){
-            drupal_set_message(t('[LomSpecies::getAllSpeciesKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
+
+            drupal_set_message(t('[BestPlaces::getAllSitesKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
         }
 
         return $species;
@@ -188,10 +189,13 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
             $query  = " SELECT n.nid,n.title FROM {node} n ";
            
             $query .= " WHERE n.type = 'best_places' "; 
+
+            $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             
             if($changedFrom != NULL){
-               $query .= " AND n.changed >= ". strtotime($changedFrom); 
+               //$query .= " AND n.changed >= ". strtotime($changedFrom); 
+                $query .= " AND n.changed >= ". $changedFrom; 
             }
             
             $query .= " ORDER BY n.title ASC ";

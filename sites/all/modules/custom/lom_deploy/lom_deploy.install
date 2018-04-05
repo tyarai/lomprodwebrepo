@@ -79,3 +79,46 @@ function lom_deploy_update_7022(){
     module_enable(array('captcha','image_captcha'));
 }
 
+/**
+ * Enable views_php module
+ */
+function lom_deploy_update_7023(){
+    module_enable(array('views_php'));
+}
+
+/**
+ * Enable lom_comment module
+ */
+function lom_deploy_update_7024(){
+    module_enable(array('lom_comment'));
+}
+
+/**
+ * Add 'synced' field to 'comment' table
+ */
+function lom_deploy_update_7025(){
+   
+    $field = array(
+        'type' => 'int',
+        'length' => '3',
+        'not null' => FALSE,
+        'description' => 'Synced',
+    );
+    db_add_field('comment', 'synced', $field);
+}
+
+/**
+ * Add 'synced' property to comment
+ */
+function lom_deploy_update_7028(){
+   
+    $field = array(
+        'type' => 'int',
+        'length' => '3',
+        'not null' => FALSE,
+        'description' => 'Synced',
+    );
+    db_add_field('comment', 'synced', $field);
+    
+}
+

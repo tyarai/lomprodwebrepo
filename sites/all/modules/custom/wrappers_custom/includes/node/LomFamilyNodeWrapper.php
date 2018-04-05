@@ -5,6 +5,8 @@
  */
 
 module_load_include('php', 'wrappers_custom','includes/node/LomMapNodeWrapper');
+
+module_load_include('php', 'wrappers_custom','includes/node/LomIllustrationNodeWrapper');
 class LomFamilyNodeWrapper extends WdNodeWrapper {
 
   protected $entity_type = 'node';
@@ -442,10 +444,12 @@ class LomFamilyNodeWrapper extends WdNodeWrapper {
             $query  = " SELECT n.nid,n.title FROM {node} n ";
            
             $query .= " WHERE n.type = 'lom_family' "; 
-            
+
+            $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             if($changedFrom != NULL){
-               $query .= " AND n.changed >= ". strtotime($changedFrom); 
+               //$query .= " AND n.changed >= ". strtotime($changedFrom); 
+                $query .= " AND n.changed >= ". $changedFrom; 
             }
             
             $query .= " ORDER BY n.title ASC ";
@@ -485,13 +489,24 @@ class LomFamilyNodeWrapper extends WdNodeWrapper {
                                 $__map[] = intval($map->getId());
                             }
                         }
+                        
+                        $illustrations = $family->getIllustrationRef();
+                            
+                        $_illustrations = array();
+                        foreach($illustrations as $illustration){
+                            if($illustration){
+                                $_illustrations[] = intval($illustration->getId());
+                            }
+                        }
+                            
 
                         if($family){
 
                             $familyList[] = array(
                                 'nid'                   => intval($family->getId()),
                                 'title'                 => strip_tags($family->getTitle()),
-                                'map_list_id'           => $__map,
+                                'illustration_ref'      => implode(",", $_illustrations),
+                                //'map_list_id'           => implode(",", $__map),
                                 //'image'                 => $family->getImage(),
                                 'body'                  => strip_tags($family->getBody()),
                                 'extinct'               => $family->getIsextinct() == 'yes' ? 1:0,

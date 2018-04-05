@@ -72,6 +72,70 @@ function lom_publication_data_model_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-publication-field_altitude'
+  $field_instances['node-publication-field_altitude'] = array(
+    'bundle' => 'publication',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 16,
+      ),
+      'publication_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sighting' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sighting_list_view_mode' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_altitude',
+    'label' => 'altitude',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 18,
+    ),
+  );
+
   // Exported field_instance: 'node-publication-field_associated_species'
   $field_instances['node-publication-field_associated_species'] = array(
     'bundle' => 'publication',
@@ -122,7 +186,7 @@ function lom_publication_data_model_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_associated_species',
     'label' => 'Species',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -200,7 +264,7 @@ function lom_publication_data_model_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_count',
     'label' => 'Number observed',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'max' => '',
       'min' => '',
@@ -285,7 +349,7 @@ function lom_publication_data_model_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_date',
     'label' => 'Sighting date',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'default_value' => 'now',
       'default_value2' => 'same',
@@ -483,117 +547,131 @@ function lom_publication_data_model_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-publication-field_latitude'
-  $field_instances['node-publication-field_latitude'] = array(
+  // Exported field_instance: 'node-publication-field_lat'
+  $field_instances['node-publication-field_lat'] = array(
     'bundle' => 'publication',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 10,
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 14,
       ),
       'publication_teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 17,
+        'weight' => 0,
       ),
       'sighting' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 15,
+        'weight' => 0,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 12,
+        'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_latitude',
-    'label' => 'Latitude',
+    'field_name' => 'field_lat',
+    'label' => 'lat',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 0,
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 7,
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 16,
     ),
   );
 
-  // Exported field_instance: 'node-publication-field_longtitude'
-  $field_instances['node-publication-field_longtitude'] = array(
+  // Exported field_instance: 'node-publication-field_long'
+  $field_instances['node-publication-field_long'] = array(
     'bundle' => 'publication',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'inline',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 9,
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 15,
       ),
       'publication_teaser' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 18,
+        'weight' => 0,
       ),
       'sighting' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 14,
+        'weight' => 0,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 0,
       ),
       'teaser' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_longtitude',
-    'label' => 'Longtitude',
+    'field_name' => 'field_long',
+    'label' => 'long',
     'required' => 0,
     'settings' => array(
-      'text_processing' => 0,
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => 6,
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 17,
     ),
   );
 
@@ -1033,8 +1111,6 @@ function lom_publication_data_model_field_default_field_instances() {
   t('Body');
   t('First name');
   t('Last name');
-  t('Latitude');
-  t('Longtitude');
   t('Modified');
   t('Number observed');
   t('Photos');
@@ -1043,10 +1119,13 @@ function lom_publication_data_model_field_default_field_instances() {
   t('Sighting date');
   t('Site name');
   t('Species');
+  t('altitude');
   t('iPhone UUID');
   t('is Deleted');
   t('is Local');
   t('is Synced');
+  t('lat');
+  t('long');
 
   return $field_instances;
 }

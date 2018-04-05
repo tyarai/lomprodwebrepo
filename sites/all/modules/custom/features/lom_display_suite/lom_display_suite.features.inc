@@ -11,6 +11,11 @@ function lom_display_suite_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "ds" && $api == "ds") {
     return array("version" => "1");
   }
+  
+  if ($module == "services" && $api == "services") {
+    return array("version" => "3");
+  }
+
   if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => "1");
   }
@@ -68,6 +73,48 @@ function lom_display_suite_image_default_styles() {
           '#imageinfo_cache_effect_callback' => 'image_scale_effect',
         ),
         'weight' => 1,
+      ),
+    ),
+  );
+
+  // Exported image style: lom_mobile_photo.
+  $styles['lom_mobile_photo'] = array(
+    'name' => 'lom_mobile_photo',
+    'label' => 'lom_mobile_photo',
+    'effects' => array(
+      16 => array(
+        'label' => 'Scale',
+        'help' => 'Scaling will maintain the aspect-ratio of the original image. If only a single dimension is specified, the other dimension will be calculated.',
+        'effect callback' => 'imageinfo_cache_effect_router',
+        'dimensions callback' => 'image_scale_dimensions',
+        'form callback' => 'image_scale_form',
+        'summary theme' => 'image_scale_summary',
+        'module' => 'image',
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 1024,
+          'height' => 768,
+          'upscale' => 0,
+          '#imageinfo_cache_effect_callback' => 'image_scale_effect',
+        ),
+        'weight' => 1,
+      ),
+      17 => array(
+        'label' => 'Crop',
+        'help' => 'Cropping will remove portions of an image to make it the specified dimensions.',
+        'effect callback' => 'imageinfo_cache_effect_router',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_crop_form',
+        'summary theme' => 'image_crop_summary',
+        'module' => 'image',
+        'name' => 'image_crop',
+        'data' => array(
+          'width' => 1024,
+          'height' => 768,
+          'anchor' => 'center-center',
+          '#imageinfo_cache_effect_callback' => 'image_crop_effect',
+        ),
+        'weight' => 2,
       ),
     ),
   );
@@ -231,6 +278,31 @@ function lom_display_suite_image_default_styles() {
         'data' => array(
           'width' => 200,
           'height' => '',
+          'upscale' => 0,
+          '#imageinfo_cache_effect_callback' => 'image_scale_effect',
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  // Exported image style: person_profile_photo.
+  $styles['person_profile_photo'] = array(
+    'name' => 'person_profile_photo',
+    'label' => 'person_profile_photo',
+    'effects' => array(
+      18 => array(
+        'label' => 'Scale',
+        'help' => 'Scaling will maintain the aspect-ratio of the original image. If only a single dimension is specified, the other dimension will be calculated.',
+        'effect callback' => 'imageinfo_cache_effect_router',
+        'dimensions callback' => 'image_scale_dimensions',
+        'form callback' => 'image_scale_form',
+        'summary theme' => 'image_scale_summary',
+        'module' => 'image',
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 250,
+          'height' => 250,
           'upscale' => 0,
           '#imageinfo_cache_effect_callback' => 'image_scale_effect',
         ),

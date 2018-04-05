@@ -145,13 +145,7 @@ function lom_publication_data_model_views_default_views() {
   $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'full';
   $handler->display->display_options['fields']['rendered_entity']['bypass_access'] = 0;
-  /* Field: Comment: Comment */
-  $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
-  $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
-  $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
-  $handler->display->display_options['fields']['comment_body']['relationship'] = 'cid';
-  $handler->display->display_options['fields']['comment_body']['label'] = '';
-  $handler->display->display_options['fields']['comment_body']['element_label_colon'] = FALSE;
+
   /* Field: Comment: Depth */
   $handler->display->display_options['fields']['thread']['id'] = 'thread';
   $handler->display->display_options['fields']['thread']['table'] = 'comment';
@@ -168,6 +162,7 @@ function lom_publication_data_model_views_default_views() {
   $handler->display->display_options['fields']['replyto_comment']['id'] = 'replyto_comment';
   $handler->display->display_options['fields']['replyto_comment']['table'] = 'comment';
   $handler->display->display_options['fields']['replyto_comment']['field'] = 'replyto_comment';
+  $handler->display->display_options['fields']['replyto_comment']['relationship'] = 'cid';
   /* Field: Comment: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'comment';
@@ -221,11 +216,15 @@ return $user->uid;';
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'My sightings';
+  $handler->display->display_options['defaults']['group_by'] = FALSE;
   $handler->display->display_options['defaults']['access'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';
   $handler->display->display_options['access']['role'] = array(
     2 => '2',
   );
+  $handler->display->display_options['defaults']['query'] = FALSE;
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['defaults']['exposed_form'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
@@ -244,17 +243,33 @@ return $user->uid;';
   $handler->display->display_options['row_options']['view_mode'] = 'sighting_list_view_mode';
   $handler->display->display_options['row_options']['links'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Header: Global: PHP */
+  $handler->display->display_options['header']['php']['id'] = 'php';
+  $handler->display->display_options['header']['php']['table'] = 'views';
+  $handler->display->display_options['header']['php']['field'] = 'php';
+  $handler->display->display_options['header']['php']['php_output'] = ' <?php print lom_publication_sightings_views_header(); ?>
+';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
+  $handler->display->display_options['relationships']['uid_1']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['id'] = 'field_associated_species_target_id';
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['table'] = 'field_data_field_associated_species';
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['field'] = 'field_associated_species_target_id';
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['label'] = 'SPECIES';
+  /* Relationship: Comment: Comments of the node */
+  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
+  $handler->display->display_options['relationships']['cid']['table'] = 'node';
+  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Content: Nid */
-  $handler->display->display_options['sorts']['nid']['id'] = 'nid';
-  $handler->display->display_options['sorts']['nid']['table'] = 'node';
-  $handler->display->display_options['sorts']['nid']['field'] = 'nid';
-  $handler->display->display_options['sorts']['nid']['order'] = 'DESC';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Sort criterion: Content: Updated date */
+  $handler->display->display_options['sorts']['changed']['id'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['table'] = 'node';
+  $handler->display->display_options['sorts']['changed']['field'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -272,7 +287,7 @@ return $user->uid;';
     'publication' => 'publication',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: is Deleted (field_is_deleted) */
+  /* Filter criterion: Field: is Deleted (field_is_deleted) */
   $handler->display->display_options['filters']['field_is_deleted_value']['id'] = 'field_is_deleted_value';
   $handler->display->display_options['filters']['field_is_deleted_value']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['filters']['field_is_deleted_value']['field'] = 'field_is_deleted_value';
@@ -619,12 +634,12 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
-  /* Field: Content: Latitude */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_latitude']['id'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['table'] = 'field_data_field_latitude';
   $handler->display->display_options['fields']['field_latitude']['field'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['label'] = 'latitude';
-  /* Field: Content: Longtitude */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_longtitude']['id'] = 'field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['table'] = 'field_data_field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['field'] = 'field_longtitude';
@@ -643,7 +658,8 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['table'] = 'field_data_field_is_local';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
-  /* Field: Content: is Synced */
+
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
@@ -800,12 +816,14 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
-  /* Field: Content: Latitude */
+
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_latitude']['id'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['table'] = 'field_data_field_latitude';
   $handler->display->display_options['fields']['field_latitude']['field'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['label'] = 'latitude';
-  /* Field: Content: Longtitude */
+
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_longtitude']['id'] = 'field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['table'] = 'field_data_field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['field'] = 'field_longtitude';
@@ -825,13 +843,15 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
-  /* Field: Content: is Synced */
+
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
-  /* Field: Content: When did you see it for the first time? */
+
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -843,7 +863,8 @@ return $user->uid;';
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: is Deleted */
+
+  /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
@@ -1000,12 +1021,14 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
-  /* Field: Content: Latitude */
+
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_latitude']['id'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['table'] = 'field_data_field_latitude';
   $handler->display->display_options['fields']['field_latitude']['field'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['label'] = 'latitude';
-  /* Field: Content: Longtitude */
+
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_longtitude']['id'] = 'field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['table'] = 'field_data_field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['field'] = 'field_longtitude';
@@ -1025,19 +1048,22 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
-  /* Field: Content: is Synced */
+
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
-  /* Field: Content: is Deleted */
+
+  /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['label'] = 'deleted';
   $handler->display->display_options['fields']['field_is_deleted']['type'] = 'list_key';
-  /* Field: Content: When did you see it for the first time? */
+
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1120,6 +1146,13 @@ return $user->uid;';
     2 => '2',
     1 => 0,
     3 => 0,
+  );
+  /* Filter criterion: Field: is Synced (field_is_synced) */
+  $handler->display->display_options['filters']['field_is_synced_value']['id'] = 'field_is_synced_value';
+  $handler->display->display_options['filters']['field_is_synced_value']['table'] = 'field_data_field_is_synced';
+  $handler->display->display_options['filters']['field_is_synced_value']['field'] = 'field_is_synced_value';
+  $handler->display->display_options['filters']['field_is_synced_value']['value'] = array(
+    0 => '0',
   );
   $handler->display->display_options['path'] = 'api/v1/list/my-sightings-modified-from';
 
@@ -1246,16 +1279,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
-  /* Field: Content: Latitude */
-  $handler->display->display_options['fields']['field_latitude']['id'] = 'field_latitude';
-  $handler->display->display_options['fields']['field_latitude']['table'] = 'field_data_field_latitude';
-  $handler->display->display_options['fields']['field_latitude']['field'] = 'field_latitude';
-  $handler->display->display_options['fields']['field_latitude']['label'] = 'latitude';
-  /* Field: Content: Longtitude */
-  $handler->display->display_options['fields']['field_longtitude']['id'] = 'field_longtitude';
-  $handler->display->display_options['fields']['field_longtitude']['table'] = 'field_data_field_longtitude';
-  $handler->display->display_options['fields']['field_longtitude']['field'] = 'field_longtitude';
-  $handler->display->display_options['fields']['field_longtitude']['label'] = 'longitude';
+
   /* Field: Content: Number observed */
   $handler->display->display_options['fields']['field_count']['id'] = 'field_count';
   $handler->display->display_options['fields']['field_count']['table'] = 'field_data_field_count';
@@ -1271,13 +1295,15 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
-  /* Field: Content: is Synced */
+
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
-  /* Field: Content: When did you see it for the first time? */
+
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1289,7 +1315,8 @@ return $user->uid;';
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: is Deleted */
+
+  /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
@@ -1304,6 +1331,12 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name_reference']['settings'] = array(
     'link' => 0,
   );
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Updated date */
+  $handler->display->display_options['sorts']['changed']['id'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['table'] = 'node';
+  $handler->display->display_options['sorts']['changed']['field'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
@@ -1399,6 +1432,403 @@ return $user->uid;';
     3 => 0,
   );
   $handler->display->display_options['path'] = 'public_sightings';
+
+  /* Display: ADMIN Sighting - Delete */
+  $handler = $view->new_display('page', 'ADMIN Sighting - Delete', 'page_6');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'ADMIN Delete - Sightings';
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    3 => '3',
+  );
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '20';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'title' => 'title',
+    'field_associated_species' => 'field_associated_species',
+    'uid' => 'uid',
+    'body' => 'body',
+    'comment_count' => 'comment_count',
+    'last_comment_name' => 'last_comment_name',
+    'last_comment_timestamp' => 'last_comment_timestamp',
+    'last_comment_uid' => 'last_comment_uid',
+    'nid' => 'nid',
+    'field_photo' => 'field_photo',
+    'created' => 'created',
+    'rendered_entity' => 'rendered_entity',
+    'comment_body' => 'comment_body',
+    'thread' => 'thread',
+    'nid_1' => 'nid_1',
+    'replyto_comment' => 'replyto_comment',
+    'changed' => 'changed',
+    'comments_link' => 'comments_link',
+    'name' => 'name',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_associated_species' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'uid' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'body' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'comment_count' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'last_comment_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'last_comment_timestamp' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'last_comment_uid' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_photo' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'created' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'rendered_entity' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'comment_body' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'thread' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nid_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'replyto_comment' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'changed' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'comments_link' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Bulk operations: Content */
+  $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'node';
+  $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+  $handler->display->display_options['fields']['views_bulk_operations']['label'] = '';
+  $handler->display->display_options['fields']['views_bulk_operations']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
+    'action::node_assign_owner_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_delete_item' => array(
+      'selected' => 1,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_delete_revision' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_script_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_make_sticky_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_make_unsticky_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::views_bulk_operations_modify_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+      'settings' => array(
+        'show_all_tokens' => 1,
+        'display_values' => array(
+          '_all_' => '_all_',
+        ),
+      ),
+    ),
+    'action::views_bulk_operations_argument_selector_action' => array(
+      'selected' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+      'settings' => array(
+        'url' => '',
+      ),
+    ),
+    'action::node_promote_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_publish_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_unpromote_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_save_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::system_send_email_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_unpublish_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::node_unpublish_by_keyword_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+    'action::pathauto_node_update_action' => array(
+      'selected' => 0,
+      'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'override_label' => 0,
+      'label' => '',
+    ),
+  );
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: Species */
+  $handler->display->display_options['fields']['field_associated_species']['id'] = 'field_associated_species';
+  $handler->display->display_options['fields']['field_associated_species']['table'] = 'field_data_field_associated_species';
+  $handler->display->display_options['fields']['field_associated_species']['field'] = 'field_associated_species';
+  $handler->display->display_options['fields']['field_associated_species']['label'] = '';
+  $handler->display->display_options['fields']['field_associated_species']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_associated_species']['settings'] = array(
+    'link' => 0,
+  );
+  /* Field: Content: Author uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  /* Field: Content: Comment count */
+  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['label'] = '';
+  $handler->display->display_options['fields']['comment_count']['element_label_colon'] = FALSE;
+  /* Field: Content: Last comment author */
+  $handler->display->display_options['fields']['last_comment_name']['id'] = 'last_comment_name';
+  $handler->display->display_options['fields']['last_comment_name']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['last_comment_name']['field'] = 'last_comment_name';
+  $handler->display->display_options['fields']['last_comment_name']['label'] = '';
+  $handler->display->display_options['fields']['last_comment_name']['element_label_colon'] = FALSE;
+  /* Field: Content: Last comment time */
+  $handler->display->display_options['fields']['last_comment_timestamp']['id'] = 'last_comment_timestamp';
+  $handler->display->display_options['fields']['last_comment_timestamp']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['last_comment_timestamp']['field'] = 'last_comment_timestamp';
+  $handler->display->display_options['fields']['last_comment_timestamp']['label'] = '';
+  $handler->display->display_options['fields']['last_comment_timestamp']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['last_comment_timestamp']['date_format'] = 'long';
+  $handler->display->display_options['fields']['last_comment_timestamp']['second_date_format'] = 'long';
+  /* Field: Content: Last comment uid */
+  $handler->display->display_options['fields']['last_comment_uid']['id'] = 'last_comment_uid';
+  $handler->display->display_options['fields']['last_comment_uid']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['last_comment_uid']['field'] = 'last_comment_uid';
+  $handler->display->display_options['fields']['last_comment_uid']['label'] = '';
+  $handler->display->display_options['fields']['last_comment_uid']['element_label_colon'] = FALSE;
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'long';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'long';
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'publication' => 'publication',
+  );
+  /* Filter criterion: Content: Author uid */
+  $handler->display->display_options['filters']['uid']['id'] = 'uid';
+  $handler->display->display_options['filters']['uid']['table'] = 'node';
+  $handler->display->display_options['filters']['uid']['field'] = 'uid';
+  $handler->display->display_options['filters']['uid']['value'] = '';
+  $handler->display->display_options['filters']['uid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Author uid';
+  $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
+  $handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['path'] = 'admin/sightings/delete';
   $export['all_publication'] = $view;
 
   return $export;

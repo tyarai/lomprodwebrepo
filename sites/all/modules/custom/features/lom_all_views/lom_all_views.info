@@ -14,6 +14,7 @@ features[views_view][] = all_personal_lemur_life_list_view_widget
 features[views_view][] = all_species
 features[views_view][] = all_species_json
 features[views_view][] = all_species_view_widget
+features[views_view][] = authors
 features[views_view][] = extinct_lemurs
 features[views_view][] = extinct_species
 features[views_view][] = family_export

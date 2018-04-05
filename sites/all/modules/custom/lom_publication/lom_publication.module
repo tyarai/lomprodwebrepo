@@ -16,6 +16,14 @@ function lom_publication_menu(){
         'page arguments' => array('lom_publication_add_sighting',1),
         'access callback' => 'lom_publication_permission',
     );
+    
+    $items['sighting/dummy/%'] = array(
+        'title' => t('Dummy sighting'),
+        'page callback' => '_dummySighting',
+        'page arguments' => array(2),
+        'access callback' => 'lom_publication_permission',
+    );
+
     return $items;
 }
 
@@ -46,6 +54,22 @@ function lom_publication_enable(){
     $settings = field_bundle_settings('node', 'publication');
     $settings['view_modes']['sighting_list_view_mode']['custom_settings'] = TRUE;
     field_bundle_settings('node', 'article', $settings);
+}
+
+/*
+ * One's sighting header
+ */
+function lom_publication_sightings_views_header(){
+    global $user;
+    module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
+    $count = PublicationNodeWrapper::getSightingsCount($user->uid, $changedFrom=NULL,$isSynced=NULL,$isDeleted=false);
+    
+    $html   = '<div class="sighting-view-header">';
+        $html  .= '<div class="">';
+            $html  .= t('You have @count sightings',array('@count'=>$count));
+        $html  .= '</div>';
+    $html  .= '</div>';
+    return $html;
 }
 
 
@@ -164,6 +188,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             ),
             '#default_value' => $wrapper != NULL ? $wrapper->field_place_name_reference->value()->nid : date('Y-m-d'),
         );
+        
 
         $map = NULL;
 
@@ -245,11 +270,11 @@ function lom_publication_add_sighting_submit($form,&$form_state){
     try{
         global $user;
         
-        $title      = $form_state['values']['title'];
-        $speciesNID = $form_state['values']['species'];
-        $count      = $form_state['values']['count'];
-        $date       = $form_state['values']['date'];
-        $placerefNID   = $form_state['values']['placenamereference'] ;
+        $title          = $form_state['values']['title'];
+        $speciesNID     = $form_state['values']['species'];
+        $count          = $form_state['values']['count'];
+        $date           = $form_state['values']['date'];
+        $placerefNID    = $form_state['values']['placenamereference'] ;
         
         $placeObject = new BestPlacesNodeWrapper($placerefNID);
         $fileObject = NULL;
@@ -270,6 +295,15 @@ function lom_publication_add_sighting_submit($form,&$form_state){
         }else{
            $sighting = new PublicationNodeWrapper($form_state['sightingNID']); 
         }
+        
+        $latitude   =  $sighting->getLat() != 0 ? $sighting->getLat() : 0;
+        $longitude  =  $sighting->getLong() != 0 ? $sighting->getLong() : 0;
+        $altitude   =  $sighting->getAltitude() != 0 ? $sighting->getAltitude() : 0;
+        
+        $sighting->setLat($latitude);
+        $sighting->setLong($longitude);
+        $sighting->setAltitude($altitude);
+        
         $sighting->setTitle($title);
         $sighting->setAssociatedSpecies($speciesNID);
         $sighting->setCount($count);
@@ -277,6 +311,7 @@ function lom_publication_add_sighting_submit($form,&$form_state){
         $sighting->setPlaceName($placeObject->getTitle());
         $sighting->setPlaceNameReference($placerefNID);
         $sighting->setPhoto((array)$fileObject);
+        $sighting->setIsSynced(FALSE);// Mila ampidinina any @ tablet ity
         $sighting->setAuthorId($user->uid);
         
         $sighting->save();
@@ -401,6 +436,29 @@ function lom_publication_form_alter(&$form, &$form_state, $form_id){
  * Function manao isDeleted ny publication
  */
 function lom_publication_delete_submit($form,&$form_state){
+    
+    module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
+    $nid = isset($form_state['sightingNID']) ? $form_state['sightingNID'] : NULL ;
+    $transaction = db_transaction();
+    try{
+        if($nid != NULL){
+
+            $node            = node_load($nid);
+            $sightingWrapper = new PublicationNodeWrapper($node);
+            $sightingWrapper->setIsDeleted(TRUE);
+            $sightingWrapper->setIsSynced(FALSE);
+            $sightingWrapper->save();
+            drupal_goto('/sightings');
+        }
+    }catch(Exception $e){
+        $transaction->rollback();
+        drupal_set_message('[Sighting::Delete] '.$e->getMessage(),'error');
+    }
+}
+
+
+/*
+function lom_publication_delete_submit($form,&$form_state){
     //$nid = $form['#entity']->nid;
     $nid = isset($form_state['sightingNID']) ? $form_state['sightingNID'] : NULL ;
     $transaction = db_transaction();
@@ -418,6 +476,8 @@ function lom_publication_delete_submit($form,&$form_state){
         drupal_set_message('[Sighting::Delete] '.$e->getMessage(),'error');
     }
 }
+ * 
+ */
 
 /**
  * Submit handler to add new species to Lemur Life List
@@ -508,10 +568,11 @@ function _sighting_getCommentMenu($node){
     
     if($node != NULL){
         try{
+            global $base_path;
             module_load_include('inc','pathauto','pathauto');
             $cleanTitle  = pathauto_cleanstring($node->title);
-            $linkUri = "/sighting/$node->nid/$cleanTitle#comments";
-            $addCommentUri = "/sighting/$node->nid/$cleanTitle#comment-form";
+            $linkUri = $base_path."sighting/$node->nid/$cleanTitle#comments";
+            $addCommentUri = $base_path."sighting/$node->nid/$cleanTitle#comment-form";
             
             
             $commentLink    =  '<a href="'.$linkUri.'">'.$node->comment_count. ' '.t('comment(s)') .'</a>';
@@ -538,5 +599,31 @@ function _sighting_getCommentMenu($node){
     $html .= '</div>';
     
     return $html;
+    
+}
+/*
+ * Create dummy sightings
+ */
+function _dummySighting($count){
+    
+    if($count > 0){
+        $i = 1;
+        module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+        global $user;
+        while($i <= $count){
+            
+            $form_state['values']['title']              = $user->uid.' dummy sighting '.$i;
+            $form_state['values']['species']            = $i % 2 == 0 ? 271 : 47;
+            $form_state['values']['count']              = $i;
+            $form_state['values']['date']               = date('Y-m-d H:i:s');
+            $form_state['values']['placenamereference'] = $i % 2 == 0 ? 721 : 726;
+            $form_state['values']['image']              = NULL;
+            
+            lom_publication_add_sighting_submit(array(),$form_state);
+            
+            $i++;
+        }
+        
+    }
     
 }

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the LOM Content Types feature.
+ */
+
+include_once 'lom_content_types.features.inc';

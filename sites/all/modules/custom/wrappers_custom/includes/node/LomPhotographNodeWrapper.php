@@ -103,10 +103,13 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
             $query  = " SELECT n.nid,n.title FROM {node} n ";
            
             $query .= " WHERE n.type = 'lom_photograph' "; 
+
+            $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             
             if($changedFrom != NULL){
-               $query .= " AND n.changed >= ". strtotime($changedFrom); 
+               //$query .= " AND n.changed >= ". strtotime($changedFrom); 
+                $query .= " AND n.changed >= ". $changedFrom; 
             }
             
             $query .= " ORDER BY n.title ASC ";

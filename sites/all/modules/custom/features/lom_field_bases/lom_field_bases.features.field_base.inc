@@ -68,6 +68,26 @@ function lom_field_bases_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_altitude'
+  $field_bases['field_altitude'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_altitude',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(
+      'decimal_separator' => '.',
+      'precision' => 10,
+      'scale' => 4,
+    ),
+    'translatable' => 0,
+    'type' => 'number_decimal',
+  );
+
   // Exported field_base: 'field_associated_species'
   $field_bases['field_associated_species'] = array(
     'active' => 1,
@@ -456,33 +476,24 @@ function lom_field_bases_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_latitude'
-  $field_bases['field_latitude'] = array(
+  // Exported field_base: 'field_lat'
+  $field_bases['field_lat'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_latitude',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
+    'field_name' => 'field_lat',
+    'foreign keys' => array(),
+    'indexes' => array(),
     'locked' => 0,
-    'module' => 'text',
+    'module' => 'number',
     'settings' => array(
-      'max_length' => 100,
+      'decimal_separator' => '.',
+      'precision' => 15,
+      'scale' => 8,
     ),
     'translatable' => 0,
-    'type' => 'text',
+    'type' => 'number_decimal',
   );
 
   // Exported field_base: 'field_lemur_photo'
@@ -1036,33 +1047,24 @@ function lom_field_bases_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_longtitude'
-  $field_bases['field_longtitude'] = array(
+  // Exported field_base: 'field_long'
+  $field_bases['field_long'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_longtitude',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
-    'indexes' => array(
-      'format' => array(
-        0 => 'format',
-      ),
-    ),
+    'field_name' => 'field_long',
+    'foreign keys' => array(),
+    'indexes' => array(),
     'locked' => 0,
-    'module' => 'text',
+    'module' => 'number',
     'settings' => array(
-      'max_length' => 100,
+      'decimal_separator' => '.',
+      'precision' => 15,
+      'scale' => 8,
     ),
     'translatable' => 0,
-    'type' => 'text',
+    'type' => 'number_decimal',
   );
 
   // Exported field_base: 'field_map'

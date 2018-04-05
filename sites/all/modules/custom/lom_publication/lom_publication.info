@@ -6,3 +6,4 @@ description = Sighting
 core = 7.x
 package = Lemurs Of Madagascar
 
+stylesheets[all][] = css/sighting.css

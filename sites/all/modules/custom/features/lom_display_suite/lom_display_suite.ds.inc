@@ -12,6 +12,21 @@ function lom_display_suite_ds_field_settings_info() {
 
   $ds_fieldsetting = new stdClass();
   $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|authors|default';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'authors';
+  $ds_fieldsetting->view_mode = 'default';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '8',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+  );
+  $export['node|authors|default'] = $ds_fieldsetting;
+
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
   $ds_fieldsetting->id = 'node|best_places|best_places_map_view';
   $ds_fieldsetting->entity_type = 'node';
   $ds_fieldsetting->bundle = 'best_places';
@@ -289,6 +304,46 @@ function lom_display_suite_ds_field_settings_info() {
  */
 function lom_display_suite_ds_layout_settings_info() {
   $export = array();
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|authors|default';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'authors';
+  $ds_layout->view_mode = 'default';
+  $ds_layout->layout = 'ds_2col_stacked';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'left' => array(
+        0 => 'field_photo',
+      ),
+      'right' => array(
+        1 => 'body',
+      ),
+      'header' => array(
+        2 => 'title',
+      ),
+    ),
+    'fields' => array(
+      'field_photo' => 'left',
+      'body' => 'right',
+      'title' => 'header',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'header' => 'div',
+      'left' => 'div',
+      'right' => 'div',
+      'footer' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 0,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+    'layout_disable_css' => 0,
+  );
+  $export['node|authors|default'] = $ds_layout;
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;
