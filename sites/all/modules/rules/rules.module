@@ -1019,7 +1019,6 @@ function rules_invoke_all() {
  */
 function rules_invoke_event() {
     
-}
   $args = func_get_args();
   $event_name = $args[0];
   unset($args[0]);
