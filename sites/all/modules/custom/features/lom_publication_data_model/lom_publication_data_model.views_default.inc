@@ -145,6 +145,7 @@ function lom_publication_data_model_views_default_views() {
   $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
   $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'full';
   $handler->display->display_options['fields']['rendered_entity']['bypass_access'] = 0;
+
   /* Field: Comment: Depth */
   $handler->display->display_options['fields']['thread']['id'] = 'thread';
   $handler->display->display_options['fields']['thread']['table'] = 'comment';
@@ -657,6 +658,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['table'] = 'field_data_field_is_local';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
+
   /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
@@ -814,11 +816,13 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
+
   /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_latitude']['id'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['table'] = 'field_data_field_latitude';
   $handler->display->display_options['fields']['field_latitude']['field'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['label'] = 'latitude';
+
   /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_longtitude']['id'] = 'field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['table'] = 'field_data_field_longtitude';
@@ -839,12 +843,14 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
+
   /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
+
   /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
@@ -857,6 +863,7 @@ return $user->uid;';
     'multiple_from' => '',
     'multiple_to' => '',
   );
+
   /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
@@ -1014,11 +1021,13 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
+
   /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_latitude']['id'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['table'] = 'field_data_field_latitude';
   $handler->display->display_options['fields']['field_latitude']['field'] = 'field_latitude';
   $handler->display->display_options['fields']['field_latitude']['label'] = 'latitude';
+
   /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_longtitude']['id'] = 'field_longtitude';
   $handler->display->display_options['fields']['field_longtitude']['table'] = 'field_data_field_longtitude';
@@ -1039,18 +1048,21 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
+
   /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
+
   /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['label'] = 'deleted';
   $handler->display->display_options['fields']['field_is_deleted']['type'] = 'list_key';
+
   /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
@@ -1267,6 +1279,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_place_name']['table'] = 'field_data_field_place_name';
   $handler->display->display_options['fields']['field_place_name']['field'] = 'field_place_name';
   $handler->display->display_options['fields']['field_place_name']['label'] = 'place_name';
+
   /* Field: Content: Number observed */
   $handler->display->display_options['fields']['field_count']['id'] = 'field_count';
   $handler->display->display_options['fields']['field_count']['table'] = 'field_data_field_count';
@@ -1282,12 +1295,14 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
+
   /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
+
   /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
@@ -1300,6 +1315,7 @@ return $user->uid;';
     'multiple_from' => '',
     'multiple_to' => '',
   );
+
   /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';

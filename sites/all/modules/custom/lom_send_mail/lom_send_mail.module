@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * hook_menu
+ * anaovana test ny mandefa ilay mail
+ */
+function lom_send_mail_menu(){
+    
+}
+
+/**
+ *  ity no fonction mandefa ilay mail 
+ *  ny $nid sy ny olona andefasana azy no apidirina eo
+ */
+function lom_send_mail_email_send($nid){
+    
+    module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+    if($nid != NULL){
+        try{
+            global $user;
+            $module = 'lom_send_mail';
+            $key    = 'lom_email_notification_in_comments';
+            $from   = $user->mail;
+            $node   = new PublicationNodeWrapper($nid);
+            $title  = strtolower($node->getTitle());
+            $uid_created  = $node->getAuthorId();
+            $user_created = new UserUserWrapper($uid_created);
+            $Email_to     = $user_created->getMail();
+            $url = url("node/$nid");
+            global $base_url;
+            $link  = $base_url.$url;
+
+            // avy eo alefa parametre ilay lien
+            $params = array('sighting_url'  => $link);
+
+            $result = drupal_mail($module, $key, $Email_to, language_default(), $params, $from, TRUE);
+
+            // Send email
+            if ($result['result'] == TRUE) {
+                drupal_set_message(t('[@date] Mail envoyé à @TO',array('@TO'=>$Email_to , '@date' => date('d - M - Y'))));
+                return TRUE;
+            }
+            else {
+                drupal_set_message(t('[@date] Un e-mail n\'a pas été envoyé à @TO',array('@TO'=>$Email_to, '@date' => date('d - M - Y'))), 'error');
+                return FALSE;
+            }
+        }catch (Exception $ex){
+            drupal_set_message(t('[lom_send_mail::lom_send_mail_email_send] Erruer: @mess',array('@mess' => $ex->getMessage())),'error');
+            return FALSE;
+        }
+    }
+}
+
+/**
+ * Implements hook_mail
+ * @param $key
+ * @param $message
+ * @param $params
+ */
+function lom_send_mail_mail($key, &$message, $params){
+    
+    if ($key == 'lom_email_notification_in_comments'){
+        global $user;
+
+        $body  = t('<p>Cher client,');
+        $body .= '<P><i>Ceci est un test e-mail.</i>';
+
+        $body .= t('<P>Liens vers la "sighting"');
+
+        if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
+            $body .='<BR>'.l($params['sighting_url'],$params['sighting_url']);
+        }
+
+        $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+        $message['subject'] = t('Notification de Commentaire' );
+        $message['body'][] = $body;
+    }
+}

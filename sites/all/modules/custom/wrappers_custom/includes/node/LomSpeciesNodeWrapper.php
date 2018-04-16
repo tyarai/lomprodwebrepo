@@ -656,6 +656,7 @@ class LomSpeciesNodeWrapper extends WdNodeWrapper {
             }
             
             $query .= " WHERE n.type = 'lom_species' "; 
+
             $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             if($extinct !== NULL){
@@ -665,6 +666,7 @@ class LomSpeciesNodeWrapper extends WdNodeWrapper {
             
             
             if($changedFrom != NULL){
+
                //$query .= " AND n.changed >= ". strtotime($changedFrom); 
                 $query .= " AND n.changed >= ". $changedFrom; 
             }

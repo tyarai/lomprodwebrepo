@@ -121,3 +121,4 @@ function lom_deploy_update_7028(){
     db_add_field('comment', 'synced', $field);
     
 }
+

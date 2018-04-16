@@ -103,6 +103,7 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
             $query  = " SELECT n.nid,n.title FROM {node} n ";
            
             $query .= " WHERE n.type = 'lom_photograph' "; 
+
             $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             
