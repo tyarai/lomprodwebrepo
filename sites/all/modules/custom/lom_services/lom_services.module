@@ -37,7 +37,7 @@ function lom_services_menu(){
     
     $items['admin/config/lom-config'] = array(
         'title' => t('LOM CONFIGURATION'),
-        'description' => t('page de configuration LOM'),
+        'description' => t('Lemurs Of Madagascar configuration page'),
         'position' => 'left',
         'weight' => -25,
         'page callback' => 'system_admin_menu_block_page', //DONT CHANGE THIS!
@@ -46,8 +46,8 @@ function lom_services_menu(){
         'file path' => drupal_get_path('module', 'system'), //DONT CHANGE THIS!
     );
     
-    $items['admin/config/lom-config/init-date'] = array(
-        'title' => t('Date par defaut de mise à jour mobile'),
+    $items['admin/config/lom-config/init-update-date'] = array(
+        'title' => t('Initial update date'),
         'page callback' => 'drupal_get_form',
         'page arguments' => array('_lom_services_init_date_config_form'),
         'access arguments' => array('access administration pages'),
@@ -906,7 +906,7 @@ function _lom_services_changed_comments($data){
 function _lom_services_init_date_config_form($form, $form_state) {
     
     $form['_LOM_DATE_SYNCRON'] = array(
-        '#title'        => t('Date par defaut de mije à jour mobile'),
+        '#title'        => t('Set initial update date'),
         '#type'         => 'select',
         '#type'         => 'date_popup',
         '#date_format'  => 'Y-m-d',
