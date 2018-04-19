@@ -34,6 +34,25 @@ function lom_services_menu(){
         'access callback'   => TRUE,
         'page arguments' => array(2,3),//uid,synced_value
     );
+    
+    $items['admin/config/lom-config'] = array(
+        'title' => t('LOM CONFIGURATION'),
+        'description' => t('page de configuration LOM'),
+        'position' => 'left',
+        'weight' => -25,
+        'page callback' => 'system_admin_menu_block_page', //DONT CHANGE THIS!
+        'access arguments' => array('administer site configuration'), // Permission needed to view this area
+        'file' => 'system.admin.inc', //DONT CHANGE THIS!
+        'file path' => drupal_get_path('module', 'system'), //DONT CHANGE THIS!
+    );
+    
+    $items['admin/config/lom-config/init-date'] = array(
+        'title' => t('Date par defaut de mise à jour mobile'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('_lom_services_init_date_config_form'),
+        'access arguments' => array('access administration pages'),
+        'type' => MENU_NORMAL_ITEM,
+    );
     return $items;
 }
 
@@ -532,38 +551,37 @@ function _lom_services_changed_maps($from_date){
  * Maka ny Nodes vaovao na niova rehetra (Species, Photographs, Family, Map)
  */
 
-function _lom_services_changed_nodes($from_date){
+function _lom_services_changed_nodes($from_date = NULL){
    
     $data = array();
     $lastSyncDate = strtotime('now');
     
-    if($from_date != NULL){
-        
-        module_load_include('php','wrappers_custom','includes/node/LomMapNodeWrapper');
-        module_load_include('php','wrappers_custom','includes/node/LomPhotographNodeWrapper');
-        module_load_include('php','wrappers_custom','includes/node/LomFamilyNodeWrapper');
-        module_load_include('php','wrappers_custom','includes/node/BestPlacesNodeWrapper');
-        module_load_include('php','wrappers_custom','includes/node/LomSpeciesNodeWrapper');
-        module_load_include('php','wrappers_custom','includes/node/AuthorsNodeWrapper');
-        
-        $photographs = LomPhotographNodeWrapper::allPhotographs($from_date);;
-        $maps        = LomMapNodeWrapper::allMaps($from_date);
-        $families    = LomFamilyNodeWrapper::allFamilies($from_date);
-        $best_places = BestPlacesNodeWrapper::allPlaces($from_date);
-        $species     = LomSpeciesNodeWrapper::allSpecies($from_date);;
-        $authors     = AuthorsNodeWrapper::allAuthors($from_date);
-        
-        $data  = array(
-            'species'     => $species,
-            'families'    => $families,
-            'photographs' => $photographs,
-            'maps'        => $maps,
-            'best_places' => $best_places,
-            'authors'     => $authors,
-        );
-        
-        
+    if($from_date == NULL){
+        $from_date = strtotime(variable_get('_LOM_DATE_SYNCRON'));
     }
+        
+    module_load_include('php','wrappers_custom','includes/node/LomMapNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/node/LomPhotographNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/node/LomFamilyNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/node/BestPlacesNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/node/LomSpeciesNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/node/AuthorsNodeWrapper');
+
+    $photographs = LomPhotographNodeWrapper::allPhotographs($from_date);;
+    $maps        = LomMapNodeWrapper::allMaps($from_date);
+    $families    = LomFamilyNodeWrapper::allFamilies($from_date);
+    $best_places = BestPlacesNodeWrapper::allPlaces($from_date);
+    $species     = LomSpeciesNodeWrapper::allSpecies($from_date);;
+    $authors     = AuthorsNodeWrapper::allAuthors($from_date);
+
+    $data  = array(
+        'species'     => $species,
+        'families'    => $families,
+        'photographs' => $photographs,
+        'maps'        => $maps,
+        'best_places' => $best_places,
+        'authors'     => $authors,
+    );
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
     $data["serverLastSyncDate"] = $lastSyncDate;
@@ -883,4 +901,21 @@ function _lom_services_changed_comments($data){
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
     return $comments;
+}
+
+function _lom_services_init_date_config_form($form, $form_state) {
+    
+    $form['_LOM_DATE_SYNCRON'] = array(
+        '#title'        => t('Date par defaut de mije à jour mobile'),
+        '#type'         => 'select',
+        '#type'         => 'date_popup',
+        '#date_format'  => 'Y-m-d',
+        '#prefix'       => '<div>',
+        '#suffix'       => '</div>',
+        '#weight'       =>  1,
+        '#default_value'        => variable_get('_LOM_DATE_SYNCRON'),
+        '#date_label_position'  => 'none',
+    );
+
+    return system_settings_form($form);
 }
