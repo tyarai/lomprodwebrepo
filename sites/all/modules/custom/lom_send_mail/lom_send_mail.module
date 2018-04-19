@@ -11,6 +11,7 @@ function lom_send_mail_menu(){
 /**
  *  ity no fonction mandefa ilay mail 
  *  ny $nid sy ny olona andefasana azy no apidirina eo
+ *  - $nid : nid of sighting
  */
 function lom_send_mail_email_send($nid){
     
@@ -27,7 +28,7 @@ function lom_send_mail_email_send($nid){
             $uid_created  = $node->getAuthorId();
             $user_created = new UserUserWrapper($uid_created);
             $Email_to     = $user_created->getMail();
-            $url = url("node/$nid");
+            $url = url("node/$nid"); // Ity function ity no mamadika ilay url ho lasa "sighting/$nid"
             global $base_url;
             $link  = $base_url.$url;
 
@@ -38,11 +39,11 @@ function lom_send_mail_email_send($nid){
 
             // Send email
             if ($result['result'] == TRUE) {
-                drupal_set_message(t('[@date] Mail envoyé à @TO',array('@TO'=>$Email_to , '@date' => date('d - M - Y'))));
+                //drupal_set_message(t('[@date] Mail envoyé à @TO',array('@TO'=>$Email_to , '@date' => date('d - M - Y'))));
                 return TRUE;
             }
             else {
-                drupal_set_message(t('[@date] Un e-mail n\'a pas été envoyé à @TO',array('@TO'=>$Email_to, '@date' => date('d - M - Y'))), 'error');
+                //drupal_set_message(t('[@date] Un e-mail n\'a pas été envoyé à @TO',array('@TO'=>$Email_to, '@date' => date('d - M - Y'))), 'error');
                 return FALSE;
             }
         }catch (Exception $ex){
@@ -63,7 +64,7 @@ function lom_send_mail_mail($key, &$message, $params){
     if ($key == 'lom_email_notification_in_comments'){
         global $user;
 
-        $body  = t('<p>Cher client,');
+        $body  = t('<p>Dear user,');
         $body .= '<P><i>Ceci est un test e-mail.</i>';
 
         $body .= t('<P>Liens vers la "sighting"');
