@@ -404,6 +404,16 @@ function lom_publication_form_alter(&$form, &$form_state, $form_id){
     
     if($form_id == 'publication_node_form'){
         
+        if(isset($form['#node'])){
+            $node_id = 0;
+            $node    = $form['#node'];
+            $node_id = $node->vid;
+            
+            if(isset($form['#action']) && $form['#action'] == "/node/$node_id/edit"){
+
+                drupal_goto("/sighting/$node_id/edit");
+            }
+        }
         
         if(isset($form['actions']['delete'])){
             unset($form['actions']['delete']);
