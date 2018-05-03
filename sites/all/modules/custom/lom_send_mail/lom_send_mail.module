@@ -22,7 +22,7 @@ function lom_send_mail_email_send($nid){
             global $user;
             $module = 'lom_send_mail';
             $key    = 'lom_email_notification_in_comments';
-            $from   = $user->mail;
+            $from   = 'no-reply@lemursofmadagascar.com';//$user->mail;
             $node   = new PublicationNodeWrapper($nid);
             $title  = strtolower($node->getTitle());
             $uid_created  = $node->getAuthorId();
