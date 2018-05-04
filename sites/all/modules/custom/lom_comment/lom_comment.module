@@ -15,8 +15,8 @@ function lom_comment_comment_presave($comment){
     
     $node_type  = $comment->node_type;
     if($node_type == 'comment_node_publication'){
-        $nid = $comment->nid;
-        lom_send_mail_email_send($nid);
+        //$nid = $comment->nid;
+        //lom_send_mail_email_send($nid);
     }
 }
 
