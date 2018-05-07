@@ -26,7 +26,7 @@ function lom_send_mail_email_send($nid){
             
             $module = 'lom_send_mail';
             $key    = 'lom_email_notification_in_comments';
-            $from   = 'no-reply@lemursofmadagascar.com';//$user->mail;
+            $from   = 'info@lemursofmadagascar.com';//$user->mail;
             $node   = new PublicationNodeWrapper($nid);
             $title  = strtolower($node->getTitle());
             $uid_created  = $node->getAuthorId();
@@ -72,16 +72,16 @@ function lom_send_mail_mail($key, &$message, $params){
         global $user;
         
         $body  = t('<p>Dear ').$params['owner_name'].',';
-        $body .= '<P><i>'.$params['user_who_commented'].'</i> commented your sighting' ;
+        $body .= '<p>'.$params['user_who_commented'].' commented your sighting' ;
      
         if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
             $body .='<BR>'.l($params['sighting_url'],$params['sighting_url']);
         }
 
-        $body .= '<P>Lemurs of Madagascar team' ;
+        $body .= '<p>Lemurs of Madagascar team' ;
         
         $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
-        $message['subject'] = t('Notification de Commentaire' );
+        $message['subject'] = t('Comment notification' );
         $message['body'][] = $body;
     }
 }
