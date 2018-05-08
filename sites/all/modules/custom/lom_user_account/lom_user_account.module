@@ -5,14 +5,15 @@ function lom_user_account_entity_view($entity, $type, $view_mode, $langcode){
     if($type == 'user'){
         $output = drupal_get_form('lom_user_account_form',$entity->uid);
         $body   = drupal_render($output);
-        foreach ($entity->content as $key => $element){
-            if ($key[0] == '#') continue;
-            $entity->content[$key]['#access'] = FALSE;
-        }
-        $entity->content['created'] = array(
+            
+        $entity->content['field_last_name']['#access'] = FALSE;
+        // raha vao tsy ao anatin'ilay field ilay atao ao anatin'ilay content eto
+        // de tsy mety iseho mihitsy ilay izy
+        $entity->content['field_first_name'] = array(
             '#prefix' => '<div>',
             '#suffix' => '</div>',
             '#markup' => $body,
+            '#access' => TRUE,
         );
     }
 }
@@ -27,9 +28,25 @@ function lom_user_account_form($form, &$form_state,$user_id) {
         $user    = new UserUserWrapper($user_id);
         $account = user_load($user_id);
         
+        $form['first_name'] = array(
+            '#type'  => 'markup',
+            '#markup'=> t('Fisrt Name : ').$user->getFirstName(),
+            '#prefix' => '<div>',
+            '#suffix' => '</div>',
+        );
+        
+        $form['last_name'] = array(
+            '#type'  => 'markup',
+            '#markup'=> t('Last Name : ').$user->getLastName(),
+            '#prefix' => '<div>',
+            '#suffix' => '</div>',
+        );
+        
         $form['user_email'] = array(
             '#type'  => 'markup',
-            '#markup'=> $account->mail,
+            '#markup'=> t('E-mail : ').$account->mail,
+            '#prefix' => '<div>',
+            '#suffix' => '</div>',
         );
         
         $form['lom_settings'] = array(
