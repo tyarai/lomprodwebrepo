@@ -1,0 +1,42 @@
+<?php
+
+function lom_user_account_entity_view($entity, $type, $view_mode, $langcode){
+    
+    if($type == 'user'){
+        $output = drupal_get_form('lom_user_account_form',$entity->uid);
+        $body   = drupal_render($output);
+        foreach ($entity->content as $key => $element){
+            if ($key[0] == '#') continue;
+            $entity->content[$key]['#access'] = FALSE;
+        }
+        $entity->content['created'] = array(
+            '#prefix' => '<div>',
+            '#suffix' => '</div>',
+            '#markup' => $body,
+        );
+    }
+}
+
+function lom_user_account_form($form, &$form_state,$user_id) {
+    
+    if($user_id != 0 && $user_id != NULL){
+        
+        $form['#tree'] = TRUE;
+
+        module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+        $user    = new UserUserWrapper($user_id);
+        $account = user_load($user_id);
+        
+        $form['user_email'] = array(
+            '#type'  => 'markup',
+            '#markup'=> $account->mail,
+        );
+        
+        $form['lom_settings'] = array(
+            '#type'  => 'markup',
+            '#markup'=> l(t('Settings'), '/lom_settings'),
+        );
+
+        return $form;
+    }
+}
