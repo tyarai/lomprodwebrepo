@@ -232,13 +232,20 @@
     </div>
   <?php endif; ?>
 
+  
   <footer id="colophon" class="site-footer" role="contentinfo">
     <div class="container">
       <div class="row">
-        <div class="fcred col-sm-12">
-          <?php print t('Copyright'); ?> &copy; <?php echo date("Y"); ?>, <a href="<?php print $front_page; ?>"><?php print $site_name; ?></a>. <?php print t('Theme by'); ?>  <a href="http://www.devsaran.com" target="_blank">Devsaran</a>.
+        <div class="fcred col-sm-12 footer">
+          
+            <div class="footer-img">
+                <img src="/sites/default/files/logo_1.png" alt="crypto EFX">
+            </div>
+            <div class="footer-img">
+                <img src="/sites/default/files/logo_1.png" alt="crypto EFX">
+            </div>
         </div>
       </div>
     </div>
-  </div>
+  </footer>
 </div>
