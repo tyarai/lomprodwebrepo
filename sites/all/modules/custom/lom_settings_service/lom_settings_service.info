@@ -1,4 +1,4 @@
 name = LOM Settings Service
 description = LOM Settings Service
 core = 7.x
-package = ADRA
+package = LOM
