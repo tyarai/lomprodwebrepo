@@ -32,9 +32,9 @@ function lom_send_mail_email_send($nid){
             $uid_created  = $node->getAuthorId();
             $user_created = new UserUserWrapper($uid_created);
             $Email_to     = $user_created->getMail();
-            $url = url("node/$nid"); // Ity function ity no mamadika ilay url ho lasa "sighting/$nid"
+            //$url = url("node/$nid"); // Ity function ity no mamadika ilay url ho lasa "sighting/$nid"
             global $base_url;
-            $link  = $base_url.$url;
+            $link  = $base_url.'/sighting/'.$nid;//$url;
 
             // avy eo alefa parametre ilay lien
             $params = array('sighting_url'       => $link,
@@ -72,7 +72,7 @@ function lom_send_mail_mail($key, &$message, $params){
         global $user;
         
         $body  = t('<p>Dear ').$params['owner_name'].',';
-        $body .= '<p>'.$params['user_who_commented'].' commented your sighting' ;
+        $body .= '<BR><p>'.$params['user_who_commented'].' commented your sighting' ;
      
         if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
             $body .='<BR>'.l($params['sighting_url'],$params['sighting_url']);
