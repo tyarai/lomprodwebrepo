@@ -34,9 +34,10 @@ function lom_send_mail_email_send($nid){
             $Email_to     = $user_created->getMail();
             $url = url("node/$nid"); // Ity function ity no mamadika ilay url ho lasa "sighting/$nid"
             global $base_root;
-            $link  = $base_root.'/'.$url;
-            //$link  = 'https://www.lemursofmadagascar.com/'. $url;
-
+            $link  = $base_root.$url;
+            
+            
+            
             // avy eo alefa parametre ilay lien
             $params = array('sighting_url'       => $link,
                             'owner_name'         => $user_created->getName(),
