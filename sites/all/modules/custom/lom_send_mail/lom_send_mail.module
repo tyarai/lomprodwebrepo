@@ -74,10 +74,10 @@ function lom_send_mail_mail($key, &$message, $params){
         global $user;
         
         $body  = t('<p>Dear ').$params['owner_name'].',';
-        $body .= '<BR><p>'.$params['user_who_commented'].' commented your sighting' ;
+        $body .= '<br><p>'.$params['user_who_commented'].' commented your sighting' ;
      
         if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
-            $body .='<BR>'.l($params['sighting_url'],$params['sighting_url']);
+            $body .='<br>'.l($params['sighting_url'],$params['sighting_url']);
         }
 
         $body .= '<p>Lemurs of Madagascar team' ;
