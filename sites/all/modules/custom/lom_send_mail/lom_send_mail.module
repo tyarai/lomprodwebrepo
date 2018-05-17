@@ -80,7 +80,7 @@ function lom_send_mail_mail($key, &$message, $params){
             $body .='<br>'.l($params['sighting_url'],$params['sighting_url']);
         }
 
-        $body .= '<p>Lemurs of Madagascar team' ;
+        $body .= '<br>Lemurs of Madagascar team' ;
         
         $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
         $message['subject'] = t('Comment notification' );
