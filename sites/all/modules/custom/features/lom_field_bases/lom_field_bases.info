@@ -24,6 +24,7 @@ features[field_base][] = field_family_order
 features[field_base][] = field_first_name
 features[field_base][] = field_illustration_ref
 features[field_base][] = field_image
+features[field_base][] = field_images
 features[field_base][] = field_is_deleted
 features[field_base][] = field_is_local
 features[field_base][] = field_is_synced

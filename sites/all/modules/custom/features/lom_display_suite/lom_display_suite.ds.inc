@@ -293,6 +293,11 @@ function lom_display_suite_ds_field_settings_info() {
         'class' => '',
       ),
     ),
+    'ds_user_picture' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'ds_picture_thumbnail',
+    ),
   );
   $export['user|user|default'] = $ds_fieldsetting;
 
@@ -685,14 +690,14 @@ function lom_display_suite_ds_layout_settings_info() {
         10 => 'group_identification',
         11 => 'group_species',
         12 => 'group_natural_history',
-        13 => 'field_lom_natural_history',
-        14 => 'group_geographic_range',
-        15 => 'field_lom_conservation_status',
-        16 => 'group_conservation_status',
-        17 => 'field_lom_identification',
-        18 => 'group_where_to_see_it',
-        19 => 'field_lom_where_to_see_it',
-        20 => 'group_photographs',
+        13 => 'group_geographic_range',
+        14 => 'field_lom_natural_history',
+        15 => 'group_conservation_status',
+        16 => 'field_lom_conservation_status',
+        17 => 'group_where_to_see_it',
+        18 => 'field_lom_identification',
+        19 => 'group_photographs',
+        20 => 'field_lom_where_to_see_it',
         21 => 'field_species_photograph',
         22 => 'field_lom_geographic_range',
         23 => 'field_species_map',
@@ -712,14 +717,14 @@ function lom_display_suite_ds_layout_settings_info() {
       'group_identification' => 'ds_content',
       'group_species' => 'ds_content',
       'group_natural_history' => 'ds_content',
-      'field_lom_natural_history' => 'ds_content',
       'group_geographic_range' => 'ds_content',
-      'field_lom_conservation_status' => 'ds_content',
+      'field_lom_natural_history' => 'ds_content',
       'group_conservation_status' => 'ds_content',
-      'field_lom_identification' => 'ds_content',
+      'field_lom_conservation_status' => 'ds_content',
       'group_where_to_see_it' => 'ds_content',
-      'field_lom_where_to_see_it' => 'ds_content',
+      'field_lom_identification' => 'ds_content',
       'group_photographs' => 'ds_content',
+      'field_lom_where_to_see_it' => 'ds_content',
       'field_species_photograph' => 'ds_content',
       'field_lom_geographic_range' => 'ds_content',
       'field_species_map' => 'ds_content',
@@ -1209,15 +1214,17 @@ function lom_display_suite_ds_layout_settings_info() {
   $ds_layout->settings = array(
     'regions' => array(
       'ds_content' => array(
-        0 => 'field_first_name',
-        1 => 'field_last_name',
-        2 => 'name',
+        0 => 'ds_user_picture',
+        1 => 'name',
+        2 => 'field_first_name',
+        3 => 'field_last_name',
       ),
     ),
     'fields' => array(
+      'ds_user_picture' => 'ds_content',
+      'name' => 'ds_content',
       'field_first_name' => 'ds_content',
       'field_last_name' => 'ds_content',
-      'name' => 'ds_content',
     ),
     'classes' => array(),
     'wrappers' => array(
@@ -1228,6 +1235,7 @@ function lom_display_suite_ds_layout_settings_info() {
     'layout_attributes_merge' => 1,
     'layout_link_attribute' => '',
     'layout_link_custom' => '',
+    'layout_disable_css' => FALSE,
   );
   $export['user|user|default'] = $ds_layout;
 

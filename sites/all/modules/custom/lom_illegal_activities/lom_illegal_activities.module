@@ -1,0 +1,156 @@
+<?php
+
+
+function lom_illegal_activities_resources() {
+    return array(
+        
+    'lom_illegal_activities_services'=> array(
+        
+            'actions' => array(
+                
+                'new_illegal_activities' => array(
+
+                    'help'      => t('Create new illegal activities'),
+                    'callback'  => '_lom_illegal_activities_new_illegal_activity',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Title',
+                        ),
+                    ),
+                ),
+                
+                'new_comment' => array(
+
+                    'help'      => t('Create new comment'),
+                    'callback'  => '_lom_illegal_activities_new_comment',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Data',
+                        ),
+                    ),
+                ),
+                
+                'edit_comment' => array(
+
+                    'help'      => t('Edit comment'),
+                    'callback'  => '_lom_illegal_activities_edit_comment',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name'      => 'data', 
+                                    'optional'  => FALSE, //mandatory parameter
+                                    'source'    => 'data',
+                                    'type'      => 'data', 
+                                    'description' => 'Data',
+                                ),
+                    ),
+                ),
+                'changed_comments' => array(
+
+                    'help'      => t('Get user\'s changed comments'),
+                    'callback'  => '_lom_illegal_activities_changed_comments',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Data',
+                        ),
+                    ),
+                ),
+                
+                'changed_illegal_activities' => array(
+
+                    'help'      => t('Export recently changed sightings'),
+                    'callback'  => '_lom_illegal_activities_changed_illegal_activity',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'uid', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => array('param' => 'uid'),
+                            'type'      => 'int', 
+                            'description' => 'User uid',
+                        ),
+                        array(
+                            'name'      => 'from_date', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'from_date'),
+                            'type'      => 'string', 
+                            'description' => 'From Date',
+                        ),
+                        array(
+                            'name'      => 'start', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'start'),
+                            'type'      => 'int', 
+                            'description' => 'Start',
+                        ),
+                        array(
+                            'name'      => 'count', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'count'),
+                            'type'      => 'int', 
+                            'description' => 'Count',
+                        ),
+                        array(
+                            'name'      => 'synced', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'synced'),
+                            'type'      => 'int', 
+                            'description' => 'Synced',
+                        ),
+                    ),
+                ),
+                
+                'count_illegal_activities' => array(
+
+                    'help'      => t('Count sightings'),
+                    'callback'  => '_lom_illegal_activities_count_illegal_activities',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'uid', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => array('param' => 'uid'),
+                            'type'      => 'int', 
+                            'description' => 'User uid',
+                        ),
+                        array(
+                            'name'      => 'from_date', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'from_date'),
+                            'type'      => 'int', 
+                            'description' => 'From Date',
+                        ),
+                        array(
+                            'name'      => 'synced', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'synced'),
+                            'type'      => 'int', 
+                            'description' => 'Synced',
+                        ),
+                    ),
+                ),
+            ),  
+        ),
+    );
+}
