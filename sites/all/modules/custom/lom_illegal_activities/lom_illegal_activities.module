@@ -186,7 +186,7 @@ function lom_illegal_activities_resources() {
                 'edit_comment' => array(
 
                     'help'      => t('Edit comment'),
-                    'callback'  => '_lom_illegal_activities_edit_comment',
+                    'callback'  => '_lom_illegal_activities_comment_edit',
                     'access callback' => '_lom_illegal_activities_access_permission',
                     'access arguments append' => FALSE,
                     'args' =>array(
@@ -405,7 +405,7 @@ function _lom_illegal_activities_new_comment($data){
  * Create edit  comment
  * 
  */
-function _lom_illegal_activities_edit_comment($data){
+function _lom_illegal_activities_comment_edit($data){
   
     $cid = 0;
     module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');

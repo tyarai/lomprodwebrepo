@@ -539,7 +539,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_offence',
-    'label' => 'Offence',
+    'label' => 'Offense',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -606,7 +606,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
   t('Body');
   t('Images');
   t('Modified');
-  t('Offence');
+  t('Offense');
   t('altitude');
   t('iPhone UUID');
   t('is Deleted');
