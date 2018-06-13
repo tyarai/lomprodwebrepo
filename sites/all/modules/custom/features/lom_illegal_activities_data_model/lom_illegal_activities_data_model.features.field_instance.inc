@@ -506,6 +506,55 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-illegal_activities-field_offence'
+  $field_instances['node-illegal_activities-field_offence'] = array(
+    'bundle' => 'illegal_activities',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 11,
+      ),
+      'sighting_list_view_mode' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_offence',
+    'label' => 'Offence',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 15,
+    ),
+  );
+
   // Exported field_instance: 'node-illegal_activities-field_uuid'
   $field_instances['node-illegal_activities-field_uuid'] = array(
     'bundle' => 'illegal_activities',
@@ -557,6 +606,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
   t('Body');
   t('Images');
   t('Modified');
+  t('Offence');
   t('altitude');
   t('iPhone UUID');
   t('is Deleted');

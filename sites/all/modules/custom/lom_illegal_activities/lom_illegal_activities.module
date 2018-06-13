@@ -343,7 +343,7 @@ function _lom_illegal_activities_new_comment($data){
   
     $cid    = 0;
     $error  = NULL;
-    module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
     module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
   
     if($data != NULL){
@@ -356,7 +356,7 @@ function _lom_illegal_activities_new_comment($data){
             global $user;
             $_user = new UserUserWrapper($user->uid);
             
-            if(! CommentNodePublicationCommentWrapper::lookupUUID($data['uuid'],$errorMessage,$cid)){
+            if(! CommentNodeIllegalActivitiesCommentWrapper::lookupUUID($data['uuid'],$errorMessage,$cid)){
             
                 $comment = new stdClass();
                 
@@ -385,6 +385,124 @@ function _lom_illegal_activities_new_comment($data){
             $error = $e->getMessage();
             $transaction->rollback();
             drupal_set_message(t('New comment services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'cid'    =>intval($cid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+
+/*
+ * Create edit  comment
+ * 
+ */
+function _lom_illegal_activities_edit_comment($data){
+  
+    $cid = 0;
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            $uuid               = $data['uuid'];
+            $body               = $data['body'];
+            $status             = $data['status'];
+            $deleted            = $data['deleted'];
+            $error              = NULL;
+                    
+            
+            CommentNodeIllegalActivitiesCommentWrapper::lookupUUID($uuid, $error, $cid);
+            
+            if($cid != 0){
+                $comment = new CommentNodeIllegalActivitiesCommentWrapper($cid);
+                $comment->setCommentBody($body);
+                $comment->setStatus($status);
+                $comment->setIsdeleted($deleted);
+                $comment->save();
+            }
+            
+            
+          
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('Edit comment services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'cid'    =>intval($cid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+
+/*
+ * Create edit  comment
+ * 
+ */
+function _lom_illegal_activities_edit_comment($data){
+  
+    $cid = 0;
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            $uuid               = $data['uuid'];
+            $body               = $data['body'];
+            $status             = $data['status'];
+            $deleted            = $data['deleted'];
+            $error              = NULL;
+                    
+            
+            CommentNodeIllegalActivitiesCommentWrapper::lookupUUID($uuid, $error, $cid);
+            
+            if($cid != 0){
+                $comment = new CommentNodeIllegalActivitiesCommentWrapper($cid);
+                $comment->setCommentBody($body);
+                $comment->setStatus($status);
+                $comment->setIsdeleted($deleted);
+                $comment->save();
+            }
+            
+            
+          
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('Edit comment services :@error',array('@error'=>$e->getMessage())));
             $errorMessage = $e->getMessage();
         }
         
