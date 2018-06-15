@@ -20,20 +20,29 @@ function lom_send_mail_email_send($nid){
     if($nid != NULL){
         try{
             global $user;
+            $_user      = new UserUserWrapper($user->uid);
+            $_userName  = $_user->getName();
+            
+            
             $module = 'lom_send_mail';
             $key    = 'lom_email_notification_in_comments';
-            $from   = 'no-reply@lemursofmadagascar.com';//$user->mail;
+            $from   = 'info@lemursofmadagascar.com';//$user->mail;
             $node   = new PublicationNodeWrapper($nid);
             $title  = strtolower($node->getTitle());
             $uid_created  = $node->getAuthorId();
             $user_created = new UserUserWrapper($uid_created);
             $Email_to     = $user_created->getMail();
             $url = url("node/$nid"); // Ity function ity no mamadika ilay url ho lasa "sighting/$nid"
-            global $base_url;
-            $link  = $base_url.$url;
-
+            global $base_root;
+            $link  = $base_root.$url;
+            
+            
+            
             // avy eo alefa parametre ilay lien
-            $params = array('sighting_url'  => $link);
+            $params = array('sighting_url'       => $link,
+                            'owner_name'         => $user_created->getName(),
+                            'user_who_commented' => $_userName,
+                        );
 
             $result = drupal_mail($module, $key, $Email_to, language_default(), $params, $from, TRUE);
 
@@ -63,18 +72,18 @@ function lom_send_mail_mail($key, &$message, $params){
     
     if ($key == 'lom_email_notification_in_comments'){
         global $user;
-
-        $body  = t('<p>Dear user,');
-        $body .= '<P><i>Ceci est un test e-mail.</i>';
-
-        $body .= t('<P>Liens vers la "sighting"');
-
+        
+        $body  = t('<p>Dear ').$params['owner_name'].',';
+        $body .= '<br><p>'.$params['user_who_commented'].' commented your sighting' ;
+     
         if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
-            $body .='<BR>'.l($params['sighting_url'],$params['sighting_url']);
+            $body .='<br>'.l($params['sighting_url'],$params['sighting_url']);
         }
 
+        $body .= '<br>Lemurs of Madagascar team' ;
+        
         $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
-        $message['subject'] = t('Notification de Commentaire' );
+        $message['subject'] = t('Comment notification' );
         $message['body'][] = $body;
     }
 }

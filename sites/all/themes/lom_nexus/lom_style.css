@@ -1369,3 +1369,12 @@ ul.postDateInfo{
     border-style: solid;
     border-width: 1px;
 }
+.footer-img{
+    display: inline-block;
+    width: 29em;
+    margin: auto auto;
+}
+
+.footer{
+    margin: auto auto;
+}
