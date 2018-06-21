@@ -1,73 +1,6 @@
 <?php
 
-
-/*
- * Function mi-declarer endpoint
- */
-function lom_illegal_activities_default_services_endpoint() {
-    
-    $endpoints = array();
-    
-    $endpoint           = new stdClass();
-    $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
-    $endpoint->api_version = 3;
-    $endpoint->name     = 'lom_services';
-    $endpoint->server   = 'rest_server';
-    $endpoint->path     = 'lom_endpoint/api/v1/services';
-    $endpoint->authentication =array();// array( 'services' => 'services',);
-    $endpoint->server_settings = array(
-        'formatters'    => array(
-            'json'      => TRUE,
-            'bencode'   => FALSE,
-            'jsonp'     => FALSE,
-            'php'       => FALSE,
-            'xml'       => FALSE,
-        ),
-        'parsers' => array(
-            'application/json'                  => TRUE,
-            'application/vnd.php.serialized'    => FALSE,
-            'application/x-www-form-urlencoded' => TRUE,
-            'application/xml'                   => FALSE,
-            'multipart/form-data'               => FALSE,
-            'text/xml'                          => FALSE,
-        ),
-    );
-    $endpoint->resources = array(
-        
-        'lom_illegal_activities_services' => array(
-            'actions' => array(
-                'new_illegal_activity' => array( //Export to iPhone
-                    'enabled'          => '1',
-                ),
-                'changed_illegal_activities' => array(
-                    'enabled' => '1',
-                ),
-                'count_illegal_activities' => array(
-                    'enabled'  => '1',
-                ),
-                'new_comment' => array(
-                    'enabled' => '1',
-                ),
-                'edit_comment' => array(
-                    'enabled'     => '1',
-                ),
-                'changed_comments' => array(
-                    'enabled'  => '1',
-                ),
-            ),
-        ),
-    );
-    
-    $endpoint->debug = 1;
-
-    $endpoints[] = $endpoint;
-
-    return $endpoints;
-      
-}
-
-
-function lom_illegal_activities_resources() {
+function lom_illegal_activities_services_resources() {
     return array(
         
     'lom_illegal_activities_services'=> array(
@@ -93,7 +26,7 @@ function lom_illegal_activities_resources() {
                 
                 'changed_illegal_activities' => array(
 
-                    'help'      => t('Export recently changed sightings'),
+                    'help'      => t('Export recently changed illegalActivities'),
                     'callback'  => '_lom_illegal_activities_changed_illegal_activity',
                     'access callback' => '_lom_illegal_activities_access_permission',
                     'access arguments append' => FALSE,
@@ -138,7 +71,7 @@ function lom_illegal_activities_resources() {
                 
                 'count_illegal_activities' => array(
 
-                    'help'      => t('Count sightings'),
+                    'help'      => t('Count illegalActivities'),
                     'callback'  => '_lom_illegal_activities_count_illegal_activities',
                     'access callback' => '_lom_illegal_activities_access_permission',
                     'access arguments append' => FALSE,
@@ -284,29 +217,29 @@ function _lom_illegal_activities_new_illegal_activity($data){
 
 
 /*
- * 1- Rehefa maka ny changed sightings dia mbola synced= FALSE ny sighting
+ * 1- Rehefa maka ny changed illegalActivities dia mbola synced= FALSE ny illegalActivity
  * 2- Mila avadika synced=TRUE rehefa tafalatsaka any @ phone @ zay izy eto
  */
 function _lom_illegal_activities_changed_illegal_activity($uid,$from_date,$start,$count,$synced=NULL){
     
-    $sightings      = array("nodes"=>array());
+    $illegalActivities      = array("nodes"=>array());
     $lastSyncDate   = 0;
     
     if($uid != NULL){
         
         module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
-        $modifiedSightings  = array();
-        $sightings          = IllegalActivitiesNodeWrapper::allSightings($uid,$from_date,$start,$count,$synced,$modifiedSightings);
+        $modifiedIllegalActivities  = array();
+        $illegalActivities          = IllegalActivitiesNodeWrapper::allIllegalActivities($uid,$from_date,$start,$count,$synced,$modifiedIllegalActivities);
         
-        if(count($modifiedSightings) != 0){
+        if(count($modifiedIllegalActivities) != 0){
             
-            //--- Nisy sightings voaova taty @server dia nivadika synced=FALSE izy ireo ka mila avadika 
+            //--- Nisy Activity voaova taty @server dia nivadika synced=FALSE izy ireo ka mila avadika 
             //    synced=TRUE @ zay eto satria halatsaka any @ phone
-            foreach ($modifiedSightings as $nid => $title){
+            foreach ($modifiedIllegalActivities as $nid => $title){
                 if($nid != NULL){
-                    $_sighting = new IllegalActivitiesNodeWrapper($nid);
-                    $_sighting->setIsSynced(TRUE);
-                    $_sighting->save();
+                    $_illegalActivity = new IllegalActivitiesNodeWrapper($nid);
+                    $_illegalActivity->setIsSynced(TRUE);
+                    $_illegalActivity->save();
                 }
             }
             
@@ -314,10 +247,10 @@ function _lom_illegal_activities_changed_illegal_activity($uid,$from_date,$start
         }
     }
     
-    $sightings["serverLastSyncDate"] = $lastSyncDate;
+    $illegalActivities["serverLastSyncDate"] = $lastSyncDate;
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
-    return $sightings;
+    return $illegalActivities;
 }
 
 /*
@@ -370,7 +303,7 @@ function _lom_illegal_activities_new_comment($data){
                 $comment->subject   = $data['subject']; 
                 $comment->comment_body[$comment->language][0]['value']    = $data['body'];
                 $comment->comment_body[$comment->language][0]['format']   = 'filtered_html'; 
-                $comment->field_is_synced[$comment->language][0]['value'] = $data['synced'];
+                //$comment->field_is_synced[$comment->language][0]['value'] = $data['synced'];
                 
                 comment_submit($comment);
                 comment_save($comment);
@@ -398,6 +331,37 @@ function _lom_illegal_activities_new_comment($data){
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
     return $return;
     
+}
+
+
+/**
+ * Maka ny comments vaovao na niova rehetra (Species, Photographs, Family, Map)
+ */
+
+function _lom_illegal_activities_changed_comments($data){
+   
+    $comments       = array();
+    $lastSyncDate   = 0;
+    
+    if($data != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
+    
+        $changedFrom = (isset($data['fromDate']) && $data['fromDate'] != NULL) ? $data['fromDate'] : NULL;
+        $uid         = (isset($data['uid']) && $data['uid'] != NULL) ? $data['uid'] : NULL;
+        $synced      = (isset($data['synced']) && $data['synced'] != NULL) ? $data['synced'] : NULL;
+        $nid         = (isset($data['nid']) && $data['nid'] != NULL) ? $data['nid'] : NULL;
+        
+        $comments["comments"]  =   CommentNodeIllegalActivitiesCommentWrapper::getComments($uid, $nid,$changedFrom,$synced);
+        
+        $lastSyncDate = strtotime('now');
+        
+    }
+    
+    $comments["serverLastSyncDate"] =  $lastSyncDate;
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $comments;
 }
 
 
@@ -459,3 +423,56 @@ function _lom_illegal_activities_edit_comment($data){
     
 }
 
+
+/**
+ * hook_entity_view
+ * @param unknown $entity
+ * @param unknown $type
+ * @param unknown $view_mode
+ * @param unknown $langcode
+ */
+function lom_illegal_activities_node_view($node, $view_mode, $langcode){
+
+    if( isset($node->type) && $node->type == 'illegal_activities' ){
+        module_load_include('php', 'wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        global $user;
+        $illegal_activity   = new IllegalActivitiesNodeWrapper($node->nid);
+        $uid_created_id     = $illegal_activity->getAuthorId();
+        
+        if($user->uid != $uid_created_id && ! $illegal_activity->getOffence()){
+            $output = drupal_get_form('_lom_illegal_activities_edit_offence',$node->nid);
+            $body = drupal_render($output);
+            $node->content['field_offence'] = array(
+                '#prefix' => '<div>',
+                '#suffix' => '</div>',
+                '#markup' => $body,
+                '#weight'   => 1000, 
+            );
+        }else{
+            $node->content[field_offence]['#access'] = FALSE;
+        }
+    }
+}
+
+
+function _lom_illegal_activities_edit_offence($form, &$form_state, $illegal_avtivity_id) {
+    $form['submit'] = array(
+        '#type'     => 'submit',
+        '#value'    => 'Signaler cette publication',
+        '#prefix'   => '<div class="edit-action submit-form clearfix">',
+        '#suffix'   => '</div>',
+    );
+    $form_state['illegal_avtivity_id'] = $illegal_avtivity_id;
+    return $form;
+}
+
+function _lom_illegal_activities_edit_offence_submit($form, &$form_state) {
+
+    if($form_state['illegal_avtivity_id'] != NULL){
+        module_load_include('php', 'wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        $illegal_activity   = new IllegalActivitiesNodeWrapper($form_state['illegal_avtivity_id']);
+        $illegal_activity->setOffence(TRUE);
+        $illegal_activity->save();
+        // MBOLA ASIANA MANDEFA MAIL MAKANY AMIN'NY ADMIN ETO
+    }
+}
