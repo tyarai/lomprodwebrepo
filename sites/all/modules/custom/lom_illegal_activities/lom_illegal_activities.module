@@ -191,7 +191,7 @@ function _lom_illegal_activities_new_illegal_activity($data){
                 $node->field_is_local[$node->language][0]['value']    = $data['field_is_local'];
                 $node->field_is_synced[$node->language][0]['value']   = $data['field_is_synced'];
                 $node->field_is_deleted[$node->language][0]['value']  = 0;
-                //$node->field_images[$node->language][]                 = array('fid'=>$data['field_photo']);
+                $node->field_images[$node->language][]                = array('fid'=>$data['field_photo']);
 
                 $node = node_submit($node);
                 node_save($node);
@@ -222,8 +222,8 @@ function _lom_illegal_activities_new_illegal_activity($data){
  */
 function _lom_illegal_activities_changed_illegal_activity($uid,$from_date,$start,$count,$synced=NULL){
     
-    $illegalActivities      = array("nodes"=>array());
-    $lastSyncDate   = 0;
+    $illegalActivities  = array("nodes"=>array());
+    $lastSyncDate       = 0;
     
     if($uid != NULL){
         
@@ -439,7 +439,7 @@ function lom_illegal_activities_node_view($node, $view_mode, $langcode){
         $illegal_activity   = new IllegalActivitiesNodeWrapper($node->nid);
         $uid_created_id     = $illegal_activity->getAuthorId();
         
-        if($user->uid != $uid_created_id && ! $illegal_activity->getOffence()){
+        if($user->uid == $uid_created_id && ! $illegal_activity->getOffence()){
             $output = drupal_get_form('_lom_illegal_activities_edit_offence',$node->nid);
             $body = drupal_render($output);
             $node->content['field_offence'] = array(
@@ -473,6 +473,63 @@ function _lom_illegal_activities_edit_offence_submit($form, &$form_state) {
         $illegal_activity   = new IllegalActivitiesNodeWrapper($form_state['illegal_avtivity_id']);
         $illegal_activity->setOffence(TRUE);
         $illegal_activity->save();
-        // MBOLA ASIANA MANDEFA MAIL MAKANY AMIN'NY ADMIN ETO
+        // alefa mail eto izany ilay izy
+        _lom_illegal_activities_email_send($form_state['illegal_avtivity_id']);
+    }
+}
+
+/**
+ * Ito ny function mametra ny access @ ity webservice ity. Raha tsy authenticated tsy mahazo miditra
+ * @return boolean
+ */
+function _lom_illegal_activities_access_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return TRUE;
+}
+
+
+/**
+ *  ity no fonction mandefa ilay mail 
+ *  ny $nid sy ny olona andefasana azy no apidirina eo
+ *  - $nid : nid of sighting
+ */
+function _lom_illegal_activities_email_send($nid){
+    
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+    if($nid != NULL){
+        try{
+            global $user;
+            $_user      = new UserUserWrapper($user->uid);
+            $_userName  = $_user->getName();
+            
+            
+            $module = 'lom_send_mail';
+            $key    = 'lom_email_notification_offence';
+            $from   = 'manoarazafindrabe@gmail.com';
+            $Email_to = 'manoarazafindrabe@gmail.com';// soloina mail admin ity
+            $url      = url("node/$nid");
+            global $base_root;
+            $link  = $base_root.$url;
+            
+            // avy eo alefa parametre ilay lien
+            $params = array('sighting_url'       => $link,);
+
+            $result = drupal_mail($module, $key, $Email_to, language_default(), $params, $from, TRUE);
+
+            // Send email
+            if ($result['result'] == TRUE) {
+                //drupal_set_message(t('[@date] Mail envoyé à @TO',array('@TO'=>$Email_to , '@date' => date('d - M - Y'))));
+                return TRUE;
+            }
+            else {
+                //drupal_set_message(t('[@date] Un e-mail n\'a pas été envoyé à @TO',array('@TO'=>$Email_to, '@date' => date('d - M - Y'))), 'error');
+                return FALSE;
+            }
+        }catch (Exception $ex){
+            drupal_set_message(t('[lom_send_mail::lom_send_mail_email_send] Erruer: @mess',array('@mess' => $ex->getMessage())),'error');
+            return FALSE;
+        }
     }
 }
