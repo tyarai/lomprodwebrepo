@@ -1,5 +1,21 @@
 <?php
 
+function lom_illegal_activities_menu() {
+    
+    $items['node/%/edit-illegal-activity'] = array(
+        'title'             => t('Edit illegal activity'),
+        'page callback'     => 'drupal_get_form',
+        'access callback'   => '_lom_illegal_activities_edit_permission',
+        'page arguments'    => array('_lom_illegal_activities_edit_illegal_activity',1),
+        'type'              => MENU_LOCAL_TASK,
+        'weight'            => 10,
+    );
+    return $items;
+}
+
+/**
+ *  hook_services_resources
+ */
 function lom_illegal_activities_services_resources() {
     return array(
         
@@ -425,7 +441,7 @@ function _lom_illegal_activities_edit_comment($data){
 
 
 /**
- * hook_entity_view
+ * hook__node_view
  * @param unknown $entity
  * @param unknown $type
  * @param unknown $view_mode
@@ -439,23 +455,23 @@ function lom_illegal_activities_node_view($node, $view_mode, $langcode){
         $illegal_activity   = new IllegalActivitiesNodeWrapper($node->nid);
         $uid_created_id     = $illegal_activity->getAuthorId();
         
-        if($user->uid == $uid_created_id && ! $illegal_activity->getOffence()){
-            $output = drupal_get_form('_lom_illegal_activities_edit_offence',$node->nid);
+        if($user->uid != $uid_created_id && ! $illegal_activity->getOffence()){
+            $output = drupal_get_form('_lom_illegal_activities_view_offence',$node->nid);
             $body = drupal_render($output);
             $node->content['field_offence'] = array(
                 '#prefix' => '<div>',
                 '#suffix' => '</div>',
                 '#markup' => $body,
-                '#weight'   => 1000, 
+                '#weight' => 1000, 
             );
         }else{
-            $node->content[field_offence]['#access'] = FALSE;
+            $node->content['field_offence']['#access'] = FALSE;
         }
     }
 }
 
 
-function _lom_illegal_activities_edit_offence($form, &$form_state, $illegal_avtivity_id) {
+function _lom_illegal_activities_view_offence($form, &$form_state, $illegal_avtivity_id) {
     $form['submit'] = array(
         '#type'     => 'submit',
         '#value'    => 'Signaler cette publication',
@@ -466,7 +482,7 @@ function _lom_illegal_activities_edit_offence($form, &$form_state, $illegal_avti
     return $form;
 }
 
-function _lom_illegal_activities_edit_offence_submit($form, &$form_state) {
+function _lom_illegal_activities_view_offence_submit($form, &$form_state) {
 
     if($form_state['illegal_avtivity_id'] != NULL){
         module_load_include('php', 'wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
@@ -530,6 +546,74 @@ function _lom_illegal_activities_email_send($nid){
         }catch (Exception $ex){
             drupal_set_message(t('[lom_send_mail::lom_send_mail_email_send] Erruer: @mess',array('@mess' => $ex->getMessage())),'error');
             return FALSE;
+        }
+    }
+}
+
+function _lom_illegal_activities_edit_illegal_activity($form, &$form_state, $id) {
+    
+    module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+    $form = array();
+
+    if($id != NULL){
+        try{
+            $illegal_activity = new IllegalActivitiesNodeWrapper($id);
+            $form_state['id'] = $id;
+            
+            $form['illegal_activity'] = array(
+                '#type'     => 'fieldset',
+            );
+
+            $form['illegal_activity']['offence'] = array(
+                '#type'     => 'checkbox',
+                '#title'    => t('Offence'),
+                '#default_value' => $illegal_activity->getOffence(),
+            );
+
+            $form['illegal_activity']['status'] = array(
+                '#type'     => 'checkbox',
+                '#title'    => t('Status'),
+                '#default_value' => $illegal_activity->isPublished(),
+            );
+
+
+            $form['illegal_activity']['submit'] = array(
+                '#type'     => 'submit',
+                '#value'    => t('Enregistrer la modification'),
+            );
+    
+        } catch (Exception $ex) {
+            drupal_set_message(t('[_lom_illegal_activities_edit_illegal_activity] Error : ' . $ex->getMessages()), 'error');
+        }
+    }
+    return $form;
+}
+
+function _lom_illegal_activities_edit_illegal_activity_submit($form , &$form_state) {
+    
+    if(isset($form_state['id'])){
+        module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        $illegal_activity = new IllegalActivitiesNodeWrapper($form_state['id']);
+        $illegal_activity->setOffence($form_state['values']['offence']);
+        $illegal_activity->setPublished($form_state['values']['status']);
+        $illegal_activity->save();
+    }
+}
+
+function _lom_illegal_activities_edit_permission() {
+    // Mbola mila ovaina admin ity
+    return TRUE;
+}
+
+function lom_illegal_activities_node_presave($node) {
+    
+    if($node->type == 'illegal_activities'){
+        try{
+            module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+            $illegal_activity = new IllegalActivitiesNodeWrapper($node->nid);
+            $illegal_activity->setModified(strtotime('now'));
+        }catch(Exception $e){
+            drupal_set_message('[lom_illegal_activities_node_presave()] '.$e->getMessage(),'error');
         }
     }
 }
