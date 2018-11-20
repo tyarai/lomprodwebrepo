@@ -1,5 +1,7 @@
 <?php
 
+define('ADMIN_ROLES', 3);
+
 function lom_illegal_activities_menu() {
     
     $items['node/%/edit-illegal-activity'] = array(
@@ -597,17 +599,29 @@ function _lom_illegal_activities_edit_illegal_activity($form, &$form_state, $id)
 function _lom_illegal_activities_edit_illegal_activity_submit($form , &$form_state) {
     
     if(isset($form_state['id'])){
-        module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
-        $illegal_activity = new IllegalActivitiesNodeWrapper($form_state['id']);
-        $illegal_activity->setOffence($form_state['values']['offence']);
-        $illegal_activity->setPublished($form_state['values']['status']);
-        $illegal_activity->save();
+        
+        $db_transaction = db_transaction();
+        
+        try{
+
+            module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+            $illegal_activity = new IllegalActivitiesNodeWrapper($form_state['id']);
+            $illegal_activity->setOffence($form_state['values']['offence']);
+            $illegal_activity->setPublished($form_state['values']['status']);
+            $illegal_activity->save();
+            
+        } catch (Exception $ex) {
+            $db_transaction->rollback();
+        }
     }
 }
 
 function _lom_illegal_activities_edit_permission() {
-    // Mbola mila ovaina admin ity
-    return TRUE;
+    global $user;
+    if(user_has_role(ADMIN_ROLES,$user)){
+        return TRUE;
+    }
+    return FALSE;
 }
 
 function lom_illegal_activities_node_presave($node) {
