@@ -17,6 +17,13 @@ function lom_illegal_activities_data_model_ctools_plugin_api($module = NULL, $ap
 }
 
 /**
+ * Implements hook_views_api().
+ */
+function lom_illegal_activities_data_model_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
  * Implements hook_node_info().
  */
 function lom_illegal_activities_data_model_node_info() {

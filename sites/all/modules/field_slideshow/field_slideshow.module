@@ -974,9 +974,10 @@ function template_preprocess_field_slideshow(&$variables) {
     }
 
   // If the theme function hasn't added width and height attributes to the image, add them
-  if ($item["type"] == 'image' && strpos($variables['items'][$num]['image'], 'width=') === FALSE) {
-    $variables['items'][$num]['image'] = drupal_substr($variables['items'][$num]['image'], 0, -2) . "width=\"$dimensions[width]\" height=\"$dimensions[height]\" />";
-  }
+  // Manoa . no-commenter-na ity satria manao warning nefa tsy azoko ny dikany
+//  if ($item["type"] == 'image' && strpos($variables['items'][$num]['image'], 'width=') === FALSE) {
+//    $variables['items'][$num]['image'] = drupal_substr($variables['items'][$num]['image'], 0, -2) . "width=\"$dimensions[width]\" height=\"$dimensions[height]\" />";
+//  }
 
   // Keeps biggest dimensions
   if ($dimensions['width'] > $variables['slides_max_width']) $variables['slides_max_width'] = $dimensions['width'];

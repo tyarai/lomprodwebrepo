@@ -467,6 +467,11 @@ function lom_illegal_activities_node_view($node, $view_mode, $langcode){
         }else{
             $node->content['field_offence']['#access'] = FALSE;
         }
+        
+        // tsy mety miala ilay any amin'ny display 
+        // de eto no esorina ilay is deleted sy is synced ao amin'ny commentaire
+        $node->content['comments']['comment_form']['field_is_deleted']['#access'] = FALSE;
+        $node->content['comments']['comment_form']['field_is_synced']['#access'] = FALSE;
     }
 }
 
