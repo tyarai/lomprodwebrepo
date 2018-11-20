@@ -571,7 +571,7 @@ function _lom_illegal_activities_edit_illegal_activity($form, &$form_state, $id)
 
             $form['illegal_activity']['offence'] = array(
                 '#type'     => 'checkbox',
-                '#title'    => t('Offence'),
+                '#title'    => t('Report as offense'),
                 '#default_value' => $illegal_activity->getOffence(),
             );
 
@@ -584,7 +584,7 @@ function _lom_illegal_activities_edit_illegal_activity($form, &$form_state, $id)
 
             $form['illegal_activity']['submit'] = array(
                 '#type'     => 'submit',
-                '#value'    => t('Enregistrer la modification'),
+                '#value'    => t('Save changes'),
             );
     
         } catch (Exception $ex) {
