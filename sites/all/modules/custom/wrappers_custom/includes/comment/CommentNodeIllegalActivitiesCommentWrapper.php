@@ -139,7 +139,7 @@ class CommentNodeIllegalActivitiesCommentWrapper extends WdCommentWrapper {
     /**
      * 
      * Tadiavina ilay UUID sao efa ao anaty base
-     *
+     * Tasara asiana bundle
      * @param type $uuid
      * @param type $error
      * @param type $cid

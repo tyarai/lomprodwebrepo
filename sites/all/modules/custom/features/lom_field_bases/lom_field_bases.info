@@ -55,6 +55,7 @@ features[field_base][] = field_long
 features[field_base][] = field_map
 features[field_base][] = field_map_list
 features[field_base][] = field_modified
+features[field_base][] = field_offence
 features[field_base][] = field_photo
 features[field_base][] = field_photo_comment
 features[field_base][] = field_place_name

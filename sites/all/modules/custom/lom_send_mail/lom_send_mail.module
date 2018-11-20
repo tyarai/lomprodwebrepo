@@ -86,4 +86,19 @@ function lom_send_mail_mail($key, &$message, $params){
         $message['subject'] = t('Comment notification' );
         $message['body'][] = $body;
     }
+    if ($key == 'lom_email_notification_offence'){
+        global $user;
+        
+        $body  = t('<p>Dear admin,');
+        
+        if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
+            $body .='<br>'.l($params['sighting_url'],$params['sighting_url']);
+        }
+
+        $body .= '<br>Lemurs of Madagascar team' ;
+        
+        $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+        $message['subject'] = t('Comment notification' );
+        $message['body'][] = $body;
+    }
 }

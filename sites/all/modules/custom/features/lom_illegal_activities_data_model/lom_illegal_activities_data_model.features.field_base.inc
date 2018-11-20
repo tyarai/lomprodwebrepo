@@ -27,8 +27,8 @@ function lom_illegal_activities_data_model_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        0 => '',
-        1 => '',
+        0 => 'no',
+        1 => 'yes',
       ),
       'allowed_values_function' => '',
     ),

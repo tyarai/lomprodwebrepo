@@ -80,6 +80,7 @@ function lom_illegal_activities_data_model_field_group_info() {
       2 => 'field_lat',
       3 => 'field_altitude',
       4 => 'field_date',
+      5 => 'field_offence',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
