@@ -53,6 +53,12 @@ function lom_services_menu(){
         'access arguments' => array('access administration pages'),
         'type' => MENU_NORMAL_ITEM,
     );
+    
+    $items['lom_services/illegal_activities/taxonomy-export'] = array(
+        'page callback' => '_taxonomy_export',// Exporter-na daholo ny vocabulary rehetra
+        'access callback'   => TRUE,
+    );
+    
     return $items;
 }
 
@@ -457,9 +463,142 @@ function lom_services_services_resources() {
                 
             ),  
         ),
+        
+        //----- Service for Illegal activities -------------
+        
+        /*
+         'lom_illegal_activities_services'=> array(
+        
+            'actions' => array(
+                
+                'new_illegal_activity' => array(
+
+                    'help' => t('Create new illegal activity'),
+                    'callback' => '_lom_services_new_illegal_activity',
+                    'access callback' => '_lom_services_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                        array(
+                            'name' => 'data', 
+                            'optional' => FALSE, //mandatory parameter
+                            'source' => 'data',
+                            'type' => 'data', 
+                            'description' => 'Title',
+                        ),
+                    ),
+                ),
+                
+            ),  
+        ),
+        */
+        
+        
+        //---- Service to sync all taxonomy vocabularies with mobile
+        'lom_taxonomy_services'=> array(
+
+                'actions' => array(
+
+                    'all_taxonomies' => array(
+
+                        'help' => t('Export taxonomy vocabularies'),
+                        'callback' => '_taxonomy_export', // Exporter-na daholo ny vocabulary rehetra
+                        'access callback' => '_lom_services_access_permission',
+                        'access arguments append' => FALSE,
+                    ),
+            ),  
+        ),
+        
     );
     
+    
 }
+
+
+/*
+ * Create new illegal activity
+ * 
+ */
+/*
+function _lom_services_new_illegal_activity($data){
+  
+    $nid = 0;
+    $error = NULL;
+    module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            if(! IllegalActivitiesNodeWrapper::lookupUUID($data['uuid'],$errorMessage,$nid)){
+            
+                $node               = new stdClass(); // We create a new node object
+                $node->type         = 'illegal_activities'; 
+                $node->title        = $data['title'];
+                $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+                node_object_prepare($node); // Set some default values.
+                $node->uid          = $data['uid']; // Or any id you wish
+                $node->status       = $data['status']; // Or any id you wish
+                $node->uuid         = $data['uuid'];
+
+                $node->body[$node->language][0]['value']   = $data['body'];
+                $node->body[$node->language][0]['summary'] = NULL;
+                $node->body[$node->language][0]['format']  = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+
+                $node->field_type[$node->language][0]['tid'] = intval($data['type']);
+
+                //$node->field_images[$node->language][] = array('fid'=>$data['field_images']);
+                //array(
+                  //  'target_id'   => intval($data['field_images']),
+                    //'target_type' => 'file',
+                //);
+
+                //$node->field_count[$node->language][0]['value']   = $data['field_count'];        ;
+                //$node->field_date[$node->language][0]['value']    = $data['date'];
+
+                //$node->field_place_name[$node->language][0]['value']  = $data['field_place_name'];
+                $node->field_lat[$node->language][0]['value']         = $data['field_lat'];
+                $node->field_long[$node->language][0]['value']        = $data['field_long'];
+                $node->field_altitude[$node->language][0]['value']    = $data['field_altitude'];
+                $node->field_is_local[$node->language][0]['value']    = $data['field_is_local'];
+                $node->field_is_synced[$node->language][0]['value']   = $data['field_is_synced'];
+                $node->field_is_deleted[$node->language][0]['value']  = 0;
+                //$node->field_photo[$node->language][]                 = array('fid'=>$data['field_photo']);
+
+                $node = node_submit($node);
+                node_save($node);
+
+                $nid = $node->nid;
+                
+            }
+            
+        }catch(Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollback();
+            drupal_set_message(t('New illegal activity services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'nid'    =>intval($nid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+*/
+
+
 
 /**
  * Ito ny function mametra ny access @ ity webservice ity. Raha tsy authenticated tsy mahazo miditra
@@ -516,6 +655,18 @@ function _lom_services_changed_families($from_date){
         
     }
 }
+
+/*
+ * Maka izay taxonomy rehetra dia exporter-na ho JSON
+ */
+function _taxonomy_export(){
+    
+    module_load_include('php','wrappers_custom','includes/taxonomy_term/TagsTaxonomyTermWrapper');
+    $data = TagsTaxonomyTermWrapper::exportToJSON();
+    drupal_add_http_header('Content-Type', 'application/json; charset=UTF-8');
+    return $data; 
+}
+
 
 /*
  * Maka izay photo changed vao haingana

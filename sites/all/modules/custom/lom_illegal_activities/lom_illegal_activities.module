@@ -12,6 +12,7 @@ function lom_illegal_activities_menu() {
         'type'              => MENU_LOCAL_TASK,
         'weight'            => 10,
     );
+   
     return $items;
 }
 
@@ -166,6 +167,22 @@ function lom_illegal_activities_services_resources() {
                         ),
                     ),
                 ),
+                'update_status' => array(
+
+                    'help'      => t('Update illegal activity status'),
+                    'callback'  => '_lom_illegal_update_status',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Data',
+                        ),
+                    ),
+                ),
             ),  
         ),
     );
@@ -177,7 +194,7 @@ function lom_illegal_activities_services_resources() {
  */
 function _lom_illegal_activities_new_illegal_activity($data){
   
-    $nid            = 0;
+    $nid = 0;
     
     module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
   
@@ -189,7 +206,7 @@ function _lom_illegal_activities_new_illegal_activity($data){
          
             if(! IllegalActivitiesNodeWrapper::lookupUUID($data['uuid'],$nid,$errorMessage)){
             
-                $node               = new stdClass(); // We create a new node object
+                /*$node               = new stdClass(); // We create a new node object
                 $node->type         = 'illegal_activities'; // Or any other content type you want
                 $node->title        = $data['title'];
                 $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
@@ -215,6 +232,43 @@ function _lom_illegal_activities_new_illegal_activity($data){
                 node_save($node);
 
                 $nid = $node->nid;
+                */
+                $node               = new stdClass(); // We create a new node object
+                $node->type         = 'illegal_activities'; 
+                $node->title        = $data['title'];
+                $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+                node_object_prepare($node); // Set some default values.
+                $node->uid          = $data['uid']; // Or any id you wish
+                $node->status       = $data['status']; // Or any id you wish
+                $node->uuid         = $data['uuid'];
+
+                $node->body[$node->language][0]['value']   = $data['body'];
+                $node->body[$node->language][0]['summary'] = NULL;
+                $node->body[$node->language][0]['format']  = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+                
+                $node->field_date[$node->language][0]['value']        = $data['field_date'];
+                $node->field_lat[$node->language][0]['value']         = $data['field_lat'];
+                $node->field_long[$node->language][0]['value']        = $data['field_long'];
+                
+                $node->field_is_local[$node->language][0]['value']    = $data['local'];
+                $node->field_is_synced[$node->language][0]['value']   = $data['synced'];
+                $node->field_is_deleted[$node->language][0]['value']  = 0;
+                
+                $node->field_type[$node->language][0]['tid'] = intval($data['type_tid']);
+                //$node->field_type_uuid[$node->language][0]['value'] = $data['type_uuid']; //Mbola mila ampina UUID ihany koa ny cote mobile raha ilaina
+                
+                $node->field_images[$node->language][] = array('fid'=>$data['images']);
+                //array(
+                  //  'target_id'   => intval($data['field_images']),
+                    //'target_type' => 'file',
+                //);
+
+                
+                
+                $node = node_submit($node);
+                node_save($node);
+                $nid = $node->nid;
+
             }
             
         }catch(Exception $e){
@@ -269,6 +323,52 @@ function _lom_illegal_activities_changed_illegal_activity($uid,$from_date,$start
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
     return $illegalActivities;
+}
+
+/*
+ * Update illegal_activity status in server
+ */
+
+function _lom_illegal_update_status($data){
+    
+    $error  = true;
+    $nid    = 0;
+    $status = -1;
+    $message = '';
+    
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        
+        try{
+            
+            $nid                    = $data['nid'];
+            $status                 = $data['status'];
+            $illegal_activity_node  = node_load($nid);
+            
+            if($illegal_activity_node){
+                $error = false;
+                $illegal_activity_node->status = $status == 0 ? false : true;
+                node_save($illegal_activity_node);
+            }
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('WebServices :@error',array('@error'=>$e->getMessage())));
+            $message = $e->getMessage();
+        }
+    }
+    
+    $return = array(
+        'error'  => $error,
+        'nid'    => $nid,
+        'status' => $status,
+        'message'=> $message,
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
 }
 
 /*

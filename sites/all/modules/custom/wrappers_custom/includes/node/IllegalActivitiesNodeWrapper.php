@@ -418,6 +418,8 @@ class IllegalActivitiesNodeWrapper extends WdNodeWrapper {
         return $sightings;
     }
 
+    
+    
     /**
      * 
      * @global type $base_url
