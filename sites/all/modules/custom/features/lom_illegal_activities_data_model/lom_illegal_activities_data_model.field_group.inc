@@ -46,7 +46,7 @@ function lom_illegal_activities_data_model_field_group_info() {
   $field_group->parent_name = 'group_groupes';
   $field_group->data = array(
     'label' => 'Images',
-    'weight' => '1',
+    'weight' => '0',
     'children' => array(
       0 => 'body',
       1 => 'field_date',
@@ -75,19 +75,19 @@ function lom_illegal_activities_data_model_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Information',
-    'weight' => '2',
-    'children' => array(
-      0 => 'field_altitude',
-      1 => 'field_lat',
-      2 => 'field_long',
-      3 => 'field_offence',
-    ),
-    'format_type' => 'hidden',
+    'weight' => '1',
+    'children' => array(),
+    'format_type' => 'html-element',
     'format_settings' => array(
       'formatter' => 'collapsible',
       'instance_settings' => array(
         'description' => '',
         'classes' => 'group-info field-group-fieldset',
+        'element' => 'div',
+        'show_label' => 0,
+        'label_element' => 'div',
+        'attributes' => '',
+        'required_fields' => 1,
       ),
     ),
   );

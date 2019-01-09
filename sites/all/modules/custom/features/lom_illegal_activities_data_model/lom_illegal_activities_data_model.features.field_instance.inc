@@ -22,7 +22,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 5,
+        'weight' => 6,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -68,7 +68,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 4,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -120,7 +120,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 4,
+        'weight' => 7,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -212,7 +212,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
           'slideshow_timeout' => 4000,
         ),
         'type' => 'slideshow',
-        'weight' => 2,
+        'weight' => 4,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -269,7 +269,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 9,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -311,7 +311,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 4,
+        'weight' => 6,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -353,7 +353,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 3,
+        'weight' => 7,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -395,7 +395,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 3,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -441,7 +441,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 2,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -486,7 +486,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 10,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -543,7 +543,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 5,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -586,7 +586,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 3,
+        'weight' => 5,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -629,7 +629,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 8,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
