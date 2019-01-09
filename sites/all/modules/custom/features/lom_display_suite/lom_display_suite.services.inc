@@ -299,6 +299,9 @@ function lom_display_suite_default_services_endpoint() {
         'changed_comments' => array(
           'enabled' => '1',
         ),
+        'update_status' => array(
+          'enabled' => '1',
+        ),
       ),
     ),
     'lom_node_services' => array(
@@ -344,6 +347,13 @@ function lom_display_suite_default_services_endpoint() {
           'enabled' => '1',
         ),
         'count_sightings' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'lom_taxonomy_services' => array(
+      'actions' => array(
+        'all_taxonomies' => array(
           'enabled' => '1',
         ),
       ),

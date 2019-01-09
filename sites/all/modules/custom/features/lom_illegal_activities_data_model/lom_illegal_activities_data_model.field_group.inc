@@ -24,7 +24,6 @@ function lom_illegal_activities_data_model_field_group_info() {
     'weight' => '0',
     'children' => array(
       0 => 'group_images',
-      1 => 'group_info',
     ),
     'format_type' => 'htabs',
     'format_settings' => array(
@@ -49,7 +48,9 @@ function lom_illegal_activities_data_model_field_group_info() {
     'label' => 'Images',
     'weight' => '1',
     'children' => array(
-      0 => 'field_images',
+      0 => 'body',
+      1 => 'field_date',
+      2 => 'field_images',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -70,19 +71,17 @@ function lom_illegal_activities_data_model_field_group_info() {
   $field_group->entity_type = 'node';
   $field_group->bundle = 'illegal_activities';
   $field_group->mode = 'default';
-  $field_group->parent_name = 'group_groupes';
+  $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Information',
     'weight' => '2',
     'children' => array(
-      0 => 'body',
-      1 => 'field_long',
-      2 => 'field_lat',
-      3 => 'field_altitude',
-      4 => 'field_date',
-      5 => 'field_offence',
+      0 => 'field_altitude',
+      1 => 'field_lat',
+      2 => 'field_long',
+      3 => 'field_offence',
     ),
-    'format_type' => 'fieldset',
+    'format_type' => 'hidden',
     'format_settings' => array(
       'formatter' => 'collapsible',
       'instance_settings' => array(
