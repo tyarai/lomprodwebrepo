@@ -51,6 +51,7 @@ function lom_illegal_activities_data_model_field_group_info() {
       0 => 'body',
       1 => 'field_date',
       2 => 'field_images',
+      3 => 'field_type',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(

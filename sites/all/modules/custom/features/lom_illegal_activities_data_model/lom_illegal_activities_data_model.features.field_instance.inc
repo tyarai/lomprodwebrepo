@@ -22,7 +22,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 4,
+        'weight' => 5,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -120,7 +120,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
           'multiple_to' => '',
         ),
         'type' => 'date_default',
-        'weight' => 3,
+        'weight' => 4,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -225,7 +225,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => 'content',
-          'image_style' => 'medium',
+          'image_style' => 'lom_sighting_list',
         ),
         'type' => 'image',
         'weight' => 1,
@@ -585,8 +585,8 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 1,
+        'type' => 'taxonomy_term_reference_plain',
+        'weight' => 3,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
