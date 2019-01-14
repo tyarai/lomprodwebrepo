@@ -136,6 +136,7 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
             }
             
         }catch(Exception $e){
+
             drupal_set_message(t('[BestPlaces::getAllSitesKeyedByNID()] Error: @e',array('@e'=>$e->getMessage())),'error');
         }
 
@@ -188,6 +189,7 @@ class BestPlacesNodeWrapper extends WdNodeWrapper {
             $query  = " SELECT n.nid,n.title FROM {node} n ";
            
             $query .= " WHERE n.type = 'best_places' "; 
+
             $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             

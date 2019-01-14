@@ -137,6 +137,9 @@ function lom_publication_data_model_strongarm() {
       'species_selecting' => array(
         'custom_settings' => FALSE,
       ),
+      'species_selecting_small' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -151,6 +154,13 @@ function lom_publication_data_model_strongarm() {
     ),
   );
   $export['field_bundle_settings_node__publication'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'language_content_type_publication';
+  $strongarm->value = '2';
+  $export['language_content_type_publication'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

@@ -1,0 +1,754 @@
+<?php
+
+define('ADMIN_ROLES', 3);
+
+function lom_illegal_activities_menu() {
+    
+    $items['node/%/edit-illegal-activity'] = array(
+        'title'             => t('Edit illegal activity'),
+        'page callback'     => 'drupal_get_form',
+        'access callback'   => '_lom_illegal_activities_edit_permission',
+        'page arguments'    => array('_lom_illegal_activities_edit_illegal_activity',1),
+        'type'              => MENU_LOCAL_TASK,
+        'weight'            => 10,
+    );
+   
+    return $items;
+}
+
+/**
+ *  hook_services_resources
+ */
+function lom_illegal_activities_services_resources() {
+    return array(
+        
+    'lom_illegal_activities_services'=> array(
+        
+            'actions' => array(
+                
+                'new_illegal_activity' => array(
+
+                    'help'      => t('Create new illegal activity'),
+                    'callback'  => '_lom_illegal_activities_new_illegal_activity',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Title',
+                        ),
+                    ),
+                ),
+                
+                'changed_illegal_activities' => array(
+
+                    'help'      => t('Export recently changed illegalActivities'),
+                    'callback'  => '_lom_illegal_activities_changed_illegal_activity',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'uid', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => array('param' => 'uid'),
+                            'type'      => 'int', 
+                            'description' => 'User uid',
+                        ),
+                        array(
+                            'name'      => 'from_date', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'from_date'),
+                            'type'      => 'string', 
+                            'description' => 'From Date',
+                        ),
+                        array(
+                            'name'      => 'start', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'start'),
+                            'type'      => 'int', 
+                            'description' => 'Start',
+                        ),
+                        array(
+                            'name'      => 'count', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'count'),
+                            'type'      => 'int', 
+                            'description' => 'Count',
+                        ),
+                        array(
+                            'name'      => 'synced', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'synced'),
+                            'type'      => 'int', 
+                            'description' => 'Synced',
+                        ),
+                    ),
+                ),
+                
+                'count_illegal_activities' => array(
+
+                    'help'      => t('Count illegalActivities'),
+                    'callback'  => '_lom_illegal_activities_count_illegal_activities',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'uid', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => array('param' => 'uid'),
+                            'type'      => 'int', 
+                            'description' => 'User uid',
+                        ),
+                        array(
+                            'name'      => 'from_date', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'from_date'),
+                            'type'      => 'int', 
+                            'description' => 'From Date',
+                        ),
+                        array(
+                            'name'      => 'synced', 
+                            'optional'  => TRUE, 
+                            'source'    => array('param' => 'synced'),
+                            'type'      => 'int', 
+                            'description' => 'Synced',
+                        ),
+                    ),
+                ),
+                'new_comment' => array(
+
+                    'help'      => t('Create new comment'),
+                    'callback'  => '_lom_illegal_activities_new_comment',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' => array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Data',
+                        ),
+                    ),
+                ),
+                
+                'edit_comment' => array(
+
+                    'help'      => t('Edit comment'),
+                    'callback'  => '_lom_illegal_activities_comment_edit',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                                array(
+                                    'name'      => 'data', 
+                                    'optional'  => FALSE, //mandatory parameter
+                                    'source'    => 'data',
+                                    'type'      => 'data', 
+                                    'description' => 'Data',
+                                ),
+                    ),
+                ),
+                'changed_comments' => array(
+
+                    'help'      => t('Get user\'s changed comments'),
+                    'callback'  => '_lom_illegal_activities_changed_comments',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Data',
+                        ),
+                    ),
+                ),
+                'update_status' => array(
+
+                    'help'      => t('Update illegal activity status'),
+                    'callback'  => '_lom_illegal_update_status',
+                    'access callback' => '_lom_illegal_activities_access_permission',
+                    'access arguments append' => FALSE,
+                    'args' =>array(
+                        array(
+                            'name'      => 'data', 
+                            'optional'  => FALSE, //mandatory parameter
+                            'source'    => 'data',
+                            'type'      => 'data', 
+                            'description' => 'Data',
+                        ),
+                    ),
+                ),
+            ),  
+        ),
+    );
+}
+
+
+/*
+ * Create new illegal activity
+ */
+function _lom_illegal_activities_new_illegal_activity($data){
+  
+    $nid = 0;
+    
+    module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            // Creating new activity
+            if(! IllegalActivitiesNodeWrapper::lookupUUID($data['uuid'],$nid,$errorMessage)){
+            
+                $node               = new stdClass(); // We create a new node object
+                $node->type         = 'illegal_activities'; 
+                $node->title        = $data['title'];
+                $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+                node_object_prepare($node); // Set some default values.
+                $node->uid          = $data['uid']; // Or any id you wish
+                $node->status       = $data['status']; // Or any id you wish
+                $node->uuid         = $data['uuid'];
+
+                $node->body[$node->language][0]['value']   = $data['body'];
+                $node->body[$node->language][0]['summary'] = NULL;
+                $node->body[$node->language][0]['format']  = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+                
+                $node->field_date[$node->language][0]['value']        = $data['date'];
+                $node->field_lat[$node->language][0]['value']         = $data['field_lat'];
+                $node->field_long[$node->language][0]['value']        = $data['field_long'];
+                
+                $node->field_is_local[$node->language][0]['value']    = $data['local'];
+                $node->field_is_synced[$node->language][0]['value']   = $data['synced'];
+                $node->field_is_deleted[$node->language][0]['value']  = 0;
+                
+                $node->field_type[$node->language][0]['tid'] = intval($data['type_tid']);
+                //$node->field_type_uuid[$node->language][0]['value'] = $data['type_uuid']; //Mbola mila ampina UUID ihany koa ny cote mobile raha ilaina
+                
+                $node->field_images[$node->language][] = array('fid'=>$data['images']);
+                //array(
+                  //  'target_id'   => intval($data['field_images']),
+                    //'target_type' => 'file',
+                //);
+
+                
+                
+                $node = node_submit($node);
+                node_save($node);
+                $nid = $node->nid;
+
+            }else{
+                // Updating activity 
+                
+                $node = node_load($nid);
+                
+                if($node){
+                    
+                    $node->title        = $data['title'];
+                    $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+                    node_object_prepare($node); // Set some default values.
+                    $node->uid          = $data['uid']; // Or any id you wish
+                    $node->status       = $data['status']; // Or any id you wish
+                    $node->uuid         = $data['uuid'];
+
+                    $node->body[$node->language][0]['value']   = $data['body'];
+                    $node->body[$node->language][0]['summary'] = NULL;
+                    $node->body[$node->language][0]['format']  = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+
+                    $node->field_date[$node->language][0]['value']        = $data['date'];
+                    $node->field_lat[$node->language][0]['value']         = $data['field_lat'];
+                    $node->field_long[$node->language][0]['value']        = $data['field_long'];
+
+                    $node->field_is_local[$node->language][0]['value']    = $data['local'];
+                    $node->field_is_synced[$node->language][0]['value']   = $data['synced'];
+                    $node->field_is_deleted[$node->language][0]['value']  = 0;
+
+                    $node->field_type[$node->language][0]['tid'] = intval($data['type_tid']);
+                    //$node->field_type_uuid[$node->language][0]['value'] = $data['type_uuid']; //Mbola mila ampina UUID ihany koa ny cote mobile raha ilaina
+
+                    $node->field_images[$node->language][0] = array('fid'=>$data['images']);
+                    //array(
+                      //  'target_id'   => intval($data['field_images']),
+                        //'target_type' => 'file',
+                    //);
+                    //$node = node_submit($node);
+                    node_save($node);
+                    //$nid = $node->nid;
+                    
+                }
+                
+                
+            }
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('WebServices :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+    }
+    
+    $return = array(
+        'nid'       =>intval($nid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+}
+
+
+
+/*
+ * 1- Rehefa maka ny changed illegalActivities dia mbola synced= FALSE ny illegalActivity
+ * 2- Mila avadika synced=TRUE rehefa tafalatsaka any @ phone @ zay izy eto
+ */
+function _lom_illegal_activities_changed_illegal_activity($uid,$from_date,$start,$count,$synced=NULL){
+    
+    $illegalActivities  = array("nodes"=>array());
+    $lastSyncDate       = 0;
+    
+    if($uid != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        $modifiedIllegalActivities  = array();
+        $illegalActivities          = IllegalActivitiesNodeWrapper::allIllegalActivities($uid,$from_date,$start,$count,$synced,$modifiedIllegalActivities);
+        
+        if(count($modifiedIllegalActivities) != 0){
+            
+            //--- Nisy Activity voaova taty @server dia nivadika synced=FALSE izy ireo ka mila avadika 
+            //    synced=TRUE @ zay eto satria halatsaka any @ phone
+            foreach ($modifiedIllegalActivities as $nid => $title){
+                if($nid != NULL){
+                    $_illegalActivity = new IllegalActivitiesNodeWrapper($nid);
+                    $_illegalActivity->setIsSynced(TRUE);
+                    $_illegalActivity->save();
+                }
+            }
+            
+            $lastSyncDate = strtotime('now');
+        }
+    }
+    
+    $illegalActivities["serverLastSyncDate"] = $lastSyncDate;
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $illegalActivities;
+}
+
+/*
+ * Update illegal_activity status in server
+ */
+
+function _lom_illegal_update_status($data){
+    
+    $error  = true;
+    $nid    = 0;
+    $status = -1;
+    $message = '';
+    
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        
+        try{
+            
+            $nid                    = $data['nid'];
+            $status                 = $data['status'];
+            $illegal_activity_node  = node_load($nid);
+            
+            if($illegal_activity_node){
+                $error = false;
+                $illegal_activity_node->status = $status == 0 ? false : true;
+                node_save($illegal_activity_node);
+            }
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('WebServices :@error',array('@error'=>$e->getMessage())));
+            $message = $e->getMessage();
+        }
+    }
+    
+    $return = array(
+        'error'  => $error,
+        'nid'    => $nid,
+        'status' => $status,
+        'message'=> $message,
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+/*
+ * Get changed illegal activities count (from_date is optional)
+ */
+function _lom_illegal_activities_count_illegal_activities($uid,$from_date=NULL,$synced=NULL){
+    $count = 0;
+    if($uid != NULL){
+        module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        $count          = IllegalActivitiesNodeWrapper::getIllegalActivitiesCount($uid,$from_date,$synced);
+    }
+    $return = array('count'=>intval($count));
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+}
+
+
+/*
+ * Create new comment
+ * 
+ */
+function _lom_illegal_activities_new_comment($data){
+  
+    $cid    = 0;
+    $error  = NULL;
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            if(! CommentNodeIllegalActivitiesCommentWrapper::lookupUUID($data['uuid'],$errorMessage,$cid)){
+            
+                $comment = new stdClass();
+                
+                $comment->nid       = $data['nid']; // nid of a node you want to attach a comment to
+                $comment->uid       = $data['uid']; // user's id, who left the comment
+                $comment->uuid      = $data['uuid']; // user's id, who left the comment
+                $comment->status    = $data['status']; // user's id, who left the comment
+                $comment->mail      = $_user->getMail(); // user's email
+                $comment->name      = $_user->getName(); 
+                $comment->language  = LANGUAGE_NONE;
+                $comment->subject   = $data['subject']; 
+                $comment->comment_body[$comment->language][0]['value']    = $data['body'];
+                $comment->comment_body[$comment->language][0]['format']   = 'filtered_html'; 
+                //$comment->field_is_synced[$comment->language][0]['value'] = $data['synced'];
+                
+                comment_submit($comment);
+                comment_save($comment);
+                
+                
+                
+                $cid = $comment->cid;
+                
+            }
+            
+        }catch(Exception $e){
+            $error = $e->getMessage();
+            $transaction->rollback();
+            drupal_set_message(t('New comment services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'cid'    =>intval($cid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+
+/**
+ * Maka ny comments vaovao na niova rehetra (Species, Photographs, Family, Map)
+ */
+
+function _lom_illegal_activities_changed_comments($data){
+   
+    $comments       = array();
+    $lastSyncDate   = 0;
+    
+    if($data != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
+    
+        $changedFrom = (isset($data['fromDate']) && $data['fromDate'] != NULL) ? $data['fromDate'] : NULL;
+        $uid         = (isset($data['uid']) && $data['uid'] != NULL) ? $data['uid'] : NULL;
+        $synced      = (isset($data['synced']) && $data['synced'] != NULL) ? $data['synced'] : NULL;
+        $nid         = (isset($data['nid']) && $data['nid'] != NULL) ? $data['nid'] : NULL;
+        
+        $comments["comments"]  =   CommentNodeIllegalActivitiesCommentWrapper::getComments($uid, $nid,$changedFrom,$synced);
+        
+        $lastSyncDate = strtotime('now');
+        
+    }
+    
+    $comments["serverLastSyncDate"] =  $lastSyncDate;
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $comments;
+}
+
+
+/*
+ * Create edit  comment
+ * 
+ */
+function _lom_illegal_activities_edit_comment($data){
+  
+    $cid = 0;
+    module_load_include('php','wrappers_custom','includes/comment/CommentNodeIllegalActivitiesCommentWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+  
+    if($data != NULL){
+        
+        $transaction = db_transaction();
+        $errorMessage = '';
+        try{
+         
+            
+            global $user;
+            $_user = new UserUserWrapper($user->uid);
+            
+            $uuid               = $data['uuid'];
+            $body               = $data['body'];
+            $status             = $data['status'];
+            $deleted            = $data['deleted'];
+            $error              = NULL;
+                    
+            
+            CommentNodeIllegalActivitiesCommentWrapper::lookupUUID($uuid, $error, $cid);
+            
+            if($cid != 0){
+                $comment = new CommentNodeIllegalActivitiesCommentWrapper($cid);
+                $comment->setCommentBody($body);
+                $comment->setStatus($status);
+                $comment->setIsdeleted($deleted);
+                $comment->save();
+            }
+            
+            
+          
+            
+        }catch(Exception $e){
+            $transaction->rollback();
+            drupal_set_message(t('Edit comment services :@error',array('@error'=>$e->getMessage())));
+            $errorMessage = $e->getMessage();
+        }
+        
+        
+    }
+    
+    $return = array(
+        'cid'    =>intval($cid)
+    );
+    
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    return $return;
+    
+}
+
+
+/**
+ * hook__node_view
+ * @param unknown $entity
+ * @param unknown $type
+ * @param unknown $view_mode
+ * @param unknown $langcode
+ */
+function lom_illegal_activities_node_view($node, $view_mode, $langcode){
+
+    if( isset($node->type) && $node->type == 'illegal_activities' ){
+        module_load_include('php', 'wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        global $user;
+        $illegal_activity   = new IllegalActivitiesNodeWrapper($node->nid);
+        $uid_created_id     = $illegal_activity->getAuthorId();
+        
+        if($user->uid != $uid_created_id && ! $illegal_activity->getOffence()){
+            $output = drupal_get_form('_lom_illegal_activities_view_offence',$node->nid);
+            $body = drupal_render($output);
+            $node->content['field_offence'] = array(
+                '#prefix' => '<div>',
+                '#suffix' => '</div>',
+                '#markup' => $body,
+                '#weight' => 1000, 
+            );
+        }else{
+            $node->content['field_offence']['#access'] = FALSE;
+        }
+        
+        // tsy mety miala ilay any amin'ny display 
+        // de eto no esorina ilay is deleted sy is synced ao amin'ny commentaire
+        $node->content['comments']['comment_form']['field_is_deleted']['#access'] = FALSE;
+        $node->content['comments']['comment_form']['field_is_synced']['#access'] = FALSE;
+    }
+}
+
+
+function _lom_illegal_activities_view_offence($form, &$form_state, $illegal_avtivity_id) {
+    $form['submit'] = array(
+        '#type'     => 'submit',
+        '#value'    => 'Report as offense',
+        '#prefix'   => '<div class="edit-action submit-form clearfix">',
+        '#suffix'   => '</div>',
+    );
+    $form_state['illegal_avtivity_id'] = $illegal_avtivity_id;
+    return $form;
+}
+
+function _lom_illegal_activities_view_offence_submit($form, &$form_state) {
+
+    if($form_state['illegal_avtivity_id'] != NULL){
+        module_load_include('php', 'wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+        $illegal_activity   = new IllegalActivitiesNodeWrapper($form_state['illegal_avtivity_id']);
+        $illegal_activity->setOffence(TRUE);
+        $illegal_activity->save();
+        // alefa mail eto izany ilay izy
+        _lom_illegal_activities_email_send($form_state['illegal_avtivity_id']);
+    }
+}
+
+/**
+ * Ito ny function mametra ny access @ ity webservice ity. Raha tsy authenticated tsy mahazo miditra
+ * @return boolean
+ */
+function _lom_illegal_activities_access_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return TRUE;
+}
+
+
+/**
+ *  ity no fonction mandefa ilay mail 
+ *  ny $nid sy ny olona andefasana azy no apidirina eo
+ *  - $nid : nid of sighting
+ */
+function _lom_illegal_activities_email_send($nid){
+    
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+    if($nid != NULL){
+        try{
+            global $user;
+            $_user      = new UserUserWrapper($user->uid);
+            $_userName  = $_user->getName();
+            
+            
+            $module = 'lom_send_mail';
+            $key    = 'lom_email_notification_offence';
+            $from   = 'manoarazafindrabe@gmail.com';
+            $Email_to = 'manoarazafindrabe@gmail.com';// soloina mail admin ity
+            $url      = url("node/$nid");
+            global $base_root;
+            $link  = $base_root.$url;
+            
+            // avy eo alefa parametre ilay lien
+            $params = array('sighting_url'       => $link,);
+
+            $result = drupal_mail($module, $key, $Email_to, language_default(), $params, $from, TRUE);
+
+            // Send email
+            if ($result['result'] == TRUE) {
+                //drupal_set_message(t('[@date] Mail envoyé à @TO',array('@TO'=>$Email_to , '@date' => date('d - M - Y'))));
+                return TRUE;
+            }
+            else {
+                //drupal_set_message(t('[@date] Un e-mail n\'a pas été envoyé à @TO',array('@TO'=>$Email_to, '@date' => date('d - M - Y'))), 'error');
+                return FALSE;
+            }
+        }catch (Exception $ex){
+            drupal_set_message(t('[lom_send_mail::lom_send_mail_email_send] Erruer: @mess',array('@mess' => $ex->getMessage())),'error');
+            return FALSE;
+        }
+    }
+}
+
+function _lom_illegal_activities_edit_illegal_activity($form, &$form_state, $id) {
+    
+    module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+    $form = array();
+
+    if($id != NULL){
+        try{
+            $illegal_activity = new IllegalActivitiesNodeWrapper($id);
+            $form_state['id'] = $id;
+            
+            $form['illegal_activity'] = array(
+                '#type'     => 'fieldset',
+            );
+
+            $form['illegal_activity']['offence'] = array(
+                '#type'     => 'checkbox',
+                '#title'    => t('Report as offense'),
+                '#default_value' => $illegal_activity->getOffence(),
+            );
+
+            $form['illegal_activity']['status'] = array(
+                '#type'     => 'checkbox',
+                '#title'    => t('Status'),
+                '#default_value' => $illegal_activity->isPublished(),
+            );
+
+
+            $form['illegal_activity']['submit'] = array(
+                '#type'     => 'submit',
+                '#value'    => t('Save changes'),
+            );
+    
+        } catch (Exception $ex) {
+            drupal_set_message(t('[_lom_illegal_activities_edit_illegal_activity] Error : ' . $ex->getMessages()), 'error');
+        }
+    }
+    return $form;
+}
+
+function _lom_illegal_activities_edit_illegal_activity_submit($form , &$form_state) {
+    
+    if(isset($form_state['id'])){
+        
+        $db_transaction = db_transaction();
+        
+        try{
+
+            module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+            $illegal_activity = new IllegalActivitiesNodeWrapper($form_state['id']);
+            $illegal_activity->setOffence($form_state['values']['offence']);
+            $illegal_activity->setPublished($form_state['values']['status']);
+            $illegal_activity->save();
+            
+        } catch (Exception $ex) {
+            $db_transaction->rollback();
+        }
+    }
+}
+
+function _lom_illegal_activities_edit_permission() {
+    global $user;
+    if(user_has_role(ADMIN_ROLES,$user)){
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function lom_illegal_activities_node_presave($node) {
+    
+    if($node->type == 'illegal_activities'){
+        try{
+            module_load_include('php','wrappers_custom','includes/node/IllegalActivitiesNodeWrapper');
+            $illegal_activity = new IllegalActivitiesNodeWrapper($node->nid);
+            $illegal_activity->setModified(strtotime('now'));
+        }catch(Exception $e){
+            drupal_set_message('[lom_illegal_activities_node_presave()] '.$e->getMessage(),'error');
+        }
+    }
+}
+

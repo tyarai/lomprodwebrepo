@@ -279,6 +279,31 @@ function lom_display_suite_default_services_endpoint() {
         ),
       ),
     ),
+    'lom_illegal_activities_services' => array(
+      'actions' => array(
+        'new_illegal_activity' => array(
+          'enabled' => '1',
+        ),
+        'changed_illegal_activities' => array(
+          'enabled' => '1',
+        ),
+        'count_illegal_activities' => array(
+          'enabled' => '1',
+        ),
+        'new_comment' => array(
+          'enabled' => '1',
+        ),
+        'edit_comment' => array(
+          'enabled' => '1',
+        ),
+        'changed_comments' => array(
+          'enabled' => '1',
+        ),
+        'update_status' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
     'lom_node_services' => array(
       'actions' => array(
         'changed_nodes' => array(
@@ -322,6 +347,13 @@ function lom_display_suite_default_services_endpoint() {
           'enabled' => '1',
         ),
         'count_sightings' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'lom_taxonomy_services' => array(
+      'actions' => array(
+        'all_taxonomies' => array(
           'enabled' => '1',
         ),
       ),

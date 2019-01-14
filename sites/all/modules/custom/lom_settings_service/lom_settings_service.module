@@ -178,6 +178,7 @@ function _lom_settings_access_permission(){
     
 
 function _lom_settings_service_export($user_uid){
+
     $data = array();
     if($user_uid != NULL){
         module_load_include('php','wrappers_custom','includes/lom_user_settings_entity/LomUserSettingsEntityLomUserSettingsEntityWrapper');

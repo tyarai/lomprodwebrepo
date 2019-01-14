@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the LOM Illegal Activities Data Model feature.
+ */
+
+include_once 'lom_illegal_activities_data_model.features.inc';

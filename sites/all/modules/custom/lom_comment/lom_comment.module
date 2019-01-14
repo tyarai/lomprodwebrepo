@@ -11,20 +11,12 @@
  * Izay comment niova na vaovao dia mila averins isSynced=FALE aty @ server
  * @param type $node
  */
-function lom_comment_node_presave($node){
-    /*if($node->type == 'comment'){
-        try{
-            module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
-            
-            $comment = new CommentNodePublicationCommentWrapper($node->cid);
-            if($comment){
-                $comment->setIsSynced(FALSE);
-                $comment->save();
-            }
-        }catch(Exception $e){
-            watchdog('lom_comment', $e->getMessage());
-            drupal_set_message('[lom_comment_node_presave()] '.$e->getMessage(),'error');
-        }
-    }*/
+function lom_comment_comment_presave($comment){
+    
+    $node_type  = $comment->node_type;
+    if($node_type == 'comment_node_publication'){
+        $nid = $comment->nid;
+        lom_send_mail_email_send($nid);
+    }
 }
 

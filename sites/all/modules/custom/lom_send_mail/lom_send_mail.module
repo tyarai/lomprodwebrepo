@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * hook_menu
+ * anaovana test ny mandefa ilay mail
+ */
+function lom_send_mail_menu(){
+    
+}
+
+/**
+ *  ity no fonction mandefa ilay mail 
+ *  ny $nid sy ny olona andefasana azy no apidirina eo
+ *  - $nid : nid of sighting
+ */
+function lom_send_mail_email_send($nid){
+    
+    module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+    if($nid != NULL){
+        try{
+            global $user;
+            $_user      = new UserUserWrapper($user->uid);
+            $_userName  = $_user->getName();
+            
+            
+            $module = 'lom_send_mail';
+            $key    = 'lom_email_notification_in_comments';
+            $from   = 'info@lemursofmadagascar.com';//$user->mail;
+            $node   = new PublicationNodeWrapper($nid);
+            $title  = strtolower($node->getTitle());
+            $uid_created  = $node->getAuthorId();
+            $user_created = new UserUserWrapper($uid_created);
+            $Email_to     = $user_created->getMail();
+            $url = url("node/$nid"); // Ity function ity no mamadika ilay url ho lasa "sighting/$nid"
+            global $base_root;
+            $link  = $base_root.$url;
+            
+            
+            
+            // avy eo alefa parametre ilay lien
+            $params = array('sighting_url'       => $link,
+                            'owner_name'         => $user_created->getName(),
+                            'user_who_commented' => $_userName,
+                        );
+
+            $result = drupal_mail($module, $key, $Email_to, language_default(), $params, $from, TRUE);
+
+            // Send email
+            if ($result['result'] == TRUE) {
+                //drupal_set_message(t('[@date] Mail envoyé à @TO',array('@TO'=>$Email_to , '@date' => date('d - M - Y'))));
+                return TRUE;
+            }
+            else {
+                //drupal_set_message(t('[@date] Un e-mail n\'a pas été envoyé à @TO',array('@TO'=>$Email_to, '@date' => date('d - M - Y'))), 'error');
+                return FALSE;
+            }
+        }catch (Exception $ex){
+            drupal_set_message(t('[lom_send_mail::lom_send_mail_email_send] Erruer: @mess',array('@mess' => $ex->getMessage())),'error');
+            return FALSE;
+        }
+    }
+}
+
+/**
+ * Implements hook_mail
+ * @param $key
+ * @param $message
+ * @param $params
+ */
+function lom_send_mail_mail($key, &$message, $params){
+    
+    if ($key == 'lom_email_notification_in_comments'){
+        global $user;
+        
+        $body  = t('<p>Dear ').$params['owner_name'].',';
+        $body .= '<br><p>'.$params['user_who_commented'].' commented your sighting' ;
+     
+        if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
+            $body .='<br>'.l($params['sighting_url'],$params['sighting_url']);
+        }
+
+        $body .= '<br>Lemurs of Madagascar team' ;
+        
+        $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+        $message['subject'] = t('Comment notification' );
+        $message['body'][] = $body;
+    }
+    if ($key == 'lom_email_notification_offence'){
+        global $user;
+        
+        $body  = t('<p>Dear admin,');
+        
+        if(isset($params['sighting_url']) && $params['sighting_url'] != NULL){
+            $body .='<br>'.l($params['sighting_url'],$params['sighting_url']);
+        }
+
+        $body .= '<br>Lemurs of Madagascar team' ;
+        
+        $message['headers']['Content-Type'] = 'text/html; charset=UTF-8;';
+        $message['subject'] = t('Comment notification' );
+        $message['body'][] = $body;
+    }
+}

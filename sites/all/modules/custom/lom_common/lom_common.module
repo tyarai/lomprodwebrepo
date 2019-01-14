@@ -276,6 +276,7 @@ function lom_common_block_contents($delta){
             $html .= '<div class="lom-block-item">'.l(t('Origin of the Lemurs'),'origin-lemurs').'</div>';
             $html .= '<div class="lom-block-item">'.l(t('Extinct lemurs'),'extinct-lemurs').'</div>';
             $html .= '<div class="lom-block-item">'.l(t('Lemur-watching Sites'),'lemur-watching-sites').'</div>';
+            $html .= '<div class="lom-block-item">'.l(t('Illegal activities'),'illegal-activities').'</div>';
             $html .= '<div class="lom-block-item">'.l(t('About the authors'),'authors').'</div>';
         $html .= '</div>';
     }

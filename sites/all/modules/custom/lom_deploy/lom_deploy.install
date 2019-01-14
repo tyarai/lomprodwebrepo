@@ -121,3 +121,18 @@ function lom_deploy_update_7028(){
     db_add_field('comment', 'synced', $field);
     
 }
+
+/**
+ * enable smtp module
+ */
+function lom_deploy_update_7029(){
+   module_enable(array('smtp')); 
+}
+
+/**
+ * enable lom_illegal_activities_data_model features
+ */
+function lom_deploy_update_7030(){
+   module_enable(array('lom_illegal_activities_data_model','lom_illegal_activities'));
+}
+

@@ -144,6 +144,7 @@
             $html .= '<div class="row"> <div class="field-title">'. '*'   . '</div>'.'<div class="field-value">'. $link.  '</div></div>';
             $html .= '<div class="row"> <div class="field-title">'. t('Number observed :'). '</div>'.'<div class="field-value">'. $sightingWrapper->field_count->value().  '</div></div>';
             $html .= '<div class="row"> <div class="field-title">'. t('Place name      :'). '</div>'.'<div class="field-value">'. $placeNameLink.  '</div></div>';
+
             $html .= '<div class="row"> <div class="field-title">'. t('Longitude       :'). '</div>'.'<div class="field-value">'. $sightingWrapper->field_long->value() .  '</div></div>';
             $html .= '<div class="row"> <div class="field-title">'. t('Latitude        :'). '</div>'.'<div class="field-value">'. $sightingWrapper->field_lat->value() .  '</div></div>';
             $html .= '<div class="row"> <div class="field-title">'. t('Altitude        :'). '</div>'.'<div class="field-value">'. $sightingWrapper->field_altitude->value() .  '</div></div>';

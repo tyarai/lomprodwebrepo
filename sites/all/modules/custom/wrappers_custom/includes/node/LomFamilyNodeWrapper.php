@@ -5,6 +5,7 @@
  */
 
 module_load_include('php', 'wrappers_custom','includes/node/LomMapNodeWrapper');
+
 module_load_include('php', 'wrappers_custom','includes/node/LomIllustrationNodeWrapper');
 class LomFamilyNodeWrapper extends WdNodeWrapper {
 
@@ -443,6 +444,7 @@ class LomFamilyNodeWrapper extends WdNodeWrapper {
             $query  = " SELECT n.nid,n.title FROM {node} n ";
            
             $query .= " WHERE n.type = 'lom_family' "; 
+
             $query .= " AND n.status = 1 "; // Only published=YES will be returned
             
             if($changedFrom != NULL){

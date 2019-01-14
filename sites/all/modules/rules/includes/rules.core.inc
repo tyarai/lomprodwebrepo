@@ -1124,6 +1124,7 @@ abstract class RulesPlugin extends RulesExtendable {
         elseif ($this->plugin == 'reaction rule') {
           // Clear event sets cached for evaluation.
           cache_clear_all('event_', 'cache_rules', TRUE);
+
           // Clear event whitelist for rebuild.
           cache_clear_all('rules_event_whitelist', 'cache_rules', TRUE);
         }
