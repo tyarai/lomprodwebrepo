@@ -23,6 +23,7 @@ features[views_view][] = filtered_species
 features[views_view][] = filtered_species_view
 features[views_view][] = filtered_species_view_widget
 features[views_view][] = filtered_species_widget
+features[views_view][] = illegal_activities_view
 features[views_view][] = illustration_export
 features[views_view][] = ketrika_master_list
 features[views_view][] = ketrika_personal_lemur_life_list

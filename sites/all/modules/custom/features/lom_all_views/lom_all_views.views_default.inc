@@ -84,8 +84,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['field_locality_editable']['widget_type'] = '0';
   $handler->display->display_options['fields']['field_locality_editable']['suppress_label'] = 0;
   $handler->display->display_options['fields']['field_locality_editable']['suppress_description'] = 0;
-
-  /* Field: Content: When did you see it for the first time? (editable) */
+  /* Field: Content: Sighting date (editable) */
   $handler->display->display_options['fields']['field_date_editable']['id'] = 'field_date_editable';
   $handler->display->display_options['fields']['field_date_editable']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date_editable']['field'] = 'field_date_editable';
@@ -165,8 +164,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['field_locality_editable']['widget_type'] = '0';
   $handler->display->display_options['fields']['field_locality_editable']['suppress_label'] = 0;
   $handler->display->display_options['fields']['field_locality_editable']['suppress_description'] = 0;
-
-  /* Field: Content: When did you see it for the first time? (editable) */
+  /* Field: Content: Sighting date (editable) */
   $handler->display->display_options['fields']['field_date_editable']['id'] = 'field_date_editable';
   $handler->display->display_options['fields']['field_date_editable']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date_editable']['field'] = 'field_date_editable';
@@ -359,28 +357,24 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-
   /* Field: Content: English */
   $handler->display->display_options['fields']['field_lom_en']['id'] = 'field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['table'] = 'field_data_field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['field'] = 'field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['label'] = 'English name';
   $handler->display->display_options['fields']['field_lom_en']['element_label_colon'] = FALSE;
-
   /* Field: Content: Malagasy */
   $handler->display->display_options['fields']['field_lom_mg']['id'] = 'field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['table'] = 'field_data_field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['field'] = 'field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['label'] = 'Malagasy name';
   $handler->display->display_options['fields']['field_lom_mg']['element_label_colon'] = FALSE;
-
   /* Field: Content: German */
   $handler->display->display_options['fields']['field_lom_german']['id'] = 'field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['table'] = 'field_data_field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['field'] = 'field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['label'] = 'German name';
   $handler->display->display_options['fields']['field_lom_german']['element_label_colon'] = FALSE;
-
   /* Field: Content: French */
   $handler->display->display_options['fields']['field_lom_fr']['id'] = 'field_lom_fr';
   $handler->display->display_options['fields']['field_lom_fr']['table'] = 'field_data_field_lom_fr';
@@ -444,7 +438,6 @@ function lom_all_views_views_default_views() {
     1 => 0,
     3 => 0,
   );
-  
   /* Filter criterion: Content: English (field_lom_en) */
   $handler->display->display_options['filters']['field_lom_en_value']['id'] = 'field_lom_en_value';
   $handler->display->display_options['filters']['field_lom_en_value']['table'] = 'field_data_field_lom_en';
@@ -461,7 +454,6 @@ function lom_all_views_views_default_views() {
     1 => 0,
     3 => 0,
   );
-  
   /* Filter criterion: Content: Malagasy (field_lom_mg) */
   $handler->display->display_options['filters']['field_lom_mg_value']['id'] = 'field_lom_mg_value';
   $handler->display->display_options['filters']['field_lom_mg_value']['table'] = 'field_data_field_lom_mg';
@@ -494,7 +486,6 @@ function lom_all_views_views_default_views() {
     1 => 0,
     3 => 0,
   );
-
   /* Filter criterion: Content: French (field_lom_fr) */
   $handler->display->display_options['filters']['field_lom_fr_value']['id'] = 'field_lom_fr_value';
   $handler->display->display_options['filters']['field_lom_fr_value']['table'] = 'field_data_field_lom_fr';
@@ -511,7 +502,6 @@ function lom_all_views_views_default_views() {
     1 => 0,
     3 => 0,
   );
-  
   /* Filter criterion: Content: Where to see it (field_lom_where_to_see_it) */
   $handler->display->display_options['filters']['field_lom_where_to_see_it_value']['id'] = 'field_lom_where_to_see_it_value';
   $handler->display->display_options['filters']['field_lom_where_to_see_it_value']['table'] = 'field_data_field_lom_where_to_see_it';
@@ -729,25 +719,21 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-
   /* Field: Content: English */
   $handler->display->display_options['fields']['field_lom_en']['id'] = 'field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['table'] = 'field_data_field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['field'] = 'field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['element_label_colon'] = FALSE;
-
   /* Field: Content: Malagasy */
   $handler->display->display_options['fields']['field_lom_mg']['id'] = 'field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['table'] = 'field_data_field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['field'] = 'field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['element_label_colon'] = FALSE;
-
   /* Field: Content: German */
   $handler->display->display_options['fields']['field_lom_german']['id'] = 'field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['table'] = 'field_data_field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['field'] = 'field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['element_label_colon'] = FALSE;
-
   /* Field: Content: French */
   $handler->display->display_options['fields']['field_lom_fr']['id'] = 'field_lom_fr';
   $handler->display->display_options['fields']['field_lom_fr']['table'] = 'field_data_field_lom_fr';
@@ -820,7 +806,6 @@ function lom_all_views_views_default_views() {
     1 => 0,
     3 => 0,
   );
-  
   /* Filter criterion: Content: German (field_lom_german) */
   $handler->display->display_options['filters']['field_lom_german_value']['id'] = 'field_lom_german_value';
   $handler->display->display_options['filters']['field_lom_german_value']['table'] = 'field_data_field_lom_german';
@@ -837,7 +822,6 @@ function lom_all_views_views_default_views() {
     1 => 0,
     3 => 0,
   );
-  
   /* Filter criterion: Content: French (field_lom_fr) */
   $handler->display->display_options['filters']['field_lom_fr_value']['id'] = 'field_lom_fr_value';
   $handler->display->display_options['filters']['field_lom_fr_value']['table'] = 'field_data_field_lom_fr';
@@ -1316,13 +1300,11 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['title']['relationship'] = 'reverse_field_species_node';
   $handler->display->display_options['fields']['title']['label'] = 'List item';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['relationship'] = 'reverse_field_species_node';
-
   $handler->display->display_options['fields']['field_date']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_date']['settings'] = array(
     'format_type' => 'long',
@@ -1558,8 +1540,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1686,8 +1667,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['field_locality']['relationship'] = 'reverse_field_species_node';
   $handler->display->display_options['fields']['field_locality']['label'] = 'Locality';
   $handler->display->display_options['fields']['field_locality']['element_label_colon'] = FALSE;
-
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1769,6 +1749,76 @@ return $user->uid;';
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'list/filtered-species';
   $export['filtered_species_widget'] = $view;
+
+  $view = new view();
+  $view->name = 'illegal_activities_view';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'illegal-activities';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Illegal activities';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'node';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'illegal_activities' => 'illegal_activities',
+  );
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'Title';
+  $handler->display->display_options['filters']['title']['expose']['description'] = 'Contains word';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['path'] = 'illegal-activities';
+  $export['illegal_activities_view'] = $view;
 
   $view = new view();
   $view->name = 'illustration_export';
@@ -2621,8 +2671,7 @@ require_once(  drupal_get_path(\'module\', \'master_list_setup\').  \'/includes/
   $handler->display->display_options['fields']['field_locality']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_locality']['alter']['text'] = '<div class="table_view_item">Locality: [field_locality]</div>';
   $handler->display->display_options['fields']['field_locality']['element_label_colon'] = FALSE;
-
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -2728,8 +2777,7 @@ return $user->uid;';
     1 => 0,
     3 => 0,
   );
-  
-  /* Filter criterion: Content: When did you see it for the first time? (field_date) */
+  /* Filter criterion: Content: Sighting date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -2915,8 +2963,7 @@ return $user->uid;';
     1 => 0,
     3 => 0,
   );
-  
-  /* Filter criterion: Content: When did you see it for the first time? (field_date) */
+  /* Filter criterion: Content: Sighting date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -3114,8 +3161,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_species']['settings'] = array(
     'link' => 0,
   );
-  
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3251,8 +3297,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_species']['settings'] = array(
     'link' => 0,
   );
-  
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3383,8 +3428,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_species']['settings'] = array(
     'link' => 0,
   );
-  
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3510,8 +3554,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-
-  /* Sort criterion: Content: When did you see it for the first time? (field_date) */
+  /* Sort criterion: Content: Sighting date (field_date) */
   $handler->display->display_options['sorts']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['sorts']['field_date_value']['field'] = 'field_date_value';
@@ -3787,8 +3830,7 @@ drupal_set_message( t(\'Empty personal lemur life-list! To add new item in your 
   $handler->display->display_options['fields']['field_locality']['field'] = 'field_locality';
   $handler->display->display_options['fields']['field_locality']['relationship'] = 'reverse_field_species_node';
   $handler->display->display_options['fields']['field_locality']['label'] = 'Locality';
-
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3918,7 +3960,6 @@ return $user->uid;';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-
   /* Field: Content: Photograph */
   $handler->display->display_options['fields']['field_lom_photograph']['id'] = 'field_lom_photograph';
   $handler->display->display_options['fields']['field_lom_photograph']['table'] = 'field_data_field_lom_photograph';
@@ -4656,7 +4697,6 @@ require_once(  drupal_get_path(\'module\', \'master_list_setup\').  \'/includes/
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-
   /* Field: Content: English */
   $handler->display->display_options['fields']['field_lom_en']['id'] = 'field_lom_en';
   $handler->display->display_options['fields']['field_lom_en']['table'] = 'field_data_field_lom_en';
@@ -4666,48 +4706,40 @@ require_once(  drupal_get_path(\'module\', \'master_list_setup\').  \'/includes/
   $handler->display->display_options['fields']['field_lom_other_en']['id'] = 'field_lom_other_en';
   $handler->display->display_options['fields']['field_lom_other_en']['table'] = 'field_data_field_lom_other_en';
   $handler->display->display_options['fields']['field_lom_other_en']['field'] = 'field_lom_other_en';
-
   /* Field: Content: French */
   $handler->display->display_options['fields']['field_lom_fr']['id'] = 'field_lom_fr';
   $handler->display->display_options['fields']['field_lom_fr']['table'] = 'field_data_field_lom_fr';
   $handler->display->display_options['fields']['field_lom_fr']['field'] = 'field_lom_fr';
-
   /* Field: Content: German */
   $handler->display->display_options['fields']['field_lom_german']['id'] = 'field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['table'] = 'field_data_field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['field'] = 'field_lom_german';
   $handler->display->display_options['fields']['field_lom_german']['element_label_colon'] = FALSE;
-
   /* Field: Content: Malagasy */
   $handler->display->display_options['fields']['field_lom_mg']['id'] = 'field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['table'] = 'field_data_field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['field'] = 'field_lom_mg';
   $handler->display->display_options['fields']['field_lom_mg']['element_label_colon'] = FALSE;
-
   /* Field: Content: Identification */
   $handler->display->display_options['fields']['field_lom_identification']['id'] = 'field_lom_identification';
   $handler->display->display_options['fields']['field_lom_identification']['table'] = 'field_data_field_lom_identification';
   $handler->display->display_options['fields']['field_lom_identification']['field'] = 'field_lom_identification';
   $handler->display->display_options['fields']['field_lom_identification']['element_label_colon'] = FALSE;
-
   /* Field: Content: Natural history */
   $handler->display->display_options['fields']['field_lom_natural_history']['id'] = 'field_lom_natural_history';
   $handler->display->display_options['fields']['field_lom_natural_history']['table'] = 'field_data_field_lom_natural_history';
   $handler->display->display_options['fields']['field_lom_natural_history']['field'] = 'field_lom_natural_history';
   $handler->display->display_options['fields']['field_lom_natural_history']['element_label_colon'] = FALSE;
-
   /* Field: Content: Geographic range */
   $handler->display->display_options['fields']['field_lom_geographic_range']['id'] = 'field_lom_geographic_range';
   $handler->display->display_options['fields']['field_lom_geographic_range']['table'] = 'field_data_field_lom_geographic_range';
   $handler->display->display_options['fields']['field_lom_geographic_range']['field'] = 'field_lom_geographic_range';
   $handler->display->display_options['fields']['field_lom_geographic_range']['element_label_colon'] = FALSE;
-
   /* Field: Content: Conservation status */
   $handler->display->display_options['fields']['field_lom_conservation_status']['id'] = 'field_lom_conservation_status';
   $handler->display->display_options['fields']['field_lom_conservation_status']['table'] = 'field_data_field_lom_conservation_status';
   $handler->display->display_options['fields']['field_lom_conservation_status']['field'] = 'field_lom_conservation_status';
   $handler->display->display_options['fields']['field_lom_conservation_status']['element_label_colon'] = FALSE;
-
   /* Field: Content: Where to see it */
   $handler->display->display_options['fields']['field_lom_where_to_see_it']['id'] = 'field_lom_where_to_see_it';
   $handler->display->display_options['fields']['field_lom_where_to_see_it']['table'] = 'field_data_field_lom_where_to_see_it';
