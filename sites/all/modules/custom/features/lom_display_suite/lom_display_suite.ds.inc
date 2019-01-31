@@ -47,6 +47,31 @@ function lom_display_suite_ds_field_settings_info() {
 
   $ds_fieldsetting = new stdClass();
   $ds_fieldsetting->api_version = 1;
+  $ds_fieldsetting->id = 'node|illegal_activities|teaser';
+  $ds_fieldsetting->entity_type = 'node';
+  $ds_fieldsetting->bundle = 'illegal_activities';
+  $ds_fieldsetting->view_mode = 'teaser';
+  $ds_fieldsetting->settings = array(
+    'title' => array(
+      'weight' => '0',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'node_link' => array(
+      'weight' => '4',
+      'label' => 'hidden',
+      'format' => 'default',
+    ),
+    'submitted_by' => array(
+      'weight' => '5',
+      'label' => 'hidden',
+      'format' => 'ds_time_ago',
+    ),
+  );
+  $export['node|illegal_activities|teaser'] = $ds_fieldsetting;
+
+  $ds_fieldsetting = new stdClass();
+  $ds_fieldsetting->api_version = 1;
   $ds_fieldsetting->id = 'node|lom_photograph|photograph_with_title';
   $ds_fieldsetting->entity_type = 'node';
   $ds_fieldsetting->bundle = 'lom_photograph';
