@@ -598,7 +598,7 @@ function lom_illegal_activities_data_model_field_default_field_instances() {
         'label' => 'above',
         'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'taxonomy_term_reference_plain',
         'weight' => 3,
       ),
     ),
