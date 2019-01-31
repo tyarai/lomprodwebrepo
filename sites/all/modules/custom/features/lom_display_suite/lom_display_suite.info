@@ -29,6 +29,7 @@ features[ds_field_settings][] = node|video|teaser
 features[ds_field_settings][] = user|user|default
 features[ds_layout_settings][] = node|authors|default
 features[ds_layout_settings][] = node|best_places|best_places_map_view
+features[ds_layout_settings][] = node|illegal_activities|teaser
 features[ds_layout_settings][] = node|lom_illustration|default
 features[ds_layout_settings][] = node|lom_map|default
 features[ds_layout_settings][] = node|lom_map|map_image_medium

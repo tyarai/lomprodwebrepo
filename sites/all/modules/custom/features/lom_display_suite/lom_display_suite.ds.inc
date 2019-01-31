@@ -410,6 +410,53 @@ function lom_display_suite_ds_layout_settings_info() {
 
   $ds_layout = new stdClass();
   $ds_layout->api_version = 1;
+  $ds_layout->id = 'node|illegal_activities|teaser';
+  $ds_layout->entity_type = 'node';
+  $ds_layout->bundle = 'illegal_activities';
+  $ds_layout->view_mode = 'teaser';
+  $ds_layout->layout = 'ds_3col_stacked';
+  $ds_layout->settings = array(
+    'regions' => array(
+      'header' => array(
+        0 => 'title',
+      ),
+      'middle' => array(
+        1 => 'field_images',
+      ),
+      'footer' => array(
+        2 => 'field_date',
+        3 => 'field_type',
+        4 => 'node_link',
+        5 => 'submitted_by',
+      ),
+    ),
+    'fields' => array(
+      'title' => 'header',
+      'field_images' => 'middle',
+      'field_date' => 'footer',
+      'field_type' => 'footer',
+      'node_link' => 'footer',
+      'submitted_by' => 'footer',
+    ),
+    'classes' => array(),
+    'wrappers' => array(
+      'header' => 'div',
+      'left' => 'div',
+      'middle' => 'div',
+      'right' => 'div',
+      'footer' => 'div',
+    ),
+    'layout_wrapper' => 'div',
+    'layout_attributes' => '',
+    'layout_attributes_merge' => 1,
+    'layout_link_attribute' => '',
+    'layout_link_custom' => '',
+    'layout_disable_css' => 0,
+  );
+  $export['node|illegal_activities|teaser'] = $ds_layout;
+
+  $ds_layout = new stdClass();
+  $ds_layout->api_version = 1;
   $ds_layout->id = 'node|lom_illustration|default';
   $ds_layout->entity_type = 'node';
   $ds_layout->bundle = 'lom_illustration';
