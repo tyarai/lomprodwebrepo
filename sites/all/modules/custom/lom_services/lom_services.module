@@ -858,6 +858,8 @@ function _lom_services_new_sighting($data){
                 $node->field_is_deleted[$node->language][0]['value']  = 0;
                 $node->field_photo[$node->language][]                 = array('fid'=>$data['field_photo']);
 
+                $node->field_type[$node->language][0]                 = array('tid'=> $data['field_type']);   
+                
                 $node = node_submit($node);
                 node_save($node);
 
