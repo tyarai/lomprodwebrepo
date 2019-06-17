@@ -824,7 +824,7 @@ function _lom_services_new_sighting($data){
             if(! PublicationNodeWrapper::lookupUUID($data['uuid'],$nid,$errorMessage)){
             
                 $node               = new stdClass(); // We create a new node object
-                $node->type         = 'publication'; // Or any other content type you want
+                $node->type         = 'publication'; 
                 $node->title        = $data['title'];
                 $node->language     = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
                 node_object_prepare($node); // Set some default values.
@@ -836,23 +836,27 @@ function _lom_services_new_sighting($data){
                 $node->body[$node->language][0]['summary'] = NULL;
                 $node->body[$node->language][0]['format']  = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
 
-                $node->field_place_name_reference[$node->language][] = array(
-                    'target_id'   => intval($data['field_place_name_reference']),
-                    'target_type' => 'node',
-                );
+                if($data['field_place_name_reference'] != null && $data['field_place_name_reference'] != 0){
+                    $node->field_place_name_reference[$node->language][] = array(
+                        'target_id'   => intval($data['field_place_name_reference']),
+                        'target_type' => 'node',
+                    );
+                }
 
-                $node->field_associated_species[$node->language][] = array(
-                    'target_id'   => intval($data['field_associated_species']),
-                    'target_type' => 'node',
-                );
+                if($data['field_associated_species'] != null && $data['field_associated_species'] != 0 ){
+                    $node->field_associated_species[$node->language][] = array(
+                        'target_id'   => intval($data['field_associated_species']),
+                        'target_type' => 'node',
+                    );
+                }
 
-                $node->field_count[$node->language][0]['value']   = $data['field_count'];        ;
+                $node->field_count[$node->language][0]['value']   = $data['field_count'] != null ? $data['field_count'] : 0;        
                 $node->field_date[$node->language][0]['value']    = $data['field_date'];
 
-                $node->field_place_name[$node->language][0]['value']  = $data['field_place_name'];
-                $node->field_lat[$node->language][0]['value']         = $data['field_lat'];
-                $node->field_long[$node->language][0]['value']        = $data['field_long'];
-                $node->field_altitude[$node->language][0]['value']    = $data['field_altitude'];
+                $node->field_place_name[$node->language][0]['value']  = $data['field_place_name'] != null ? $data['field_place_name'] : null;
+                $node->field_lat[$node->language][0]['value']         = $data['field_lat'] != null ? $data['field_lat'] : 0.0;
+                $node->field_long[$node->language][0]['value']        = $data['field_long'] != null ? $data['field_long'] : 0.0;
+                $node->field_altitude[$node->language][0]['value']    = $data['field_altitude'] != null ? $data['field_altitude'] : 0.0;
                 $node->field_is_local[$node->language][0]['value']    = $data['field_is_local'];
                 $node->field_is_synced[$node->language][0]['value']   = $data['field_is_synced'];
                 $node->field_is_deleted[$node->language][0]['value']  = 0;
