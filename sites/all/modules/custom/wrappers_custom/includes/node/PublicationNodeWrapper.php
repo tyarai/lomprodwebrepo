@@ -633,6 +633,100 @@ class PublicationNodeWrapper extends WdNodeWrapper {
         try{
 
             if(count($changedSightings) != 0){
+                
+                foreach ($changedSightings as $nid => $title){
+                    if($nid != NULL){
+
+                        $sighting = new PublicationNodeWrapper($nid);
+                        $wrapper  = entity_metadata_wrapper('node',$nid);
+                        
+                        if($sighting){
+                            
+                            global $base_url;
+                            
+                            $nid                            = intval($sighting->getId());
+                            $uuid                           = $sighting->uuid;
+                            $title                          =  strip_tags($sighting->getTitle());
+                            $species                        = strip_tags($sighting->getAssociatedSpecies()->getTitle());
+                            $user_uid                       = intval($sighting->getAuthorId());
+                            $body                           = strip_tags($sighting->getBody());
+                            $photo_name                     = $base_url.'/'.PUBLIC_PATH .'/'.$sighting->getPhoto()['filename'];
+                            $field_photo                    = array(
+                                                                'src' => $photo_name,
+                                                                'alt' => '',    
+                                                            );
+                            $created                        = date('Y-m-d H:i:s',$sighting->getCreatedTime());
+                            $changed                        = date('Y-m-d H:i:s',$sighting->getChangedTime());
+                            $author_name                    = $sighting->getAuthor()->getName();
+                            $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
+                            $uuid                           = $wrapper->uuid->value();
+                            $placeName                      = $sighting->getPlaceName();
+                            $latitude                       = $sighting->getLat() != NULL  ? doubleval($sighting->getLat())  : 0.000000000;
+                            $longitude                      = $sighting->getLong() != NULL ? doubleval($sighting->getLong()) : 0.000000000;
+                            $altitude                       = $sighting->getAltitude() != NULL ? doubleval($sighting->getAltitude()) : 0.000000000;
+                            $count                          = intval($sighting->getCount());
+                            $isLocal                        = intval($sighting->getIsLocal());
+                            $isSynced                       = intval($sighting->getIsSynced());
+                            $date                           = date('Y-m-d',$sighting->getFieldDate());
+                            $deleted                        = intval($sighting->getIsDeleted());
+                            $refNid                         = intval($sighting->getPlaceNameReference()->getId());
+                            $activityTID                    = intval($sighting->getType()->tid);
+                            
+                            $comments                       = CommentNodePublicationCommentWrapper::getComments($uid=NULL,$nid,$changedFrom=NULL);
+                            
+                            $sightings['nodes'][] = array('node'=> array(
+                                    '_nid'                  => $nid,
+                                    '_title'                => $title,
+                                    '_uuid'                 => $uuid,    
+                                    '_speciesName'          => $species,
+                                    '_uid'                  => $user_uid,
+                                    '_body'                 => $body,
+                                    '_photoFileNames'       => $photo_name,
+                                    '_createdTime'          => $created,
+                                    '_modifiedTime'         => $changed,
+                                    '_author_name'          => $author_name,
+                                    '_speciesNid'           => $speciesNid,
+                                    '_placeName'            => $placeName,
+                                    '_placeLatitude'        => $latitude,
+                                    '_placeLongitude'       => $longitude,
+                                    '_placeAltitude'        => $altitude,
+                                    '_speciesCount'         => $count,
+                                    '_isLocal'              => 0,//$isLocal,
+                                    '_isSynced'             => 1,//$isSynced,
+                                    '_date'                 => $date,
+                                    '_deleted'              => $deleted,
+                                    '_place_name_reference_nid' => $refNid,
+                                    '_comments'              => $comments,
+                                    '_activityTagTid'       => $activityTID,
+                                )
+                            );
+
+                        }
+                    }
+                }
+            }
+            
+        }catch(Exception $e){
+            
+            drupal_set_message(t('[Sighting::allSightings()] Error: @e',array('@e'=>$e->getMessage())),'error');
+            
+        }
+        
+        return $sightings;
+
+    }
+    
+    /*public static function allSightings($uid,$changedFrom=NULL,$start=NULL,$count=NULL,$synced=NULL,&$modifiedSightings=array()){
+        
+        $sightings["nodes"] = array();
+        $changedSightings   = PublicationNodeWrapper::getAllSightingsKeyedByNID($uid,$changedFrom,$start,$count,$synced);
+        $modifiedSightings  = $changedSightings;
+        
+        module_load_include('php','wrappers_custom','includes/comment/CommentNodePublicationCommentWrapper');
+        
+        try{
+
+            if(count($changedSightings) != 0){
                 foreach ($changedSightings as $nid => $title){
                     if($nid != NULL){
 
@@ -708,9 +802,10 @@ class PublicationNodeWrapper extends WdNodeWrapper {
         
         return $sightings;
 
-    }
+    }*/
     
    
+    
   
     
     
@@ -775,6 +870,18 @@ class PublicationNodeWrapper extends WdNodeWrapper {
    */
   public function getAltitude() {
     return $this->get('field_altitude');
+  }
+
+  /**
+   * Sets field_type
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function setType($value) {
+    $this->set('field_type', $value);
+    return $this;
   }
 
 }

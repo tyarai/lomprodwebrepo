@@ -562,4 +562,16 @@ class IllegalActivitiesNodeWrapper extends WdNodeWrapper {
         return $count;
     }
 
+  /**
+   * Sets field_type
+   *
+   * @param $value
+   *
+   * @return $this
+   */
+  public function setType($value) {
+    $this->set('field_type', $value);
+    return $this;
+  }
+
 }
