@@ -655,8 +655,11 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                                                                 'src' => $photo_name,
                                                                 'alt' => '',    
                                                             );
-                            $created                        = date('Y-m-d H:i:s',$sighting->getCreatedTime());
-                            $changed                        = date('Y-m-d H:i:s',$sighting->getChangedTime());
+                            //$created                        = date('Y-m-d H:i:s',$sighting->getCreatedTime());
+                            //$changed                        = date('Y-m-d H:i:s',$sighting->getChangedTime());
+			    $created                        = $sighting->getCreatedTime();
+                            $changed                        = $sighting->getChangedTime();			
+	
                             $author_name                    = $sighting->getAuthor()->getName();
                             $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
                             $uuid                           = $wrapper->uuid->value();
