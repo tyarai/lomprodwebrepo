@@ -664,9 +664,9 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
                             $uuid                           = $wrapper->uuid->value();
                             $placeName                      = $sighting->getPlaceName();
-                            $latitude                       = $sighting->getLat() != NULL  ? doubleval($sighting->getLat())  : 0.000000000;
-                            $longitude                      = $sighting->getLong() != NULL ? doubleval($sighting->getLong()) : 0.000000000;
-                            $altitude                       = $sighting->getAltitude() != NULL ? doubleval($sighting->getAltitude()) : 0.000000000;
+                            $latitude                       = $sighting->getLat() != NULL  ? doubleval($sighting->getLat())  : 0.0;
+                            $longitude                      = $sighting->getLong() != NULL ? doubleval($sighting->getLong()) : 0.0;
+                            $altitude                       = $sighting->getAltitude() != NULL ? doubleval($sighting->getAltitude()) : 0.0;
                             $count                          = intval($sighting->getCount());
                             $isLocal                        = intval($sighting->getIsLocal());
                             $isSynced                       = intval($sighting->getIsSynced());
