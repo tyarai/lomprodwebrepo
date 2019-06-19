@@ -674,7 +674,8 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             
                             $comments                       = CommentNodePublicationCommentWrapper::getComments($uid=NULL,$nid,$changedFrom=NULL);
                             
-                            $sightings['nodes'][] = array('node'=> array(
+                            //$sightings['nodes'][] = array('node'=> array(
+                            $sightings['nodes'][] =  array(
                                     '_nid'                  => $nid,
                                     '_title'                => $title,
                                     '_uuid'                 => $uuid,    
@@ -698,7 +699,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                                     '_place_name_reference_nid' => $refNid,
                                     '_comments'              => $comments,
                                     '_activityTagTid'       => $activityTID,
-                                )
+                                
                             );
 
                         }
