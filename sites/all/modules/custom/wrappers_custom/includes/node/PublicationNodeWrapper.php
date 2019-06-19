@@ -657,8 +657,8 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                                                             );
                             //$created                        = date('Y-m-d H:i:s',$sighting->getCreatedTime());
                             //$changed                        = date('Y-m-d H:i:s',$sighting->getChangedTime());
-			    $created                        = $sighting->getCreatedTime();
-                            $changed                        = $sighting->getChangedTime();			
+			    $created                        = doubleval($sighting->getCreatedTime());
+                            $changed                        = doubleval($sighting->getChangedTime());			
 	
                             $author_name                    = $sighting->getAuthor()->getName();
                             $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
@@ -671,7 +671,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $isLocal                        = intval($sighting->getIsLocal());
                             $isSynced                       = intval($sighting->getIsSynced());
                             //$date                           = date('Y-m-d',$sighting->getFieldDate());
-                            $date                           = $sighting->getFieldDate();
+                            $date                           = doubleval($sighting->getFieldDate());
 			    $deleted                        = intval($sighting->getIsDeleted());
                             $refNid                         = intval($sighting->getPlaceNameReference()->getId());
                             $activityTID                    = intval($sighting->getType()->tid);
