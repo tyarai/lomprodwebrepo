@@ -671,7 +671,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $isLocal                        = intval($sighting->getIsLocal());
                             $isSynced                       = intval($sighting->getIsSynced());
                             //$date                           = date('Y-m-d',$sighting->getFieldDate());
-                            $date                           = doubleval($sighting->getFieldDate());
+                            $date                           = $sighting->getFieldDate();
 			    $deleted                        = intval($sighting->getIsDeleted());
                             $refNid                         = intval($sighting->getPlaceNameReference()->getId());
                             $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getFieldType()->tid) : null ;
