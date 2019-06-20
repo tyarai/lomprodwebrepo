@@ -674,7 +674,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $date                           = doubleval($sighting->getFieldDate());
 			    $deleted                        = intval($sighting->getIsDeleted());
                             $refNid                         = intval($sighting->getPlaceNameReference()->getId());
-                            $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getType()->tid) : null ;
+                            $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getFieldType()->tid) : null ;
                             
                             $comments                       = CommentNodePublicationCommentWrapper::getComments($uid=NULL,$nid,$changedFrom=NULL);
                             
