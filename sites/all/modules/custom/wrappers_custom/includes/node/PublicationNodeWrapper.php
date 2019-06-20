@@ -657,8 +657,8 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                                                             );
                             //$created                        = date('Y-m-d H:i:s',$sighting->getCreatedTime());
                             //$changed                        = date('Y-m-d H:i:s',$sighting->getChangedTime());
-			    $created                        = doubleval($sighting->getCreatedTime() * 1000);//Convert to millisecod * 1000
-                            $changed                        = doubleval($sighting->getChangedTime() * 1000);//Convert to millisecod * 1000
+			    //$created                        = doubleval($sighting->getCreatedTime() * 1000);//Convert to millisecod * 1000
+                            //$changed                        = doubleval($sighting->getChangedTime() * 1000);//Convert to millisecod * 1000
 	
                             $author_name                    = $sighting->getAuthor()->getName();
                             $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
