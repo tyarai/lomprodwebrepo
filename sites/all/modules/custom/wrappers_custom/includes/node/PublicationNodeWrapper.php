@@ -645,8 +645,8 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             global $base_url;
                             
                             $nid                            = intval($sighting->getId());
-                            $uuid                           = $sighting->uuid;
-                            $title                          =  strip_tags($sighting->getTitle());
+                            $uuid                           = $sighting->getUuid();
+                            $title                          = strip_tags($sighting->getTitle());
                             $species                        = strip_tags($sighting->getAssociatedSpecies()->getTitle());
                             $user_uid                       = intval($sighting->getAuthorId());
                             $body                           = strip_tags($sighting->getBody());
