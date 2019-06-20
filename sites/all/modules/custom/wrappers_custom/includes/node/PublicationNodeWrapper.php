@@ -674,7 +674,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $date                           = doubleval($sighting->getFieldDate());
 			    $deleted                        = intval($sighting->getIsDeleted());
                             $refNid                         = intval($sighting->getPlaceNameReference()->getId());
-                            $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getType()->getId()) : null ;
+                            $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getType()->tid) : null ;
                             
                             $comments                       = CommentNodePublicationCommentWrapper::getComments($uid=NULL,$nid,$changedFrom=NULL);
                             
@@ -888,7 +888,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
     $this->set('field_type', $value);
     return $this;
   }
-  public function getFieldType($value) {
+  public function getFieldType() {
     return $value = $this->get('field_type');
     /*if (!empty($value)) {
       $value = new WdTaxonomyTermWrapper($value);
