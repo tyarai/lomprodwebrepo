@@ -594,8 +594,8 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                 }
 
                 if($changedFrom != NULL){
-                   //$query .= " AND n.changed >= ". strtotime($changedFrom); 
-                    $query .= " AND n.changed >= ". $changedFrom; 
+                   $query .= " AND n.changed >= ". strtotime($changedFrom); 
+                   // $query .= " AND n.changed >= ". $changedFrom; 
                 }
                 
                 //$query .= " ORDER BY n.changed DESC,n.title ASC ";
@@ -671,7 +671,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $isLocal                        = intval($sighting->getIsLocal());
                             $isSynced                       = intval($sighting->getIsSynced());
                             //$date                           = date('Y-m-d',$sighting->getFieldDate());
-                            $date                           = doubleval($sighting->getFieldDate());
+                            $date                           = doubleval($sighting->getFieldDate()) * 1000; // Convert to millisecond by mutliplying by 1000
 			    $deleted                        = intval($sighting->getIsDeleted());
                             $refNid                         = intval($sighting->getPlaceNameReference()->getId());
                             $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getFieldType()->tid) : null ;
