@@ -647,7 +647,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $nid                            = intval($sighting->getId());
                             $uuid                           = $sighting->getUuid();
                             $title                          = strip_tags($sighting->getTitle());
-                            $species                        = strip_tags($sighting->getAssociatedSpecies()->getTitle());
+                            $species                        = $sighting->getAssociatedSpecies() != null ? strip_tags($sighting->getAssociatedSpecies()->getTitle()) : null;
                             $user_uid                       = intval($sighting->getAuthorId());
                             $body                           = strip_tags($sighting->getBody());
                             $photo_name                     = $base_url.'/'.PUBLIC_PATH .'/'.$sighting->getPhoto()['filename'];
@@ -661,7 +661,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             //$changed                        = doubleval($sighting->getChangedTime() * 1000);//Convert to millisecod * 1000
 	
                             $author_name                    = $sighting->getAuthor()->getName();
-                            $speciesNid                     = intval($sighting->getAssociatedSpecies()->getId());
+                            $speciesNid                     = $sighting->getAssociatedSpecies() != null ? intval($sighting->getAssociatedSpecies()->getId()) : null;
                             $uuid                           = $wrapper->uuid->value();
                             $placeName                      = $sighting->getPlaceName();
                             $latitude                       = $sighting->getLat() != NULL  ? doubleval($sighting->getLat())  : 0.0;
@@ -673,7 +673,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             //$date                           = date('Y-m-d',$sighting->getFieldDate());
                             $date                           = doubleval($sighting->getFieldDate()) * 1000; // Convert to millisecond by mutliplying by 1000
 			    $deleted                        = intval($sighting->getIsDeleted());
-                            $refNid                         = intval($sighting->getPlaceNameReference()->getId());
+                            $refNid                         = $sighting->getPlaceNameReference() != null ? intval($sighting->getPlaceNameReference()->getId()) : null;
                             $activityTID                    = $sighting->getFieldType() != null ? intval($sighting->getFieldType()->tid) : null ;
                             
                             $comments                       = CommentNodePublicationCommentWrapper::getComments($uid=NULL,$nid,$changedFrom=NULL);
