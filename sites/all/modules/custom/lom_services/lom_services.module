@@ -349,13 +349,13 @@ function lom_services_services_resources() {
                     'access callback' => '_lom_services_access_permission',
                     'access arguments append' => FALSE,
                     'args' =>array(
-                                array(
-                                    'name' => 'data', 
-                                    'optional' => FALSE, //mandatory parameter
-                                    'source' => 'data',
-                                    'type' => 'data', 
-                                    'description' => 'Data',
-                                ),
+                        array(
+                            'name' => 'data', 
+                            'optional' => FALSE, //mandatory parameter
+                            'source' => 'data',
+                            'type' => 'data', 
+                            'description' => 'Data',
+                        ),
                     ),
                 ),
                 
@@ -771,6 +771,7 @@ function _lom_services_changed_sightings($uid,$from_date,$start,$count,$synced=N
         }
     }
     
+    //$lastSyncDate = strtotime('now');
     $sightings["serverLastSyncDate"] = $lastSyncDate;
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');

@@ -239,7 +239,8 @@ class CommentNodePublicationCommentWrapper extends WdCommentWrapper {
             }
             
             if($changedFrom !== NULL){
-                $query .= " AND c.changed >= ". intval($changedFrom); 
+                //$query .= " AND c.changed >= ". intval($changedFrom); 
+                $query .= " AND c.changed >= ". strtotime($changedFrom);
             }
             
             $query .= " ORDER BY c.nid ASC";
@@ -250,22 +251,22 @@ class CommentNodePublicationCommentWrapper extends WdCommentWrapper {
 
                 $comments[] = array(
 
-                   'cid'       => $record['cid'],
-                   'pid'       => $record['pid'],
-                   'nid'       => $record['nid'],
-                   'uid'       => $record['uid'],
-                   'subject'   => $record['subject'],
-                   'hostname'  => $record['hostname'],
-                   'created'   => $record['created'],
-                   'changed'   => $record['changed'],
-                   'status'    => $record['status'],
-                   'mail'      => $record['mail'],
-                   'name'      => $record['name'],
-                   'language'  => $record['language'],
-                   'uuid'      => $record['uuid'],
-                   'body'      => $record['body'],
-                   'deleted'   => $record['deleted'],
-                   'sighting_uuid' => $record['sightingUUID'], 
+                   '_cid'       => intval($record['cid']),
+                   '_pid'       => intval($record['pid']),
+                   '_nid'       => intval($record['nid']),
+                   '_uid'       => intval($record['uid']),
+                   '_subject'   => $record['subject'],
+                   '_hostname'  => $record['hostname'],
+                   '_created'   => doubleval($record['created']),
+                   '_modified'  => doubleval($record['changed']),
+                   '_status'    => intval($record['status']),
+                   '_mail'      => $record['mail'],
+                   '_name'      => $record['name'],
+                   '_language'  => $record['language'],
+                   '_uuid'      => $record['uuid'],
+                   '_commentBody' => strip_tags($record['body']),
+                   '_deleted'   => intval($record['deleted']),
+                   '_sighting_uuid' => $record['sightingUUID'], 
 
                 );
             }

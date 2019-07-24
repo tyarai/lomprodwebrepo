@@ -647,6 +647,7 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                             $nid                            = intval($sighting->getId());
                             $uuid                           = $sighting->getUuid();
                             $title                          = strip_tags($sighting->getTitle());
+                            //$title                          = drupal_json_encode_helper($sighting->getTitle());
                             $species                        = $sighting->getAssociatedSpecies() != null ? strip_tags($sighting->getAssociatedSpecies()->getTitle()) : null;
                             $user_uid                       = intval($sighting->getAuthorId());
                             $body                           = strip_tags($sighting->getBody());
