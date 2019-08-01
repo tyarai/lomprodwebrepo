@@ -812,7 +812,8 @@ function _lom_services_reset_synced($uid,$synced_value=0){
 function _lom_services_new_sighting($data){
   
     $nid            = 0;
-    //$serverLastSync = 0;
+    $error          = null;
+    
     
     module_load_include('php','wrappers_custom','includes/node/PublicationNodeWrapper');
   
@@ -862,8 +863,10 @@ function _lom_services_new_sighting($data){
                 $node->field_is_synced[$node->language][0]['value']   = $data['field_is_synced'];
                 $node->field_is_deleted[$node->language][0]['value']  = 0;
                 $node->field_photo[$node->language][]                 = array('fid'=>$data['field_photo']);
-
-                $node->field_type[$node->language][]                 = array('tid'=>$data['field_type']);   
+                $typeTID                                              = $data['field_type'];
+                if($typeTID != null){
+                    $node->field_type[$node->language][]                  = array('tid'=> $typeTID );   
+                }
                 
                 $node = node_submit($node);
                 node_save($node);
@@ -875,13 +878,15 @@ function _lom_services_new_sighting($data){
             $transaction->rollback();
             drupal_set_message(t('WebServices :@error',array('@error'=>$e->getMessage())));
             $errorMessage = $e->getMessage();
+            $error = $e->getMessage();
         }
         
         
     }
     
     $return = array(
-        'nid'       =>intval($nid)
+        'nid'       => intval($nid),
+        'error'     => $error
     );
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');

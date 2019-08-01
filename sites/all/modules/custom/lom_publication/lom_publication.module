@@ -153,7 +153,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             //'#attributes' => array('class'=>array("spacement")),
         );
 
-       $file = $wrapper ?  $wrapper->field_photo->value() : NULL;
+        $file = $wrapper ?  $wrapper->field_photo->value() : NULL;
         $form['container']['sighting']['image'] = array(
             '#type' => 'managed_file',
             '#description' => t('If you don\'t have photo, a default one will be chosen'),
@@ -257,7 +257,6 @@ function theme_theme_sighting_image($variables) {
     }
 }
 
-
 function _sightingChangeMapCallBack($form,&$form_state){
     
     return $form['container']['sighting']['placemap'];
@@ -267,7 +266,6 @@ function _sightingChangeSpeciesInfoCallBack($form,&$form_state){
     $form_state['speciesNID'] = $form_state['values']['species'];
     return $form['container']['sighting']['speciesinfo'];
 }
-
 
 function lom_publication_add_sighting_submit($form,&$form_state){
     module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
@@ -377,7 +375,6 @@ function lom_publication_node_presave($node){
         }
     }
 }
-
 
 /**
  * 
