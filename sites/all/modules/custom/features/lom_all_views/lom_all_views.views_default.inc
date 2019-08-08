@@ -84,7 +84,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['field_locality_editable']['widget_type'] = '0';
   $handler->display->display_options['fields']['field_locality_editable']['suppress_label'] = 0;
   $handler->display->display_options['fields']['field_locality_editable']['suppress_description'] = 0;
-  /* Field: Content: When did you see it for the first time? (editable) */
+  /* Field: Content: Sighting date (editable) */
   $handler->display->display_options['fields']['field_date_editable']['id'] = 'field_date_editable';
   $handler->display->display_options['fields']['field_date_editable']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date_editable']['field'] = 'field_date_editable';
@@ -164,7 +164,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['field_locality_editable']['widget_type'] = '0';
   $handler->display->display_options['fields']['field_locality_editable']['suppress_label'] = 0;
   $handler->display->display_options['fields']['field_locality_editable']['suppress_description'] = 0;
-  /* Field: Content: When did you see it for the first time? (editable) */
+  /* Field: Content: Sighting date (editable) */
   $handler->display->display_options['fields']['field_date_editable']['id'] = 'field_date_editable';
   $handler->display->display_options['fields']['field_date_editable']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date_editable']['field'] = 'field_date_editable';
@@ -1300,7 +1300,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['title']['relationship'] = 'reverse_field_species_node';
   $handler->display->display_options['fields']['title']['label'] = 'List item';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1540,7 +1540,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1667,7 +1667,7 @@ function lom_all_views_views_default_views() {
   $handler->display->display_options['fields']['field_locality']['relationship'] = 'reverse_field_species_node';
   $handler->display->display_options['fields']['field_locality']['label'] = 'Locality';
   $handler->display->display_options['fields']['field_locality']['element_label_colon'] = FALSE;
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1820,6 +1820,7 @@ return $user->uid;';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
+  $handler->display->display_options['enabled'] = FALSE;
   $handler->display->display_options['path'] = 'illegal-activities';
   $export['illegal_activities_view'] = $view;
 
@@ -2674,7 +2675,7 @@ require_once(  drupal_get_path(\'module\', \'master_list_setup\').  \'/includes/
   $handler->display->display_options['fields']['field_locality']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_locality']['alter']['text'] = '<div class="table_view_item">Locality: [field_locality]</div>';
   $handler->display->display_options['fields']['field_locality']['element_label_colon'] = FALSE;
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -2780,7 +2781,7 @@ return $user->uid;';
     1 => 0,
     3 => 0,
   );
-  /* Filter criterion: Content: When did you see it for the first time? (field_date) */
+  /* Filter criterion: Content: Sighting date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -2966,7 +2967,7 @@ return $user->uid;';
     1 => 0,
     3 => 0,
   );
-  /* Filter criterion: Content: When did you see it for the first time? (field_date) */
+  /* Filter criterion: Content: Sighting date (field_date) */
   $handler->display->display_options['filters']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
@@ -3164,7 +3165,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_species']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3300,7 +3301,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_species']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3431,7 +3432,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_species']['settings'] = array(
     'link' => 0,
   );
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -3557,7 +3558,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Sort criterion: Content: When did you see it for the first time? (field_date) */
+  /* Sort criterion: Content: Sighting date (field_date) */
   $handler->display->display_options['sorts']['field_date_value']['id'] = 'field_date_value';
   $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';
   $handler->display->display_options['sorts']['field_date_value']['field'] = 'field_date_value';
@@ -3833,7 +3834,7 @@ drupal_set_message( t(\'Empty personal lemur life-list! To add new item in your 
   $handler->display->display_options['fields']['field_locality']['field'] = 'field_locality';
   $handler->display->display_options['fields']['field_locality']['relationship'] = 'reverse_field_species_node';
   $handler->display->display_options['fields']['field_locality']['label'] = 'Locality';
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';

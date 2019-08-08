@@ -33,7 +33,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 13,
+        'weight' => 18,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -101,7 +101,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 15,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -400,7 +400,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 20,
+        'weight' => 25,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -458,7 +458,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 16,
+        'weight' => 21,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -516,7 +516,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 17,
+        'weight' => 22,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -576,7 +576,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 16,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -634,7 +634,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 15,
+        'weight' => 20,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -697,7 +697,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 14,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -755,7 +755,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 14,
+        'weight' => 19,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -811,7 +811,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 18,
+        'weight' => 23,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -1029,7 +1029,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 0,
+        'weight' => 17,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -1060,6 +1060,62 @@ function lom_publication_data_model_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-publication-field_type'
+  $field_instances['node-publication-field_type'] = array(
+    'bundle' => 'publication',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 17,
+      ),
+      'publication_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sighting' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
+      'sighting_list_view_mode' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_type',
+    'label' => 'Type',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 20,
+    ),
+  );
+
   // Exported field_instance: 'node-publication-field_uuid'
   $field_instances['node-publication-field_uuid'] = array(
     'bundle' => 'publication',
@@ -1083,7 +1139,7 @@ function lom_publication_data_model_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 19,
+        'weight' => 24,
       ),
       'sighting_list_view_mode' => array(
         'label' => 'above',
@@ -1234,6 +1290,7 @@ function lom_publication_data_model_field_default_field_instances() {
   t('Sighting date');
   t('Site name');
   t('Species');
+  t('Type');
   t('altitude');
   t('iPhone UUID');
   t('is Deleted');

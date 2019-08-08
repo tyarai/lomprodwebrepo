@@ -259,7 +259,7 @@ function lom_display_suite_ds_field_settings_info() {
       ),
     ),
     'author' => array(
-      'weight' => '6',
+      'weight' => '7',
       'label' => 'inline',
       'format' => 'author',
     ),
@@ -1173,7 +1173,8 @@ function lom_display_suite_ds_layout_settings_info() {
         3 => 'field_place_name',
         4 => 'field_count',
         5 => 'field_date',
-        6 => 'author',
+        6 => 'field_type',
+        7 => 'author',
       ),
     ),
     'fields' => array(
@@ -1183,6 +1184,7 @@ function lom_display_suite_ds_layout_settings_info() {
       'field_place_name' => 'ds_content',
       'field_count' => 'ds_content',
       'field_date' => 'ds_content',
+      'field_type' => 'ds_content',
       'author' => 'ds_content',
     ),
     'classes' => array(),

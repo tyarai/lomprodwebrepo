@@ -238,9 +238,15 @@ return $user->uid;';
   $handler->display->display_options['style_options']['row_class'] = 'sighting-view-row';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
-  $handler->display->display_options['row_plugin'] = 'node';
+  $handler->display->display_options['row_plugin'] = 'ds';
   $handler->display->display_options['row_options']['view_mode'] = 'sighting_list_view_mode';
-  $handler->display->display_options['row_options']['links'] = FALSE;
+  $handler->display->display_options['row_options']['load_comments'] = 0;
+  $handler->display->display_options['row_options']['alternating'] = 0;
+  $handler->display->display_options['row_options']['grouping'] = 0;
+  $handler->display->display_options['row_options']['advanced'] = 0;
+  $handler->display->display_options['row_options']['delta_fieldset']['delta_fields'] = array();
+  $handler->display->display_options['row_options']['grouping_fieldset']['group_field'] = 'node|changed';
+  $handler->display->display_options['row_options']['default_fieldset']['view_mode'] = 'sighting_list_view_mode';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
   /* Header: Global: PHP */
@@ -269,6 +275,18 @@ return $user->uid;';
   $handler->display->display_options['sorts']['changed']['table'] = 'node';
   $handler->display->display_options['sorts']['changed']['field'] = 'changed';
   $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Author uid */
+  $handler->display->display_options['arguments']['uid']['id'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['table'] = 'node';
+  $handler->display->display_options['arguments']['uid']['field'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['uid']['default_argument_options']['code'] = 'global $user;
+return $user->uid;';
+  $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -286,7 +304,7 @@ return $user->uid;';
     'publication' => 'publication',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: is Deleted (field_is_deleted) */
+  /* Filter criterion: Field: is Deleted (field_is_deleted) */
   $handler->display->display_options['filters']['field_is_deleted_value']['id'] = 'field_is_deleted_value';
   $handler->display->display_options['filters']['field_is_deleted_value']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['filters']['field_is_deleted_value']['field'] = 'field_is_deleted_value';
@@ -360,6 +378,13 @@ return $user->uid;';
     1 => 0,
     3 => 0,
   );
+  /* Filter criterion: Content: Type (field_type) */
+  $handler->display->display_options['filters']['field_type_tid']['id'] = 'field_type_tid';
+  $handler->display->display_options['filters']['field_type_tid']['table'] = 'field_data_field_type';
+  $handler->display->display_options['filters']['field_type_tid']['field'] = 'field_type_tid';
+  $handler->display->display_options['filters']['field_type_tid']['operator'] = 'empty';
+  $handler->display->display_options['filters']['field_type_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_type_tid']['vocabulary'] = 'illegal_activity_type';
   $handler->display->display_options['path'] = 'sightings';
 
   /* Display: All Sightings JSON */
@@ -657,7 +682,7 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['table'] = 'field_data_field_is_local';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
-  /* Field: Content: is Synced */
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
@@ -839,13 +864,13 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
-  /* Field: Content: is Synced */
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -857,7 +882,7 @@ return $user->uid;';
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: is Deleted */
+  /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
@@ -1039,19 +1064,19 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
-  /* Field: Content: is Synced */
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
-  /* Field: Content: is Deleted */
+  /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['label'] = 'deleted';
   $handler->display->display_options['fields']['field_is_deleted']['type'] = 'list_key';
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1135,7 +1160,7 @@ return $user->uid;';
     1 => 0,
     3 => 0,
   );
-  /* Filter criterion: Content: is Synced (field_is_synced) */
+  /* Filter criterion: Field: is Synced (field_is_synced) */
   $handler->display->display_options['filters']['field_is_synced_value']['id'] = 'field_is_synced_value';
   $handler->display->display_options['filters']['field_is_synced_value']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['filters']['field_is_synced_value']['field'] = 'field_is_synced_value';
@@ -1282,13 +1307,13 @@ return $user->uid;';
   $handler->display->display_options['fields']['field_is_local']['field'] = 'field_is_local';
   $handler->display->display_options['fields']['field_is_local']['label'] = 'isLocal';
   $handler->display->display_options['fields']['field_is_local']['type'] = 'list_key';
-  /* Field: Content: is Synced */
+  /* Field: Field: is Synced */
   $handler->display->display_options['fields']['field_is_synced']['id'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['table'] = 'field_data_field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['field'] = 'field_is_synced';
   $handler->display->display_options['fields']['field_is_synced']['label'] = 'isSynced';
   $handler->display->display_options['fields']['field_is_synced']['type'] = 'list_key';
-  /* Field: Content: When did you see it for the first time? */
+  /* Field: Content: Sighting date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -1300,7 +1325,7 @@ return $user->uid;';
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: is Deleted */
+  /* Field: Field: is Deleted */
   $handler->display->display_options['fields']['field_is_deleted']['id'] = 'field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['table'] = 'field_data_field_is_deleted';
   $handler->display->display_options['fields']['field_is_deleted']['field'] = 'field_is_deleted';
@@ -1813,76 +1838,170 @@ return $user->uid;';
     3 => 0,
   );
   $handler->display->display_options['path'] = 'admin/sightings/delete';
-  $translatables['all_publication'] = array(
-    t('Master'),
-    t('Sightings'),
-    t('more'),
-    t('Apply'),
-    t('Reset'),
-    t('Sort by'),
-    t('Asc'),
-    t('Desc'),
-    t('Comments'),
-    t('author'),
-    t('SPECIES'),
-    t('.'),
-    t(','),
-    t('Depth'),
-    t('Reply-to link'),
-    t('Add comment link'),
-    t('Name'),
-    t('All'),
-    t('Page'),
-    t('My sightings'),
-    t('Items per page'),
-    t('- All -'),
-    t('Offset'),
-    t('« first'),
-    t('‹ previous'),
-    t('next ›'),
-    t('last »'),
-    t('Filter sighting title'),
-    t('Filter by scientific name'),
-    t('Filter by malagasy name'),
-    t('Place name '),
-    t('All Sightings JSON'),
-    t('All Sightings'),
-    t('name'),
-    t('niveau'),
-    t('uuid'),
-    t('My Sightings JSON'),
-    t('My Sightings JSON with Param '),
-    t('species'),
-    t('author_name'),
-    t('speciesNid'),
-    t('place_name'),
-    t('latitude'),
-    t('longitude'),
-    t('count'),
-    t('isLocal'),
-    t('isSynced'),
-    t('All my sightings JSON'),
-    t('All my Sightings JSON '),
-    t('created'),
-    t('modified'),
-    t('date'),
-    t('deleted'),
-    t('place_name_reference_nid'),
-    t('Modified Sigthings From Date'),
-    t('Modified Sightings From Date'),
-    t('Updated date'),
-    t('is Local (field_is_local)'),
-    t('Public sightings'),
-    t('Public  sightings'),
-    t('content_author'),
-    t('PLACENAME_REF'),
-    t('Filter by sighting title'),
-    t('Filter by place'),
-    t('ADMIN Sighting - Delete'),
-    t('ADMIN Delete - Sightings'),
-    t('- Choose an operation -'),
-    t('Author uid'),
+
+  /* Display: Illegal activities */
+  $handler = $view->new_display('page', 'Illegal activities', 'page_7');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Illegal Activities';
+  $handler->display->display_options['defaults']['group_by'] = FALSE;
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    2 => '2',
   );
+  $handler->display->display_options['defaults']['query'] = FALSE;
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
+  $handler->display->display_options['defaults']['exposed_form'] = FALSE;
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['style_options']['row_class'] = 'sighting-view-row';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'ds';
+  $handler->display->display_options['row_options']['view_mode'] = 'sighting_list_view_mode';
+  $handler->display->display_options['row_options']['load_comments'] = 0;
+  $handler->display->display_options['row_options']['alternating'] = 0;
+  $handler->display->display_options['row_options']['grouping'] = 0;
+  $handler->display->display_options['row_options']['advanced'] = 0;
+  $handler->display->display_options['row_options']['delta_fieldset']['delta_fields'] = array();
+  $handler->display->display_options['row_options']['grouping_fieldset']['group_field'] = 'node|changed';
+  $handler->display->display_options['row_options']['default_fieldset']['view_mode'] = 'sighting_list_view_mode';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['header'] = FALSE;
+  /* Header: Global: PHP */
+  $handler->display->display_options['header']['php']['id'] = 'php';
+  $handler->display->display_options['header']['php']['table'] = 'views';
+  $handler->display->display_options['header']['php']['field'] = 'php';
+  $handler->display->display_options['header']['php']['php_output'] = ' <?php print lom_publication_sightings_views_header(); ?>
+';
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
+  $handler->display->display_options['relationships']['uid_1']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
+  /* Relationship: Entity Reference: Referenced Entity */
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['id'] = 'field_associated_species_target_id';
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['table'] = 'field_data_field_associated_species';
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['field'] = 'field_associated_species_target_id';
+  $handler->display->display_options['relationships']['field_associated_species_target_id']['label'] = 'SPECIES';
+  /* Relationship: Comment: Comments of the node */
+  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
+  $handler->display->display_options['relationships']['cid']['table'] = 'node';
+  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Updated date */
+  $handler->display->display_options['sorts']['changed']['id'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['table'] = 'node';
+  $handler->display->display_options['sorts']['changed']['field'] = 'changed';
+  $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'publication' => 'publication',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Field: is Deleted (field_is_deleted) */
+  $handler->display->display_options['filters']['field_is_deleted_value']['id'] = 'field_is_deleted_value';
+  $handler->display->display_options['filters']['field_is_deleted_value']['table'] = 'field_data_field_is_deleted';
+  $handler->display->display_options['filters']['field_is_deleted_value']['field'] = 'field_is_deleted_value';
+  $handler->display->display_options['filters']['field_is_deleted_value']['value'] = array(
+    0 => '0',
+  );
+  $handler->display->display_options['filters']['field_is_deleted_value']['group'] = 1;
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title']['id'] = 'title';
+  $handler->display->display_options['filters']['title']['table'] = 'node';
+  $handler->display->display_options['filters']['title']['field'] = 'title';
+  $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['group'] = 1;
+  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['label'] = 'Filter sighting title';
+  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
+  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
+  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Title */
+  $handler->display->display_options['filters']['title_1']['id'] = 'title_1';
+  $handler->display->display_options['filters']['title_1']['table'] = 'node';
+  $handler->display->display_options['filters']['title_1']['field'] = 'title';
+  $handler->display->display_options['filters']['title_1']['relationship'] = 'field_associated_species_target_id';
+  $handler->display->display_options['filters']['title_1']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title_1']['group'] = 1;
+  $handler->display->display_options['filters']['title_1']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['title_1']['expose']['operator_id'] = 'title_1_op';
+  $handler->display->display_options['filters']['title_1']['expose']['label'] = 'Filter by scientific name';
+  $handler->display->display_options['filters']['title_1']['expose']['operator'] = 'title_1_op';
+  $handler->display->display_options['filters']['title_1']['expose']['identifier'] = 'title_1';
+  $handler->display->display_options['filters']['title_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Malagasy (field_lom_mg) */
+  $handler->display->display_options['filters']['field_lom_mg_value']['id'] = 'field_lom_mg_value';
+  $handler->display->display_options['filters']['field_lom_mg_value']['table'] = 'field_data_field_lom_mg';
+  $handler->display->display_options['filters']['field_lom_mg_value']['field'] = 'field_lom_mg_value';
+  $handler->display->display_options['filters']['field_lom_mg_value']['relationship'] = 'field_associated_species_target_id';
+  $handler->display->display_options['filters']['field_lom_mg_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_lom_mg_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_lom_mg_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_lom_mg_value']['expose']['operator_id'] = 'field_lom_mg_value_op';
+  $handler->display->display_options['filters']['field_lom_mg_value']['expose']['label'] = 'Filter by malagasy name';
+  $handler->display->display_options['filters']['field_lom_mg_value']['expose']['operator'] = 'field_lom_mg_value_op';
+  $handler->display->display_options['filters']['field_lom_mg_value']['expose']['identifier'] = 'field_lom_mg_value';
+  $handler->display->display_options['filters']['field_lom_mg_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Place name (field_place_name) */
+  $handler->display->display_options['filters']['field_place_name_value']['id'] = 'field_place_name_value';
+  $handler->display->display_options['filters']['field_place_name_value']['table'] = 'field_data_field_place_name';
+  $handler->display->display_options['filters']['field_place_name_value']['field'] = 'field_place_name_value';
+  $handler->display->display_options['filters']['field_place_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_place_name_value']['group'] = 1;
+  $handler->display->display_options['filters']['field_place_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_place_name_value']['expose']['operator_id'] = 'field_place_name_value_op';
+  $handler->display->display_options['filters']['field_place_name_value']['expose']['label'] = 'Place name ';
+  $handler->display->display_options['filters']['field_place_name_value']['expose']['operator'] = 'field_place_name_value_op';
+  $handler->display->display_options['filters']['field_place_name_value']['expose']['identifier'] = 'field_place_name_value';
+  $handler->display->display_options['filters']['field_place_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Type (field_type) */
+  $handler->display->display_options['filters']['field_type_tid']['id'] = 'field_type_tid';
+  $handler->display->display_options['filters']['field_type_tid']['table'] = 'field_data_field_type';
+  $handler->display->display_options['filters']['field_type_tid']['field'] = 'field_type_tid';
+  $handler->display->display_options['filters']['field_type_tid']['operator'] = 'not empty';
+  $handler->display->display_options['filters']['field_type_tid']['value'] = '';
+  $handler->display->display_options['filters']['field_type_tid']['vocabulary'] = 'illegal_activity_type';
+  $handler->display->display_options['path'] = 'illegal-activities';
   $export['all_publication'] = $view;
 
   return $export;
