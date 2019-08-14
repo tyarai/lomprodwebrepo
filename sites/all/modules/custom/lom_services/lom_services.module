@@ -707,6 +707,8 @@ function _lom_services_changed_nodes($from_date = NULL){
     $data = array();
     $lastSyncDate = strtotime('now');
     
+    $from_date = strtotime($from_date);
+    
     if($from_date == NULL){
         $from_date = strtotime(variable_get('_LOM_DATE_SYNCRON'));
     }
