@@ -715,7 +715,7 @@ class LomSpeciesNodeWrapper extends WdNodeWrapper {
                             
                             $map = $species->getSpeciesMap();
                             
-                            $speciesList[] = array(
+                            /*$speciesList[] = array(
                                 'nid'                   => intval($species->getId()),
                                 'title'                 => $species->getTitle(),
                                 'scientific_name'       => $species->getScientificName(),
@@ -736,6 +736,29 @@ class LomSpeciesNodeWrapper extends WdNodeWrapper {
                                 'map'                   => $species->getSpeciesMap()? $species->getSpeciesMap()->getId() : NULL,
                                 'species_photographs'   => $photos,
                                 'extinct'               => $species->getIsextinct() == 'yes' ? 1:0,
+
+                            );*/
+                            $speciesList[] = array(
+                                '_species_id'           => intval($species->getId()),
+                                '_title'                => $species->getTitle(),
+                                '_scientific_name'      => $species->getScientificName(),
+                                '_scientist_name'       => $species->getScientistName(),
+                                '_profile_photograph_id' => $species->getSpeciesProfilePhotograph() ? intval($species->getSpeciesProfilePhotograph()->getId()) : NULL,
+                                '_family_id'            => $species->getLomFamily() ? intval($species->getLomFamily()->getId()) : NULL,
+                                '_taxa_tid'             => intval($species->getTaxa()[0]->tid),
+                                '_english'               => $species->getLomEn(),
+                                '_other_english'         => $species->getLomOtherEn(),
+                                '_french'                => $species->getLomFr(),
+                                '_malagasy'              => $species->getLomMg(),
+                                '_german'                => $species->getLomGerman(),
+                                '_identification'        => strip_tags($species->getLomIdentification()),
+                                '_geographic_range'      => strip_tags($species->getLomGeographicRange()),
+                                '_natural_history'       => strip_tags($species->getLomNaturalHistory()),
+                                '_conservation_status'   => strip_tags($species->getLomConservationStatus()),
+                                '_where_to_see_it'       => strip_tags($species->getLomWhereToSeeIt()),
+                                '_map'                   => $species->getSpeciesMap()? intval($species->getSpeciesMap()->getId()) : NULL,
+                                '_specie_photograph'     => implode(",", $photos),
+                                '_extinct'               => $species->getIsextinct() == 'yes' ? 1:0,
 
                             );
 

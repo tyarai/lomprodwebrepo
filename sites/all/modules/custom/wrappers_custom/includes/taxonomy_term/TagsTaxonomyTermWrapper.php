@@ -41,15 +41,22 @@ class TagsTaxonomyTermWrapper extends WdTaxonomyTermWrapper {
             $terms = taxonomy_term_load_multiple($term_tids);
             foreach ($terms  as $term) {
                 $wrapper = entity_metadata_wrapper('taxonomy_term',$term);
-                $records['illegal_activity_type'][] =array(
+                /*$records['illegal_activity_type'][] =array(
                     'tid' => intval($term->tid),
                     'name' => $term->name,
                     'uuid' => $term->uuid,
+                );*/
+                $records['illegal_activity_type'][] = array(
+                    '_tid' => intval($term->tid),
+                    '_name_en' => $term->name,
+                    '_uuid' => $term->uuid,
+                    '_vocabulary_name' => 'illegal_activity_type',
                 );
             }
         }
         
-        return drupal_json_encode($records);
+        //return drupal_json_encode($records);
+        return $records;
 
     }
 

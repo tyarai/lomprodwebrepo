@@ -502,7 +502,7 @@ class LomFamilyNodeWrapper extends WdNodeWrapper {
 
                         if($family){
 
-                            $familyList[] = array(
+                            /*$familyList[] = array(
                                 'nid'                   => intval($family->getId()),
                                 'title'                 => strip_tags($family->getTitle()),
                                 'illustration_ref'      => implode(",", $_illustrations),
@@ -510,7 +510,17 @@ class LomFamilyNodeWrapper extends WdNodeWrapper {
                                 //'image'                 => $family->getImage(),
                                 'body'                  => strip_tags($family->getBody()),
                                 'extinct'               => $family->getIsextinct() == 'yes' ? 1:0,
+                            );*/
+                            $familyList[] = array(
+                                '_nid'                   => intval($family->getId()),
+                                '_family'                => strip_tags($family->getTitle()),
+                                '_illustration'          => implode(",", $_illustrations),
+                                //'map_list_id'           => implode(",", $__map),
+                                //'image'                 => $family->getImage(),
+                                '_family_description'    => strip_tags($family->getBody()),
+                                '_extinct'               => $family->getIsextinct() == 'yes' ? 1:0,
                             );
+
 
                         }
                     }

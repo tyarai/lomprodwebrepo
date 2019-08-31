@@ -719,6 +719,7 @@ function _lom_services_changed_nodes($from_date = NULL){
     module_load_include('php','wrappers_custom','includes/node/BestPlacesNodeWrapper');
     module_load_include('php','wrappers_custom','includes/node/LomSpeciesNodeWrapper');
     module_load_include('php','wrappers_custom','includes/node/AuthorsNodeWrapper');
+    module_load_include('php','wrappers_custom','includes/taxonomy_term/TagsTaxonomyTermWrapper');
 
     $photographs = LomPhotographNodeWrapper::allPhotographs($from_date);;
     $maps        = LomMapNodeWrapper::allMaps($from_date);
@@ -726,6 +727,7 @@ function _lom_services_changed_nodes($from_date = NULL){
     $best_places = BestPlacesNodeWrapper::allPlaces($from_date);
     $species     = LomSpeciesNodeWrapper::allSpecies($from_date);;
     $authors     = AuthorsNodeWrapper::allAuthors($from_date);
+    $tags        = TagsTaxonomyTermWrapper::exportToJSON(); //Export all specified tags in this project
 
     $data  = array(
         'species'     => $species,
@@ -734,6 +736,8 @@ function _lom_services_changed_nodes($from_date = NULL){
         'maps'        => $maps,
         'best_places' => $best_places,
         'authors'     => $authors,
+        'tags'         => $tags,
+        'illegal_activity_type' => $tags['illegal_activity_type'],
     );
     
     drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');

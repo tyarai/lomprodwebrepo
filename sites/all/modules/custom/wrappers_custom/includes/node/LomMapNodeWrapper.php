@@ -142,7 +142,8 @@ class LomMapNodeWrapper extends WdNodeWrapper {
                         
                         global $base_url;
                         
-                        $path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                        //$path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                        $path_to_file = $imageFile['filename'];
                         module_load_include('inc','pathauto','pathauto');
                         $url = file_create_url($origImage->source);
                         $url = rawurldecode($url);
@@ -171,10 +172,15 @@ class LomMapNodeWrapper extends WdNodeWrapper {
                         
                         if($map){
 
-                            $maps[] = array(
+                            /*$maps[] = array(
                                 'nid'                   => intval($map->getId()),
                                 'title'                 => strip_tags($map->getTitle()),
                                 'image_url'             => $path_to_file,
+                            );*/
+                            $maps[] = array(
+                                '_nid'                   => intval($map->getId()),
+                                '_title'                 => strip_tags($map->getTitle()),
+                                '_file_name'             => $path_to_file,
                             );
 
                         }

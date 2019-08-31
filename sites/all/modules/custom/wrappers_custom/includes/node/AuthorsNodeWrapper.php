@@ -169,16 +169,23 @@ class AuthorsNodeWrapper extends WdNodeWrapper {
                             $origImage  = image_load($imageFile['uri']);
                             global $base_url;
 
-                            $path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                            //$path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                            $path_to_file = $imageFile['filename'];
                             
-                            global $base_url;
+                            //global $base_url;
 
-                            $path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                            //$path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
                             
-                            $authors[] = array(
+                            /*$authors[] = array(
                                 'nid'                   => intval($author->getId()),
                                 'title'                 => strip_tags($author->getTitle()),
                                 'image_url'             => $path_to_file,
+                            );*/
+                            $authors[] = array(
+                                '_nid'                   => intval($author->getId()),
+                                '_name'                 => strip_tags($author->getTitle()),
+                                '_details'              => strip_tags($body),
+                                '_photo'                => $path_to_file,
                             );
 
                        }

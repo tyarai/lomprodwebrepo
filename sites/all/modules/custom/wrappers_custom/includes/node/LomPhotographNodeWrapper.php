@@ -148,7 +148,9 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
                         
                         global $base_url;
                         
-                        $path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                        //$path_to_file = $base_url.'/sites/default/files/'.$imageFile['filename'];
+                        $path_to_file = $imageFile['filename'];
+                        
                         //module_load_include('inc','pathauto','pathauto');
                         //$url = file_create_url($origImage->source);
                         //$url = rawurldecode($url);
@@ -177,10 +179,15 @@ class LomPhotographNodeWrapper extends WdNodeWrapper {
                         
                         if($photograph){
 
-                            $photos[] = array(
+                            /*$photos[] = array(
                                 'nid'                   => intval($photograph->getId()),
                                 'title'                 => strip_tags($photograph->getTitle()),
                                 'image_url'             => $path_to_file,
+                            );*/
+                            $photos[] = array(
+                                "_nid"                   => intval($photograph->getId()),
+                                "_title"                 => strip_tags($photograph->getTitle()),
+                                "_photograph"            => $path_to_file,
                             );
 
                         }
