@@ -514,15 +514,15 @@ class PublicationNodeWrapper extends WdNodeWrapper {
         return FALSE;
     }
     
-    public static function getSightingsCount($uid,$changedFrom=NULL,$isSynced=NULL,$isDeleted=NULL){
+    public static function getSightingsCount($uid,$isSighting,$changedFrom=NULL,$isSynced=NULL,$isDeleted=NULL){
         
         $count  = 0;
         
-        if($uid != NULL){
+        if($uid != NULL && $isSighting !== NULL){
             
             try{
 
-                $query  = " SELECT COUNT(*) as vCount FROM {node} n ";
+                $query  = " SELECT COUNT(n.nid) as vCount FROM {node} n ";
 
                 if($isSynced !== NULL){
                     $query .= " JOIN field_data_field_is_synced synced ";
@@ -550,6 +550,25 @@ class PublicationNodeWrapper extends WdNodeWrapper {
                    //$query .= " AND n.changed >= ". strtotime($changedFrom);
                     $query .= " AND n.changed >= ". $changedFrom; 
                 }
+                
+                if($isSighting == true){
+                    $query .= " AND n.nid NOT IN ( ";
+                }else{
+                    $query .= " AND n.nid IN ( ";
+                }
+                    
+
+                $query .= " SELECT 
+                                n.nid
+                            FROM
+                                node n
+
+                            JOIN field_data_field_type tag 
+                            ON tag.entity_id = n.nid 
+                            AND tag.entity_type = 'node' 
+                            AND tag.bundle = 'publication' 
+
+                        ) "; 
                 
                 
                 

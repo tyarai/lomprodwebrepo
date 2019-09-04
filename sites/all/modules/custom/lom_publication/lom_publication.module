@@ -67,14 +67,23 @@ function lom_publication_enable(){
 /*
  * One's sighting header
  */
-function lom_publication_sightings_views_header(){
+function lom_publication_sightings_views_header($isSighting){
     global $user;
     module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
-    $count = PublicationNodeWrapper::getSightingsCount($user->uid, $changedFrom=NULL,$isSynced=NULL,$isDeleted=false);
+    $count = PublicationNodeWrapper::getSightingsCount($user->uid, $isSighting,$changedFrom=NULL,$isSynced=NULL,$isDeleted=false);
     
     $html   = '<div class="sighting-view-header">';
         $html  .= '<div class="">';
-            $html  .= t('You have @count sightings',array('@count'=>$count));
+            if($isSighting){
+                $html  .= t('You have @count sightings',array('@count'=>$count));
+            }else{
+                if($count > 1 ) {
+                    $html  .= t('You reported @count illegal activities',array('@count'=>$count));
+                }
+                else{
+                    $html  .= t('You reported @count illegal activity',array('@count'=>$count));
+                }
+            }
         $html  .= '</div>';
     $html  .= '</div>';
     return $html;
