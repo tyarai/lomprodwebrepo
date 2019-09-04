@@ -108,6 +108,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
         module_load_include('php', 'wrappers_custom','includes/node/PublicationNodeWrapper');
         module_load_include('php', 'wrappers_custom','includes/node/LomSpeciesNodeWrapper');
         module_load_include('php', 'wrappers_custom','includes/node/BestPlacesNodeWrapper');
+        module_load_include('php', 'wrappers_custom','includes/taxonomy_term/TagsTaxonomyTermWrapper');
 
         $form['#attached']['css'] = array(
             drupal_get_path('module', 'lom_publication') . '/css/sighting.css');
@@ -121,7 +122,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
         $form['container']['sighting'] = array(
             '#type' => 'fieldset',
         );
-
+        
         $form['container']['sighting']['title'] = array(
             '#type' => 'textfield',
             '#title' => t('Title'),
@@ -131,8 +132,25 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#default_value' => $wrapper != NULL ? $wrapper->title->value() : NULL,
             //'#suffix' => '</div>',
         );
+
+        $tagList =  TagsTaxonomyTermWrapper::getIllegalActivitiesList();
+        $form['container']['sighting']['activity_type'] = array(
+            '#type' => 'select',
+            '#description' => t('Select a type here if you want to report this sighting as an illegal activity or select - None - to add a new sighting'),
+            '#empty_value' => 'none',
+            '#title' => t('illegal activity type'),
+            '#required' => FALSE,
+            '#options' => $tagList,
+            '#default_value' => ($wrapper != NULL  && $wrapper->field_type->value() != NULL) ? $wrapper->field_type->value()->tid : NULL,
+            /*'#ajax'    => array(
+                'callback' => '_sightingChangeSpeciesInfoCallBack',
+                'wrapper'  => 'speciesinfo',
+            ),*/
+        );
+        
+        
         $options = LomSpeciesNodeWrapper::getAllSpeciesKeyedByNID($extinct=FALSE);
-        $speciesNID = $wrapper  ? $wrapper->field_associated_species->value()->nid : NULL;
+        $speciesNID = ($wrapper && $wrapper->field_associated_species->value() != NULL) ? $wrapper->field_associated_species->value()->nid : NULL;
         $form['container']['sighting']['species'] = array(
             '#type' => 'select',
             '#title' => t('Species'),
@@ -169,7 +187,8 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#title' => t('Sighting photo'),
             '#required' => FALSE,
             '#upload_location' => USER_IMAGE_FOLDER,
-            '#upload_validators'  => array("file_validate_extensions" => array("png jpg jpeg")),
+            //'#upload_validators'  => array("file_validate_extensions" => array("png jpg jpeg")),
+            '#upload_validators'  => array("file_validate_extensions" => array("jpg jpeg")),
             '#attributes' => array('class'=>array("top_spacement")),
             '#default_value' => $wrapper != NULL ? $file['fid'] : NULL,
             '#theme' => 'theme_sighting_image',
@@ -203,7 +222,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
                 'callback' => '_sightingChangeMapCallBack',
                 'wrapper'  => 'place-map',
             ),
-            '#default_value' => $wrapper != NULL ? $wrapper->field_place_name_reference->value()->nid : date('Y-m-d'),
+            '#default_value' => ($wrapper != NULL && $wrapper->field_place_name_reference->value() != NULL) ? $wrapper->field_place_name_reference->value()->nid : date('Y-m-d'),
         );
         
 
@@ -290,6 +309,7 @@ function lom_publication_add_sighting_submit($form,&$form_state){
         $count          = $form_state['values']['count'];
         $date           = $form_state['values']['date'];
         $placerefNID    = $form_state['values']['placenamereference'] ;
+        $activityType   = $form_state['values']['activity_type'] ;
         
         $placeObject = new BestPlacesNodeWrapper($placerefNID);
         $fileObject = NULL;
@@ -328,6 +348,7 @@ function lom_publication_add_sighting_submit($form,&$form_state){
         $sighting->setPhoto((array)$fileObject);
         $sighting->setIsSynced(FALSE);// Mila ampidinina any @ tablet ity
         $sighting->setAuthorId($user->uid);
+        $sighting->setFieldType($activityType);
         
         $sighting->save();
         
