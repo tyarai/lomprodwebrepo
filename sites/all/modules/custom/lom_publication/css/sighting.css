@@ -73,3 +73,32 @@ input[type="submit"]{
     font-size: 0.85em;
     margin: 10px 10px;
 }
+/*
+Illegal activity list 
+*/
+div.illegal-activity-list-right-region {
+    padding-top: 10px;
+    /* background-color: #DD0000; */
+}
+
+div.illegal-activity-list-right-region .field-label {
+    color: #1c6ea0;
+    font-weight: normal;
+    /* background-color: #DD0000; */
+}
+
+
+
+div.illegal-activity-list-title-region {
+    padding-bottom: 10px;
+    padding-top: 5px;
+     
+    /* background-color: #DD0000; */
+}
+
+div.illegal-activity-list-title-region h2{
+    padding-bottom: 10px;
+     
+    /* background-color: #DD0000; */
+}
+

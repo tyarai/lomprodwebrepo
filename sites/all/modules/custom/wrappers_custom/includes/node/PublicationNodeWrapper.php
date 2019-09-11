@@ -450,7 +450,11 @@ class PublicationNodeWrapper extends WdNodeWrapper {
 
 
                     GROUP BY _speciesNid 
-                    ORDER BY _speciesName ASC)aa ";
+                    ORDER BY _speciesName ASC)aa 
+                    
+                    WHERE totalObserved > 0 AND totalSightings > 0     
+
+                ";
             
             $query = str_replace(':uid', $uid, $query);
             
