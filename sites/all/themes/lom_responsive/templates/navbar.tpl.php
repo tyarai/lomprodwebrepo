@@ -10,16 +10,16 @@
 
 
           <li class="nav-item">
-            <a class="nav-link" href="<?php print $base_url .'/sightings'; ?>">My sightings</a>
+            <a class="nav-link" href="/sightings">My sightings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php print $base_url .'/lifelist';?>">My lemur life list</a>
+            <a class="nav-link" href="lifelist">My lemur life list</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php print $base_url .'/sighting/add';?>">New sighting</a>
+            <a class="nav-link" href="/add-sighting">New sighting</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php print $base_url .'/public_sightings';?>">Public sightings</a>
+            <a class="nav-link" href="/public_sightings">Public sightings</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">

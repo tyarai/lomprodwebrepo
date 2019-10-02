@@ -4,7 +4,7 @@
 define('USER_IMAGE_FOLDER','public://');
 
 function lom_publication_menu(){
-    $items['sighting/add'] = array(
+    $items['add-sighting'] = array(
         'title' => t('Add sighting'),
         'page callback' => 'drupal_get_form',
         'page arguments' => array('lom_publication_add_sighting',2),
@@ -64,6 +64,15 @@ function lom_publication_enable(){
     field_bundle_settings('node', 'article', $settings);
 }
 
+/*
+ * Created a cutsom field called 'commentcount' in all_publication views to be shown
+ * as comment counter in display mode and set the value of this field here
+ */
+function lom_publication_views_pre_render(&$view){
+    if($view->name == 'all_publication'){
+        
+    }
+}
 /*
  * One's sighting header
  */
@@ -608,6 +617,9 @@ function lom_publication_node_view($node, $view_mode, $langcode) {
 	if ($view_mode == 'publication_teaser') {
 		comment_node_view($node, 'full');
 	}
+        if ($view_mode == 'sighting_list_view_mode') {
+		comment_node_view($node, 'full');
+	}
 }
 
 
@@ -649,6 +661,10 @@ function callback_entity_info_uri($entity) {
   return array(
     'path' => 'ranto/' . $entity->nid,
   );
+}
+
+function computed_field_comment_count_compute(&$entity_field,$entity_type,$entity,$field,$instance,$langcode,$items){
+    $entity_field[0]['value'] = $entity->nid;
 }
 
 /**
