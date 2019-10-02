@@ -98,7 +98,7 @@
       <?php endif; ?>
       
       <nav id="navigation" role="navigation" class="navbar navbar-expand-lg navbar-light ">
-      <div id="main-menu">
+      <div id="main-menu" class = "container">
         <?php 
           if (module_exists('i18n')) {
             $main_menu_tree = i18n_menu_translated_tree(variable_get('menu_main_links_source', 'menu-lom-main-menu'));
