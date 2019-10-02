@@ -37,7 +37,7 @@ function lom_mylifelist(){
                         'type' => 'image',
                         'settings' => array(
                             'image_style' => 'thumbnail',
-                            'image_link' => 'content',
+                            //'image_link' => 'content',
                         ),
                     ));
   
@@ -46,7 +46,7 @@ function lom_mylifelist(){
                 'attributes' => array('class' => array() ),
             );
             
-            $markup .= '<div >';
+            $markup .= '<div class="sighting-view-row">';
             
                 $markup .= '<div class="lemur-life-list-item-title">'. l($item['_speciesName'],$alias,$options) . '</div>';
                 
@@ -54,9 +54,9 @@ function lom_mylifelist(){
                     $markup .= '<div class="group-left life-list-title">'. render($output) . '</div>';
                 $markup .= '</div>';
 
-                $markup .= '<div class="lemur-life-list-item-right">';
-                    $markup .= '<div class="lemur-life-list-item-detail">' . t('Total observed ') . $item['totalObserved']  . '</div>';
-                    $markup .= '<div class="lemur-life-list-item-detail">' . t('Total sightings '). $item['totalSightings'] . '</div>';
+                $markup .= '<div class="field-label-inline lemur-life-list-fields">';
+                    $markup .= '<div class="field-label lemur-life-list-item-detail">' . t('Total observed :') . '</div><div class="field-item">'. $item['totalObserved']  . '</div>';
+                    $markup .= '<div class="field-label lemur-life-list-item-detail">' . t('Total sightings :'). '</div><div class="field-item">'. $item['totalSightings'] . '</div>';
                 $markup .= '</div>';
         
             $markup .= '</div>';

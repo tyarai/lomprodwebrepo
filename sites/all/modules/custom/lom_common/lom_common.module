@@ -1,6 +1,7 @@
 <?php
 
-define('PUBLIC_LIST_SETTINGS','public_list');
+//define('PUBLIC_LIST_SETTINGS','public_list');
+define('PUBLIC_LIST_SETTINGS','public_settings');
 define('PUBLIC_PATH','sites/default/files');
 
 
@@ -56,6 +57,8 @@ function _lom_common_settings_form($form,&$form_state){
     $array = LomUserSettingsEntityLomUserSettingsEntityWrapper::export($user->uid);
     $settings = count($array) > 0 ? $array : lom_get_default_settings() ;
     
+    //print_r($settings);
+    
     if(count($settings) != 0){
         foreach($settings as $setting){
 
@@ -89,10 +92,14 @@ function _lom_common_settings_form_submit($form,&$form_state){
     $settings = $form_state['values'];
     
     
+    print_r($settings);
+    
     module_load_include('php','wrappers_custom','includes/lom_user_settings_entity/LomUserSettingsEntityLomUserSettingsEntityWrapper');
     global $user;
       
     $user_saved_settings = LomUserSettingsEntityLomUserSettingsEntityWrapper::export($user->uid);
+    
+    print_r($user_saved_settings);
     
     if(count($user_saved_settings) >0){
         //---- Efa nisy settings tao anaty table ---//

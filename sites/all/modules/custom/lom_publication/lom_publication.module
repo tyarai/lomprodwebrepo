@@ -115,29 +115,31 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
 
         $form['container'] = array(
             '#type' => 'container',
-            '#prefix' => '<div class="add_sighting_form">',
-            '#suffix' => '</div>',
+            '#prefix' => '<section> <div class="add_sighting_form">',
+            '#suffix' => '</div></section>',
         );
 
-        $form['container']['sighting'] = array(
+        $form['container'] = array(
             '#type' => 'fieldset',
         );
         
-        $form['container']['sighting']['title'] = array(
+        $form['container']['title'] = array(
             '#type' => 'textfield',
             '#title' => t('Title'),
             '#required' => TRUE,
-            '#size' => 80,
-            '#attributes' => array('class'=>array("bottom_spacement")),
+            //'#size' => 80,
+            //'#attributes' => array('class'=>array("bottom_spacement")),
             '#default_value' => $wrapper != NULL ? $wrapper->title->value() : NULL,
             //'#suffix' => '</div>',
         );
 
         $tagList =  TagsTaxonomyTermWrapper::getIllegalActivitiesList();
-        $form['container']['sighting']['activity_type'] = array(
+        $form['container']['activity_type'] = array(
             '#type' => 'select',
             '#description' => t('Select a type here if you want to report this sighting as an illegal activity or select - None - to add a new sighting'),
-            '#empty_value' => 'none',
+            //'#empty_value' => 'none',
+            '#empty_value' => '0',
+            //'#empty_label' => 'RQNTO',
             '#title' => t('illegal activity type'),
             '#required' => FALSE,
             '#options' => $tagList,
@@ -151,7 +153,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
         
         $options = LomSpeciesNodeWrapper::getAllSpeciesKeyedByNID($extinct=FALSE);
         $speciesNID = ($wrapper && $wrapper->field_associated_species->value() != NULL) ? $wrapper->field_associated_species->value()->nid : NULL;
-        $form['container']['sighting']['species'] = array(
+        $form['container']['species'] = array(
             '#type' => 'select',
             '#title' => t('Species'),
             '#required' => TRUE,
@@ -172,7 +174,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             $view = node_view($species, 'species_selecting');//Render species with 'species_selecting'
             $speciesInfo = drupal_render($view);
         }
-        $form['container']['sighting']['speciesinfo'] = array(
+        $form['container']['speciesinfo'] = array(
             '#type' => 'markup',
             '#markup' => $speciesInfo,
             '#prefix' => '<div id="speciesinfo">',
@@ -181,7 +183,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
         );
 
         $file = $wrapper ?  $wrapper->field_photo->value() : NULL;
-        $form['container']['sighting']['image'] = array(
+        $form['container']['image'] = array(
             '#type' => 'managed_file',
             '#description' => t('If you don\'t have photo, a default one will be chosen'),
             '#title' => t('Sighting photo'),
@@ -193,7 +195,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#default_value' => $wrapper != NULL ? $file['fid'] : NULL,
             '#theme' => 'theme_sighting_image',
         );
-        $form['container']['sighting']['count'] = array(
+        $form['container']['count'] = array(
             '#type' => 'textfield',
             '#title' => t('Number observed'),
             '#size' => 3,
@@ -202,7 +204,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#attributes' => array('class'=>array("bottom_spacement")),
             '#default_value' => $wrapper != NULL ? $wrapper->field_count->value() : NULL,
         );
-        $form['container']['sighting']['date'] = array(
+        $form['container']['date'] = array(
             '#type' => 'date_popup',
             '#title' => t('Sighting date'),
             '#required' => TRUE,
@@ -213,7 +215,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#attributes' => array('class'=>array("bottom_spacement")),
         );
         $options = BestPlacesNodeWrapper::getAllSitesKeyedByNID();
-        $form['container']['sighting']['placenamereference'] = array(
+        $form['container']['placenamereference'] = array(
             '#type' => 'select',
             '#title' => t('Place name'),
             '#required' => TRUE,
@@ -235,7 +237,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             $map = drupal_render($view);
         }
 
-        $form['container']['sighting']['placemap'] = array(
+        $form['container']['placemap'] = array(
             '#type' => 'markup',
             '#markup' => $map,
             '#prefix' => '<div id="place-map">',
@@ -246,20 +248,20 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
         
         if($wrapper != NULL){
             //--- Rehefa 'Edit' zay vao aseho ny delete button --//
-            $form['container']['sighting']['newDeleteButton'] = array(
+            $form['container']['newDeleteButton'] = array(
                 '#type' => 'submit',
                 '#value' => t(' Delete sighting'),
                 '#submit' => array('lom_publication_delete_submit'),
                 '#prefix' => '<div class="delete-sighting">',
                 '#sufffix' => '</div>',
-                '#attributes' => array('class'=>array("submit","delete-sighting","top_spacement","bottom_spacement")),
+                '#attributes' => array('class'=>array("submit","red-button","delete-sighting","top_spacement","bottom_spacement")),
             );
         }
 
-        $form['container']['sighting']['submit'] = array(
+        $form['container']['submit'] = array(
             '#type' => 'submit',
             '#value' => t('Save sighting'),
-            '#attributes' => array('class'=>array("submit","top_spacement","bottom_spacement")),
+            '#attributes' => array('class'=>array("submit","green-button","top_spacement","bottom_spacement")),
             '#weight' => 100,
         );
     
@@ -287,12 +289,12 @@ function theme_theme_sighting_image($variables) {
 
 function _sightingChangeMapCallBack($form,&$form_state){
     
-    return $form['container']['sighting']['placemap'];
+    return $form['container']['placemap'];
 }
 
 function _sightingChangeSpeciesInfoCallBack($form,&$form_state){
     $form_state['speciesNID'] = $form_state['values']['species'];
-    return $form['container']['sighting']['speciesinfo'];
+    return $form['container']['speciesinfo'];
 }
 
 function lom_publication_add_sighting_submit($form,&$form_state){
@@ -309,7 +311,7 @@ function lom_publication_add_sighting_submit($form,&$form_state){
         $count          = $form_state['values']['count'];
         $date           = $form_state['values']['date'];
         $placerefNID    = $form_state['values']['placenamereference'] ;
-        $activityType   = $form_state['values']['activity_type'] ;
+        $activityType   = isset($form_state['values']['activity_type']) && $form_state['values']['activity_type'] != NULL ?  $form_state['values']['activity_type']  : NULL ;
         
         $placeObject = new BestPlacesNodeWrapper($placerefNID);
         $fileObject = NULL;
@@ -348,7 +350,11 @@ function lom_publication_add_sighting_submit($form,&$form_state){
         $sighting->setPhoto((array)$fileObject);
         $sighting->setIsSynced(FALSE);// Mila ampidinina any @ tablet ity
         $sighting->setAuthorId($user->uid);
-        $sighting->setFieldType($activityType);
+        if($activityType != NULL && $activityType != 0){
+            $sighting->setFieldType($activityType);
+        }else{
+            $sighting->setFieldType(NULL);
+        }
         
         $sighting->save();
         
@@ -406,6 +412,7 @@ function lom_publication_node_presave($node){
     }
 }
 
+
 /**
  * 
  */
@@ -428,6 +435,8 @@ function lom_publication_form_alter(&$form, &$form_state, $form_id){
     /**
      * Soloina ny delete button
      */
+    
+    //print("<h1> $form_id </h1>");
     
     if($form_id == 'publication_node_form'){
         
@@ -473,7 +482,14 @@ function lom_publication_form_alter(&$form, &$form_state, $form_id){
         }
     }
     
-    
+    if($form_id == 'comment_node_publication_form'){
+        $fieldsToHide = array('field_is_synced','field_is_deleted');
+        foreach($fieldsToHide as $field){
+            if(isset($form[$field])){
+                unset($form[$field]);
+            }
+        }
+    }
     
 }
 
