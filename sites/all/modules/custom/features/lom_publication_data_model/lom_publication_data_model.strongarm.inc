@@ -140,6 +140,9 @@ function lom_publication_data_model_strongarm() {
       'species_selecting_small' => array(
         'custom_settings' => FALSE,
       ),
+      'sighting_new_view_mode' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
