@@ -566,7 +566,7 @@ a.frmore{
 /* =Content
 ----------------------------------------------- */
 
-.node h2.title a, h1.page-title {
+.node h2.title a {
   color: #000000;
   font-size: 20px;
   font-weight: bold;
@@ -1439,7 +1439,12 @@ form#comment-form input[type="submit"]#edit-submit{
 
 .navbar{
     font-size: 1.2em;
-    padding: 5px;
+    
+}
+
+.navbar-collapse{
+   padding-top: 5px;
+    padding-bottom: 5px; 
 }
 
 .nav-link{
@@ -1448,4 +1453,23 @@ form#comment-form input[type="submit"]#edit-submit{
 
 .header-bg{
     background-color: #E7E5E3;
+}
+
+.footer-bg{
+    background-color: #434343;
+}
+
+.page-footer {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+h1.page-title{
+    font-size: 25px;
+    font-weight: normal;
+    color:#606060;
+}
+
+#content {
+    font-size: 16px;
 }

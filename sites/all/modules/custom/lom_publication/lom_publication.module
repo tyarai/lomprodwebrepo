@@ -128,7 +128,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#title' => t('Title'),
             '#required' => TRUE,
             //'#size' => 80,
-            //'#attributes' => array('class'=>array("bottom_spacement")),
+            '#attributes' => array('class'=>array("form-control bottom_spacement")),
             '#default_value' => $wrapper != NULL ? $wrapper->title->value() : NULL,
             //'#suffix' => '</div>',
         );
@@ -141,6 +141,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#empty_value' => '0',
             //'#empty_label' => 'RQNTO',
             '#title' => t('illegal activity type'),
+            '#attributes' => array('class'=>array("form-control")),
             '#required' => FALSE,
             '#options' => $tagList,
             '#default_value' => ($wrapper != NULL  && $wrapper->field_type->value() != NULL) ? $wrapper->field_type->value()->tid : NULL,
@@ -159,6 +160,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#required' => TRUE,
             '#options' => $options,
             '#default_value' => $speciesNID,
+            '#attributes' => array('class'=>array("form-control")),
             '#ajax'    => array(
                 'callback' => '_sightingChangeSpeciesInfoCallBack',
                 'wrapper'  => 'speciesinfo',
@@ -201,7 +203,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#size' => 3,
             '#required' => TRUE,
             '#element_validate' => array('element_validate_integer'),
-            '#attributes' => array('class'=>array("bottom_spacement")),
+            '#attributes' => array('class'=>array("form-control bottom_spacement")),
             '#default_value' => $wrapper != NULL ? $wrapper->field_count->value() : NULL,
         );
         $form['container']['date'] = array(
@@ -210,9 +212,10 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
             '#required' => TRUE,
             '#date_format' => 'Y - M - d',
             '#date_label_position' => '',
+            '#attributes' => array('class'=>array("form-control")),
             '#default_value' => $wrapper != NULL ? date('Y-m-d',$wrapper->field_date->value()) : date('Y-m-d'),
             '#date_year_range' => '0:-100',
-            '#attributes' => array('class'=>array("bottom_spacement")),
+            
         );
         $options = BestPlacesNodeWrapper::getAllSitesKeyedByNID();
         $form['container']['placenamereference'] = array(
@@ -224,6 +227,7 @@ function lom_publication_add_sighting($form,&$form_state,$sightingID){
                 'callback' => '_sightingChangeMapCallBack',
                 'wrapper'  => 'place-map',
             ),
+            '#attributes' => array('class'=>array("form-control bottom_spacement")),
             '#default_value' => ($wrapper != NULL && $wrapper->field_place_name_reference->value() != NULL) ? $wrapper->field_place_name_reference->value()->nid : date('Y-m-d'),
         );
         

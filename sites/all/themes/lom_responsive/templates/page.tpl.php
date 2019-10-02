@@ -67,103 +67,77 @@
 
 <?php include 'navbar.tpl.php'; ?>
 
-<div class="container">
-    
+<div >
     
     <div class="container" id="content-contain">
 
         <?php if ($is_front): ?>
-        
-          <div class="container">
-            <?php if (theme_get_setting('slideshow_display', 'responsive')): ?>
-              <!-- Slides -->
-              <?php 
-              $url1 = check_plain(theme_get_setting('slide1_url','responsive')); $cap1 = check_markup(theme_get_setting('slide1_desc','responsive'), 'full_html');
-              $url2 = check_plain(theme_get_setting('slide2_url','responsive')); $cap2 = check_markup(theme_get_setting('slide2_desc','responsive'), 'full_html');
-              $url3 = check_plain(theme_get_setting('slide3_url','responsive')); $cap3 = check_markup(theme_get_setting('slide3_desc','responsive'), 'full_html');
-              ?>
-             <div class="flexslider">
-              <ul class="slides">
-                <li>
-                  <a href="<?php print url($url1); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'responsive') . '/images/slide-image-1.jpg'; ?>"/></a>
-                  <?php if ($cap1): ?> <div class="flex-caption"> <h3> <?php print $cap1; ?> </h3> </div>  <?php endif; ?>
-                </li>
-                <li>
-                  <a href="<?php print url($url2); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'responsive') . '/images/slide-image-2.jpg'; ?>"/></a>
-                  <?php if ($cap2): ?> <div class="flex-caption"> <h3> <?php print $cap2; ?> </h3> </div> <?php endif; ?>
-                </li>
-                <li>
-                  <a href="<?php print url($url3); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'responsive') . '/images/slide-image-3.jpg'; ?>"/></a>
-                  <?php if ($cap3): ?> <div class="flex-caption"> <h3> <?php print $cap3; ?> </h3> </div> <?php endif; ?>
-                </li>
-              </ul>
-              </div>
-             <?php endif; ?>
 
-              <?php if ($page['front_welcome']): ?>
-                <div id="front-welcome"> <?php print render($page['front_welcome']); ?></div>
-              <?php endif; ?>
+              <div class="container">
+                <?php if (theme_get_setting('slideshow_display', 'responsive')): ?>
+                  <!-- Slides -->
+                  <?php 
+                  $url1 = check_plain(theme_get_setting('slide1_url','responsive')); $cap1 = check_markup(theme_get_setting('slide1_desc','responsive'), 'full_html');
+                  $url2 = check_plain(theme_get_setting('slide2_url','responsive')); $cap2 = check_markup(theme_get_setting('slide2_desc','responsive'), 'full_html');
+                  $url3 = check_plain(theme_get_setting('slide3_url','responsive')); $cap3 = check_markup(theme_get_setting('slide3_desc','responsive'), 'full_html');
+                  ?>
+                 <div class="flexslider">
+                  <ul class="slides">
+                    <li>
+                      <a href="<?php print url($url1); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'responsive') . '/images/slide-image-1.jpg'; ?>"/></a>
+                      <?php if ($cap1): ?> <div class="flex-caption"> <h3> <?php print $cap1; ?> </h3> </div>  <?php endif; ?>
+                    </li>
+                    <li>
+                      <a href="<?php print url($url2); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'responsive') . '/images/slide-image-2.jpg'; ?>"/></a>
+                      <?php if ($cap2): ?> <div class="flex-caption"> <h3> <?php print $cap2; ?> </h3> </div> <?php endif; ?>
+                    </li>
+                    <li>
+                      <a href="<?php print url($url3); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'responsive') . '/images/slide-image-3.jpg'; ?>"/></a>
+                      <?php if ($cap3): ?> <div class="flex-caption"> <h3> <?php print $cap3; ?> </h3> </div> <?php endif; ?>
+                    </li>
+                  </ul>
+                  </div>
+                 <?php endif; ?>
+
+                  <?php if ($page['front_welcome']): ?>
+                    <div id="front-welcome"> <?php print render($page['front_welcome']); ?></div>
+                  <?php endif; ?>
+                </div>
+
+            <?php endif; ?>
+
+        <?php if ($page['header']): ?>
+            <div id="header" class="container">
+             <?php print render($page['header']); ?>
             </div>
-        
         <?php endif; ?>
-  
-    
-  
-  <?php if ($page['header']): ?>
-   <div id="header" class="sixteen columns">
-    <?php print render($page['header']); ?>
-   </div>
-   <div class="clear"></div>
-   <?php endif; ?>
-  
- <?php if($page['sidebar_first']) { $contentwid= "eleven"; } else { $contentwid= "sixteen"; } ?>
- 
- <div id="content" class="container">
-  <div class="row">
-      <div class="container col-md-8">
-          <?php print render($page['content']); ?>
-      </div>
-      <div class="container col-md-2">
-          <?php print render($page['sidebar_first']); ?>
-      </div>
-  </div>
- </div>
-   
-  <div class="clear"></div>
-  
-  <?php if ($page['footer']): ?>
-   <div id="foot" class="sixteen columns">
-     <?php print render($page['footer']) ?>
-   </div>
-   <?php endif; ?>
-  
-</div>
- 
-    <?php if ($page['footer_first'] || $page['footer_second'] || $page['footer_third'] || $page['footer_fourth']): ?> 
-      <div id="bottom" class="container">
-      <?php $botomwid = "four"; $bottom = ((bool) $page['footer_first'] + (bool) $page['footer_second'] + (bool) $page['footer_third'] + (bool) $page['footer_fourth']);
-        switch ($bottom) { 
-          case 1: $botomwid = "sixteen"; break; case 2: $botomwid = "eight"; break;
-          case 3: $botomwid = "five"; break; case 4: $botomwid = "four";
-        } ?>
-        <?php if ($page['footer_first']): ?>
-        <div class="<?php print $botomwid; ?> columns botblck"><?php print render($page['footer_first']); ?></div>
-        <?php endif; ?>
-        <?php if ($page['footer_second']): ?>
-        <div class="<?php print $botomwid; ?> columns botblck"><?php print render($page['footer_second']); ?></div>
-        <?php endif; ?>
-        <?php if ($page['footer_third']): ?>
-        <div class="<?php print $botomwid; ?> columns botblck"><?php print render($page['footer_third']); ?></div>
-        <?php endif; ?>
-        <?php if ($page['footer_fourth']): ?>
-        <div class="<?php print $botomwid; ?> columns botblck"><?php print render($page['footer_fourth']); ?></div>
-        <?php endif; ?>
+
+        <div id="content" class="container">
+            <div class="row">
+                <div class="container col-md-12">
+                    <h1 class="page-title"> <?php print $title; ?> </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <?php print render($page['content']); ?>
+                </div>
+                <div class="col-md-3">
+                    <?php print render($page['sidebar_first']); ?>
+                </div>
+            </div>
+        </div>
+
+
+        <?php if ($page['footer']): ?>
+        <div id="foot" class="sixteen columns">
+          <?php print render($page['footer']) ?>
         </div>
     <?php endif; ?>
   
-    <div id="copyright" class="container">
-        <div class="credit"><?php print t('Copyright'); ?> &copy; <?php echo date("Y"); ?>, Lemurs of Madagascar <br/> </div>
-        <div class="clear"></div>
     </div>
+ 
     
 </div>
+
+<?php include 'footer.tpl.php'; ?>
