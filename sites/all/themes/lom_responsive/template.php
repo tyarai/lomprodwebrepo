@@ -1,9 +1,48 @@
 <?php
+
+function lom_responsive_form_alter(&$form, &$form_state, $form_id) {
+
+    if ($form_id == "user_login_block") {
+        //$form['links'] = Null; // Remove Request New Password and other links from Block form
+        //$form['links']['#markup'] = t('Forgotten Password?') . ' <a href="/user/password">' . t('Forgotten Password?') . '</a>'; // Remove Request New Password from Block form
+        //print_r( $form);
+        $links  = "<a class=user-register    href=" .  $base_path . "/lommember/register>" .t('Register') . "</a>";
+        $links .= " | <a class=user-password href=".   $base_path . "/lommember/password>"  .t('Forgotten Password?') . "</a>";
+    
+        $form['links']['#markup'] = $links;
+        $form['name']['#title'] = Null; // Change text on form
+        $form['name']['#attributes'] = array('placeholder' => t('username'),'class'=> array("form-control"));
+        $form['pass']['#title'] = Null;
+        $form['pass']['#attributes'] = array('placeholder' => t('password'),'class'=> array("form-control"));
+        $form['action']['#attributes'] = array('class'=> array("primary-button"));
+    }
+    
+    
+}
+
+/*
+ * Added by Ranto on October 29th 2019 to customize login form
+ */
+function lom_responsive_theme() {
+    $items = array();
+    // create custom user-login.tpl.php
+    $items['user_login'] = array(
+        'render element' => 'form',
+        'path' => drupal_get_path('theme', 'lom_responsive') . '/templates',
+        'template' => 'user-login',
+        'preprocess functions' => array(
+        'your_themename_preprocess_user_login'
+    ),
+    );
+    return $items;
+}
+
+
 /**
  * Implements hook_html_head_alter().
  * This will overwrite the default meta character type tag with HTML5 version.
  */
-function responsive_html_head_alter(&$head_elements) {
+function lom_responsive_html_head_alter(&$head_elements) {
   $head_elements['system_meta_content_type']['#attributes'] = array(
     'charset' => 'utf-8'
   );
@@ -12,7 +51,7 @@ function responsive_html_head_alter(&$head_elements) {
 /**
  * Insert themed breadcrumb page navigation at top of the node content.
  */
-function responsive_breadcrumb($variables) {
+function lom_responsive_breadcrumb($variables) {
   $breadcrumb = $variables['breadcrumb'];
   if (!empty($breadcrumb)) {
     // Use CSS to hide titile .element-invisible.
@@ -27,7 +66,7 @@ function responsive_breadcrumb($variables) {
 /**
  * Override or insert variables into the html template.
  */
-function responsive_process_html(&$vars) {
+function lom_responsive_process_html(&$vars) {
   // Hook into color.module
   if (module_exists('color')) {
     _color_html_alter($vars);
@@ -37,7 +76,7 @@ function responsive_process_html(&$vars) {
 /**
  * Override or insert variables into the page template.
  */
-function responsive_process_page(&$variables) {
+function lom_responsive_process_page(&$variables) {
   // Hook into color.module.
   if (module_exists('color')) {
     _color_page_alter($variables);
@@ -48,7 +87,7 @@ function responsive_process_page(&$variables) {
 /**
  * Override or insert variables into the page template.
  */
-function responsive_preprocess_page(&$vars) {
+function lom_responsive_preprocess_page(&$vars) {
   if (isset($vars['main_menu'])) {
     $vars['main_menu'] = theme('links__system_main_menu', array(
       'links' => $vars['main_menu'],
@@ -81,12 +120,13 @@ function responsive_preprocess_page(&$vars) {
   else {
     $vars['secondary_menu'] = FALSE;
   }
+  
 }
 
 /**
  * Duplicate of theme_menu_local_tasks() but adds clearfix to tabs.
  */
-function responsive_menu_local_tasks(&$variables) {
+function lom_responsive_menu_local_tasks(&$variables) {
   $output = '';
 
   if (!empty($variables['primary'])) {
@@ -107,14 +147,14 @@ function responsive_menu_local_tasks(&$variables) {
 /**
  * Override or insert variables into the node template.
  */
-function responsive_preprocess_node(&$variables) {
+function lom_responsive_preprocess_node(&$variables) {
   $node = $variables['node'];
   if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
     $variables['classes_array'][] = 'node-full';
   }
 }
 
-function responsive_page_alter($page) {
+function lom_responsive_page_alter($page) {
   // <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
   $viewport = array(
     '#type' => 'html_tag',

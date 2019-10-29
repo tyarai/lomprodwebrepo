@@ -34,12 +34,13 @@
             </div>
             
             <div class="row">
-                <div class="col-md-12 col-sm-12 jumbo-padding">
+                <div class="col-md-8 col-sm-8 jumbo-padding">
                     <a href="introduction">
                         <img src="<?php print $file;?>images/enter-site.png" width="150" border="0" alt="">
                     </a>
                 </div>
             </div>
+            
             
         </div>
    </div>    
