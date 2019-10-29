@@ -1,0 +1,8 @@
+; $Id:$
+
+
+name = LOM Comment
+description = Sighting Comment
+core = 7.x
+package = Lemurs Of Madagascar
+

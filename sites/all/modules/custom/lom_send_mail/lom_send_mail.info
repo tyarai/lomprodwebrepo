@@ -1,0 +1,4 @@
+name = LOM Send Mail
+description = LOM Send Mail
+core = 7.x
+package = LOM

@@ -1,0 +1,254 @@
+<?php
+
+
+function lom_settings_service_menu(){
+    $items = array();
+    $items['lom_settings/%/%/%'] = array(
+        'page callback' => 'setSettings',
+        'access callback'   => TRUE,
+        'page arguments' => array(1,2,3),
+    );
+    return $items;
+}
+
+function getSettings($user_uid){
+    if($user_uid != NULL){
+        
+        module_load_include('php','wrappers_custom','includes/lom_user_settings_entity/LomUserSettingsEntityLomUserSettingsEntityWrapper');
+        $json = LomUserSettingsEntityLomUserSettingsEntityWrapper::export($user_uid);
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        print $json; 
+        
+    }
+}
+
+function setSettings($user_uid,$name,$value){
+    if($user_uid != NULL && $name != NULL && $value != NULL){
+        _lom_settings_service_import($user_uid,$name,$value);
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        print $json; 
+        
+    }
+}
+
+/*
+ * hook_ctools_plugin_api
+ * 
+ * Ilaina ity function ahafahana mi-declarer service aty @ code fa tsy any @ interface
+ */
+
+function lom_settings_service_ctools_plugin_api($owner,$api){
+    if ($owner == 'services' && $api == 'services') {
+        return array(
+            'version' => 3,
+        );
+    }
+}
+/*
+ * Function mi-declarer endpoint
+ */
+function lom_settings_service_default_services_endpoint() {
+    
+    $endpoints = array();
+    
+    $endpoint = new stdClass();
+    $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
+    $endpoint->api_version = 3;
+    $endpoint->name = 'lom_settings_service';
+    $endpoint->server = 'rest_server';
+    $endpoint->path = 'lom_endpoint/api/v1/settings';
+    $endpoint->authentication =array();// array( 'services' => 'services',);
+    $endpoint->server_settings = array(
+      'formatters' => array(
+        'json' => TRUE,
+        'bencode' => FALSE,
+        'jsonp' => FALSE,
+        'php' => FALSE,
+        'xml' => FALSE,
+      ),
+      'parsers' => array(
+        'application/json' => TRUE,
+        'application/vnd.php.serialized' => FALSE,
+        'application/x-www-form-urlencoded' => FALSE,
+        'application/xml' => FALSE,
+        'multipart/form-data' => FALSE,
+        'text/xml' => FALSE,
+      ),
+    );
+    $endpoint->resources = array(
+        'lom_settings' => array(
+            'actions' => array(
+                'export_settings' => array( //Export to iPhone
+                    'enabled' => '1',
+                ),
+                'import_settings' => array( // Import from iPhone
+                    'enabled' => '1',
+                ),
+            ),
+        ),
+        
+    );
+    
+    $endpoint->debug = 1;
+
+    $endpoints[] = $endpoint;
+
+    return $endpoints;
+      
+}
+
+
+/*
+ * hook_services_resources
+ */
+
+
+function lom_settings_service_services_resources() {
+    return array(
+        
+    'lom_settings'=> array(
+        
+        'actions' => array(
+            
+            'export_settings' => array(
+
+                'help' => t('Export users\'s settings to iPhone'),
+                'callback' => '_lom_settings_service_export',
+                'access callback' => '_lom_settings_access_permission',
+                'access arguments append' => FALSE,
+                'args' =>array(
+                            array(
+                                'name' => 'user_uid', 
+                                'optional' => FALSE, //mandatory parameter
+                                'source' => array('param' => 'user_uid'),
+                                'type' => 'int', 
+                                'description' => 'User uid',
+                            ),
+                ),
+            ),//---- export-configurations ---//
+            
+            'import_settings' => array(
+
+                'help' => t('Import users\'s settings from iPhone'),
+                'callback' => '_lom_settings_service_import',
+                'access callback' => '_lom_settings_access_permission',
+                'access arguments append' => FALSE,
+                'args' =>array(
+                            array(
+                                'name' => 'user_uid', 
+                                'optional' => FALSE, //mandatory parameter
+                                'source' => array('param' => 'user_uid'),
+                                'type' => 'int', 
+                                
+                            ),
+                            array(
+                                'name' => 'settings_name', 
+                                'optional' => FALSE, //mandatory parameter
+                                'source' => array('param' => 'settings_name'),
+                                'type' => 'text', 
+                                
+                            ),
+                            array(
+                                'name' => 'settings_value', 
+                                'optional' => FALSE, //mandatory parameter
+                                'source' => array('param' => 'settings_value'),
+                                'type' => 'text', 
+                                
+                            ),
+                ),
+
+            ),//---- import-planned activity instance ---//
+            
+            ),
+        ),//-- ACTIONS ---//
+    );
+    
+}
+
+/**
+ * Ito ny functio mametra ny access @ ity webservice ity. Raha tsy authenticated tsy mahazo miditra
+ * @return boolean
+ */
+function _lom_settings_access_permission(){
+    if(user_is_logged_in()){
+        return TRUE;
+    }
+    return FALSE;
+}
+    
+
+function _lom_settings_service_export($user_uid){
+
+    $data = array();
+    if($user_uid != NULL){
+        module_load_include('php','wrappers_custom','includes/lom_user_settings_entity/LomUserSettingsEntityLomUserSettingsEntityWrapper');
+        $data = LomUserSettingsEntityLomUserSettingsEntityWrapper::export($user_uid);
+    }
+    drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    
+    return $data; 
+}
+
+
+function _lom_settings_service_import($user_uid,$settings_name,$settings_value){
+    $return = array();
+    if($user_uid != NULL && $settings_name != NULL && $settings_value != NULL){
+        
+        try{
+        
+            //--- Tadiavina aloha raha mbola tsy ao anaty Base ilay settings ---//
+            $query  = " SELECT id FROM {eck_lom_user_settings_entity} ";
+            $query .= " WHERE uid  = ".$user_uid ;
+            $query .= " AND  title = '". trim($settings_name) ."'";
+            $id = db_query($query)->fetchField();
+          
+
+            if($id == NULL){
+                //--- Tsy mbola misy ilay settings aty @ server ---//
+                $nid = db_insert('eck_lom_user_settings_entity') // 
+                ->fields(array(
+                    'title' => $settings_name,
+                    'uid' => $user_uid,
+                    'value' => $settings_value,
+                    'created' => strtotime(date('Y-m-d H:i:s')),
+                    'changed' => strtotime(date('Y-m-d H:i:s')),
+                    'type'    => 'lom_user_settings_entity',
+                ))
+                ->execute();
+
+
+                //lom_user_settings_updateUserFieldPublicList($user_uid,$settings_value);
+                
+            }else{
+                //--- Efa misy dia atao update --//
+                $query = db_update('eck_lom_user_settings_entity')
+                ->fields(array(
+                    'value' => $settings_value,
+                    'changed' => strtotime(date('Y-m-d H:i:s')),
+
+                ))
+                ->condition('uid',$user_uid)
+                ->condition('title',$settings_name)
+                ->execute();     
+                
+            }
+            
+            $return = array('error'=> false);
+            
+            if($settings_name == PUBLIC_LIST_SETTINGS){
+                lom_user_settings_updateUserFieldPublicList($user_uid,$settings_value);
+            }
+            
+            
+        }catch(Exception $e){
+            $return = array('error'=> true,'error_message'=> $e->getMessage());
+            drupal_set_message(t('[_lom_settings_service_import] Error :@e',array('@e'=>$e->getMessage())),'error');
+        }
+         
+        drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+        return $return; 
+        
+    }
+    
+}
+

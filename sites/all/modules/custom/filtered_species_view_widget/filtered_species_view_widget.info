@@ -1,0 +1,7 @@
+; $Id:$
+
+name = Filtered Species View Widget
+description = Species list MINUS species already selected by the current user. When user adds new species item in his list, this view removes his own species
+core = 7.x
+package = Lemurs Of Madagascar
+files[] = filtered_species_view_widget.module

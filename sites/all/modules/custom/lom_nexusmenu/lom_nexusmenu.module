@@ -1,0 +1,49 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * hook_install
+ */
+        
+function lom_nexusmenu_install(){
+    
+   
+}
+
+
+function lom_nexusmenu_uninstall(){
+       
+}
+
+function lom_nexus_menu_link(array $variables)
+{
+    $logged = user_is_logged_in();
+    if(!$logged){
+        if ($variables['element']['#href'] == 'sighting/add') {
+            $variables['element']['#attributes']['class'][] = 'invisible';
+        }
+        if ($variables['element']['#href'] == 'sightings') {
+            $variables['element']['#attributes']['class'][] = 'invisible';
+        }
+        if ($variables['element']['#href'] == 'lifelist') {
+            $variables['element']['#attributes']['class'][] = 'invisible';
+        }
+        
+    }
+    if($logged){
+        if ($variables['element']['#href'] == 'user/register') {
+            $variables['element']['#attributes']['class'][] = 'invisible';
+        }
+         if ($variables['element']['#href'] == 'user') {
+            $variables['element']['#attributes']['class'][] = 'invisible';
+        }
+    }
+    
+    return theme_menu_link($variables);
+   
+}

@@ -1,0 +1,23 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "assembla"]
+	url = git@git.assembla.com:lemurs.lomonline.git
+	fetch = +refs/heads/*:refs/remotes/assembla/*
+[remote "lomdevwebrepo"]
+	url = ssh://ranto@41.207.49.20:9022/home/ranto/lomdevwebrepo
+	fetch = +refs/heads/*:refs/remotes/lomdevwebrepo/*
+[remote "lomprodwebrepo"]
+	url = https://github.com/tyarai/lomprodwebrepo.git
+	fetch = +refs/heads/*:refs/remotes/lomprodwebrepo/*
+[remote "mac_origin"]
+	url = ssh://ranto@192.168.3.62/Users/ranto/Documents/Webdev/lomwebrepo
+	fetch = +refs/heads/*:refs/remotes/mac_origin/*
+[remote "origin"]
+	url = git@github.com:tyarai/lomprodwebrepo.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[remote "sharedfolder"]
+	url = /media/sf_sharedfolder/lomshared
+	fetch = +refs/heads/*:refs/remotes/sharedfolder/*

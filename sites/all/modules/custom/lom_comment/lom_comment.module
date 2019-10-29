@@ -1,0 +1,22 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+/**
+ * Izay comment niova na vaovao dia mila averins isSynced=FALE aty @ server
+ * @param type $node
+ */
+function lom_comment_comment_presave($comment){
+    
+    $node_type  = $comment->node_type;
+    if($node_type == 'comment_node_publication'){
+        $nid = $comment->nid;
+        lom_send_mail_email_send($nid);
+    }
+}
+

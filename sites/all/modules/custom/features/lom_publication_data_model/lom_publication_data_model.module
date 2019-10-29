@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the LOM Publication Data Model feature.
+ */
+
+include_once 'lom_publication_data_model.features.inc';

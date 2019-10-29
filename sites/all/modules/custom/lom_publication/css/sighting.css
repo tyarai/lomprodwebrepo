@@ -1,0 +1,133 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 21, 2017, 1:12:21 AM
+    Author     : ranto
+*/
+
+form#lom-publication-add-sighting div#edit-container fieldset{
+    /*width: 500px;
+    color: #DD0000;
+    background-color: #DD0000;*/
+}
+
+.add_sighting_form .form-item label{
+    font-size:1.05em;
+    color: #535353;
+}
+
+.add_sighting_form .description{
+   font-style: italic;
+}
+
+.add_sighting_form .bottom_spacement, .top_spacement{
+    margin-bottom: 25px;
+}
+
+.add_sighting_form .container-inline-date .date-padding{
+    float:right;
+    padding: 0px;
+    
+}
+.add_sighting_form .container-inline-date label{
+    padding-top: 5px;
+    margin-right: 5px;
+    
+}
+
+.add_sighting_form .form-item-date-date .description{
+    display:none;
+    
+}
+
+.add_sighting_form input.form-select{
+    font-size:1.05em;
+    
+}
+
+.add_sighting_form input.submit{
+    padding: 10px;;
+    font-size: 1.25em;
+    width: 100%;
+    color: #3a3a3a;
+}
+
+.delete-sighting{
+    display: inline-block;
+}
+
+.add_sighting_form input.delete-sighting{
+    background-color: #DD0000;
+}
+
+
+.sighting-image-file{
+    margin-right:20px;
+}
+
+input[type="submit"]{
+    background-color: #DD0000;
+}
+
+.sighting-view-header{
+    font-size: 1.25em;
+    color:#214467;
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+}
+.view-filters{
+    font-size: 0.85em;
+    margin: 10px 10px;
+}
+/*
+Illegal activity list 
+*/
+div.illegal-activity-list-right-region {
+    padding-top: 10px;
+    /* background-color: #DD0000; */
+}
+
+div.illegal-activity-list-right-region .field-label {
+    color: #1c6ea0;
+    font-weight: normal;
+    /* background-color: #DD0000; */
+}
+
+div.views-row .field-label {
+    color: #1c6ea0;
+    font-weight: normal;
+    /* background-color: #DD0000; */
+}
+
+
+div.illegal-activity-list-title-region {
+    padding-bottom: 10px;
+    padding-top: 5px;
+     
+    /* background-color: #DD0000; */
+}
+
+div.illegal-activity-list-title-region h2{
+    padding-bottom: 10px;
+     
+    /* background-color: #DD0000; */
+}
+
+div.lemur-life-list-fields{
+   width:95%;
+  display: block;
+}
+
+div.lemur-life-list-fields .field-label{
+    color: #1c6ea0;
+    display: inline-block;
+}
+
+div.lemur-life-list-fields .field-item{
+    padding-left: 10px;
+}
+

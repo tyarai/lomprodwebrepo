@@ -1,0 +1,8 @@
+; $Id:$
+
+
+name = LOM Nexus Menu
+description = Setup menu at the page top
+core = 7.x
+package = Lemurs Of Madagascar
+

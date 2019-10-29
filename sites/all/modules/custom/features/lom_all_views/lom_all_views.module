@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the LOM_all_views feature.
+ */
+
+include_once 'lom_all_views.features.inc';

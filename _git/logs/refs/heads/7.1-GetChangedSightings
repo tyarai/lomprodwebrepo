@@ -1,0 +1,21 @@
+0000000000000000000000000000000000000000 890f0f825d0a7108ac922aa1ebe54810b663b1a1 Ranto Andrianavonison <ranto@tyarai.com> 1560864388 +0300	branch: Created from HEAD
+890f0f825d0a7108ac922aa1ebe54810b663b1a1 19892077ef9f28b98b8b9faa2cb623d36a61b7e7 Ranto Andrianavonison <ranto@tyarai.com> 1560871814 +0300	commit: Get Sighting New version part#1
+19892077ef9f28b98b8b9faa2cb623d36a61b7e7 e7fed96634b5e13b13fd797c9052efc08a9832ae Ranto Andrianavonison <ranto@tyarai.com> 1560937713 +0300	commit: Adjustment
+e7fed96634b5e13b13fd797c9052efc08a9832ae 7e0b7d6027c59a8169e9d028c9a2691690e96126 Ranto Andrianavonison <ranto@tyarai.com> 1560938958 +0300	commit: Changed date format
+7e0b7d6027c59a8169e9d028c9a2691690e96126 b7322deeb9e50bc31a9f53cb2988918d1acc4a9e Ranto Andrianavonison <ranto@tyarai.com> 1560939356 +0300	commit: Changed date format
+b7322deeb9e50bc31a9f53cb2988918d1acc4a9e 42aab5be9b5df8d13f014f45eee4a0b50fff49f6 Ranto Andrianavonison <ranto@tyarai.com> 1560942445 +0300	commit: Changed date format
+42aab5be9b5df8d13f014f45eee4a0b50fff49f6 2ea71cf7d120789fd88741fed16afc4fcd316a78 Ranto Andrianavonison <ranto@tyarai.com> 1560948029 +0300	commit: Changed type tid format
+2ea71cf7d120789fd88741fed16afc4fcd316a78 6f3d255bc633a95882d5910015c216a7c4ff1e06 Ranto Andrianavonison <ranto@tyarai.com> 1560955480 +0300	commit: Changed double precision latitiude
+6f3d255bc633a95882d5910015c216a7c4ff1e06 cded115c67d15cbb0676dbd651a4bb059c6c05f5 Ranto Andrianavonison <ranto@tyarai.com> 1561015612 +0300	commit: Updated return typeTID
+cded115c67d15cbb0676dbd651a4bb059c6c05f5 666d9196829dd4af2e65f2a1b009bf8d71935347 Ranto Andrianavonison <ranto@tyarai.com> 1561018711 +0300	commit: Uuid fixing
+666d9196829dd4af2e65f2a1b009bf8d71935347 0b57c69bbda063e6f3c6f651cd7a1bb03dfc579b Ranto Andrianavonison <ranto@tyarai.com> 1561022263 +0300	commit: Fixing FieldType error
+0b57c69bbda063e6f3c6f651cd7a1bb03dfc579b 8e4456fd5c254c2fa2251c4ccf4bc814217495c6 Ranto Andrianavonison <ranto@tyarai.com> 1561022479 +0300	commit: Fixing FieldType error
+8e4456fd5c254c2fa2251c4ccf4bc814217495c6 624f4f8b1051761accad0796fcc9bdc4493ad553 Ranto Andrianavonison <ranto@tyarai.com> 1561022669 +0300	commit: Fixing FieldType error
+624f4f8b1051761accad0796fcc9bdc4493ad553 eb77e5ff3c196f58aa835fd3c63f8125854028d7 Ranto Andrianavonison <ranto@tyarai.com> 1561022747 +0300	commit: Fixing FieldType error
+eb77e5ff3c196f58aa835fd3c63f8125854028d7 cc3a2d71d2a6c9ddd785acaf78b1777c33551b1a Ranto Andrianavonison <ranto@tyarai.com> 1561023652 +0300	commit: Fixing date
+cc3a2d71d2a6c9ddd785acaf78b1777c33551b1a ef7a1f706360058cfe660ff3909ba5770409649f Ranto Andrianavonison <ranto@tyarai.com> 1561029119 +0300	commit: Fixing date
+ef7a1f706360058cfe660ff3909ba5770409649f 87f1783e3066b5275c04ddc54d79ce09785643a0 Ranto Andrianavonison <ranto@tyarai.com> 1561038802 +0300	commit: Fixing date
+87f1783e3066b5275c04ddc54d79ce09785643a0 7e5f0396b3d450c17cc0a06ecdecb7c8f24d7a9f Ranto Andrianavonison <ranto@tyarai.com> 1561040222 +0300	commit: Fixing date
+7e5f0396b3d450c17cc0a06ecdecb7c8f24d7a9f 16076b5158556e176c08a8c312d97176c08789bd Ranto Andrianavonison <ranto@tyarai.com> 1561043915 +0300	commit: Fixing date
+16076b5158556e176c08a8c312d97176c08789bd 3259d759ad661e9ccd0bb0a7d110555d6a94f0ac Ranto Andrianavonison <ranto@tyarai.com> 1562138031 +0300	commit: Adjusted datetime format API return format
+3259d759ad661e9ccd0bb0a7d110555d6a94f0ac 9b7da5eaf7541635a2819e301877cb66dd4d474e Ranto Andrianavonison <ranto@tyarai.com> 1562170618 +0300	commit: testing things

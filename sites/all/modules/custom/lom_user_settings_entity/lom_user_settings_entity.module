@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * Rehefa manao save 'lom_user_settings_entity' dia tsy maintsy setter-na ilay field any @ user 'field_public_list'
+ * 
+ * hook_entity_presave
+ */
+function lom_user_settings_entity_entity_presave($entity, $type){
+    /*if($type == 'lom_user_settings_entity'){
+        $wrapper = entity_metadata_wrapper('lom_user_settings_entity',$entity->id);
+        if($wrapper && $entity->title == PUBLIC_LIST_SETTINGS){
+            //module_load_include('php','wrappers_custom','includes/user/UserUserWrapper');
+            $userID = $wrapper->uid->value();
+            $userWrapper = entity_metadata_wrapper('user',$userID);
+            $value = $wrapper->value->value();
+            $userWrapper->field_public_list->set($value); 
+            $userWrapper->save();
+        }
+    }*/
+}
+
+/**
+ * Rehefa avy mampiditra na manao update 'lom_user_settings' dia tokony atao update
+ * ilay field Public_list an'ilay user tompon'ilay settings
+ */
+function lom_user_settings_updateUserFieldPublicList($userUid,$value){
+    if($userUid != NULL){
+        $userWrapper = entity_metadata_wrapper('user',$userUid);
+        $userWrapper->field_public_list->set($value); 
+        $userWrapper->save();
+    }
+}
