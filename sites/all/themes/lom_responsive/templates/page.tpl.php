@@ -115,9 +115,15 @@
         <div id="content" class="container">
             <div class="row">
                 <div class="container col-md-12">
+                     <?php print $breadcrumb; ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container col-md-12">
                     <h1 class="page-title"> <?php print $title; ?> </h1>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-9">
                     <?php print render($page['content']); ?>

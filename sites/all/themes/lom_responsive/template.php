@@ -6,8 +6,8 @@ function lom_responsive_form_alter(&$form, &$form_state, $form_id) {
         //$form['links'] = Null; // Remove Request New Password and other links from Block form
         //$form['links']['#markup'] = t('Forgotten Password?') . ' <a href="/user/password">' . t('Forgotten Password?') . '</a>'; // Remove Request New Password from Block form
         //print_r( $form);
-        $links  = "<a class=user-register    href=" .  $base_path . "/lommember/register>" .t('Register') . "</a>";
-        $links .= " | <a class=user-password href=".   $base_path . "/lommember/password>"  .t('Forgotten Password?') . "</a>";
+        $links  = "<a class=user-register    href=" .  $GLOBALS['base_url']. base_path() . "lommember/register>" .t('Register') . "</a>";
+        $links .= " | <a class=user-password href=".   $GLOBALS['base_url'].base_path()  . "lommember/password>"  .t('Forgotten Password?') . "</a>";
     
         $form['links']['#markup'] = $links;
         $form['name']['#title'] = Null; // Change text on form

@@ -5,11 +5,12 @@
     ?>
 
     <div class="user-login-links">
-        <span class="password-link"><a href="<?php print $base_path;?>lommember/password">Forget your password?</a></span> | <span class="register-link"><a href="<?php print $base_path;?>lommember/register">Create an account</a></span>
+        <span class="password-link"><a href="<?php print base_path();?>password">Forget your password?</a></span> | <span class="register-link"><a href="<?php print base_path();?>register">Create an account</a></span>
     </div>
 
 <?php
     // render login button
+    
     print drupal_render($form['form_build_id']);
     print drupal_render($form['form_id']);
     print drupal_render($form['actions']);

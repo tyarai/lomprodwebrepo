@@ -1,7 +1,7 @@
 <?php
 
-//define('PUBLIC_LIST_SETTINGS','public_list');
-define('PUBLIC_LIST_SETTINGS','public_settings');
+define('PUBLIC_LIST_SETTINGS','public_list');
+//define('PUBLIC_LIST_SETTINGS','public_settings');
 define('PUBLIC_PATH','sites/default/files');
 
 
@@ -60,10 +60,14 @@ function _lom_common_settings_form($form,&$form_state){
     //print_r($settings);
     
     if(count($settings) != 0){
+        
         foreach($settings as $setting){
-
+            
+            //print($setting['title']);
+            
             switch($setting['title']){
                 case PUBLIC_LIST_SETTINGS:
+                    //print $setting['title'];
                     $form['fieldset'][PUBLIC_LIST_SETTINGS] = array(
                         '#type' => 'checkbox',
                         '#title' => t('Make my lemur life list and sightings public on www.lemursofmadagascar.com'),

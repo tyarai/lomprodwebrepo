@@ -6,7 +6,11 @@
 
 <title><?php print $head_title; ?></title>
 <!-- Bootstrap CSS -->
+
+<link rel="stylesheet" href="<?php print $GLOBALS['base_url']. base_path().drupal_get_path('theme', 'lom_responsive'). '/lom_style.css';?>">
 <?php print $styles; ?>
+
+
 <?php print $scripts; ?>
 <link   
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->

@@ -4,12 +4,12 @@ core = 7.x
 base theme = responsive
 engine = phptemplate
 
+
 stylesheets[all][] = bootstrap/css/bootstrap.min.css
 stylesheets[all][] = lom_style.css
 stylesheets[all][] = css/responsive-style.css
 stylesheets[all][] = css/layout.css
 stylesheets[all][] = flexslider.css
-stylesheets[all][] = style.css
 stylesheets[all][] = color/colors.css
 
 scripts[] = bootstrap/js/jquery-3.4.1.min.js
